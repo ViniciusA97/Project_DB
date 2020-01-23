@@ -35,12 +35,12 @@ class DatabaseHelper{
     await db.execute(
         "CREATE TABLE User(idUser INTEGER PRIMARY KEY , name TEXT, password TEXT, email TEXT, address TEXT , number TEXT );");
     await db.execute(
-        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT, password TEXT, numPedidos INTEGER, image VARCHAR);");
+        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR);");
     await db.execute(
       "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco INT , idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
       'CREATE TABLE ImagesRestaurant (idImage INTEGER PRIMARY KEY, url VARCHAR NOT NULL, idRest INTEGER, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));');
-
+   
   }
 
 //insertion
@@ -52,7 +52,7 @@ class DatabaseHelper{
 
   Future<int> saveRest(Restaurant rest) async {
     var dbClient = await db;
-    int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image) VALUES(?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url]);
+    int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description) VALUES(?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion]);
     return res;
   }
 
@@ -143,7 +143,7 @@ class DatabaseHelper{
     print(test);
 
     try{
-        Restaurant temp = new Restaurant(name,000, null, test[0]['idRest'], test[0]['urlImage']) ;
+        Restaurant temp = new Restaurant(name,000, null, test[0]['idRest'], test[0]['urlImage'], test[0]['description']) ;
         return temp;
       
     }catch(e){

@@ -9,8 +9,9 @@ class Restaurant implements Client{
   List<Prato> _cardapio;
   int _id;
   String _urlImage;
+  String _description;
 
-  Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage);
+  Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage, this._description);
 
   Restaurant.map(dynamic obj){
     _name = obj['name'];
@@ -18,6 +19,7 @@ class Restaurant implements Client{
     _numPedidos = obj['numPedidos'];
     _id =obj ['idRest'];
     _urlImage = obj['image'];
+    _description = obj['description'];
   }
 
   Map<String, dynamic> map(){
@@ -27,6 +29,7 @@ class Restaurant implements Client{
     map['numPedidos'] = _numPedidos;
     map['cardapio'] = _cardapio; 
     map['image'] = _urlImage;
+    map['description'] = _description;
     return map;
   }
   
@@ -37,4 +40,5 @@ class Restaurant implements Client{
   int get password => _password;
   int get numPedidos => _numPedidos;
   List<Prato> get cardapio => _cardapio; 
+  String get descriprion => _description;
 }

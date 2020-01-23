@@ -17,6 +17,7 @@ class _SignUpRestState extends State<SignUpRest>{
   int pass;
   String name;
   String image;
+  String description;
   
 
   @override
@@ -45,6 +46,10 @@ class _SignUpRestState extends State<SignUpRest>{
                     decoration: InputDecoration(labelText: 'Url Image'),
                     onSaved: (val)=> image = val,
                   ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Description'),
+                    onSaved: (val)=> description = val,
+                  ),
                   Padding(padding: EdgeInsets.all(10),),
                   RaisedButton(
                     onPressed:_create,
@@ -69,7 +74,7 @@ class _SignUpRestState extends State<SignUpRest>{
       }
 
     DatabaseHelper db = DatabaseHelper();
-    Restaurant temp =Restaurant(name, pass, null, 0,image);
+    Restaurant temp =Restaurant(name, pass, null, 0,image, description);
     db.saveRest(temp);
     Navigator.pop(context);
   }
