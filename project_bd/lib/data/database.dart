@@ -35,12 +35,14 @@ class DatabaseHelper{
     await db.execute(
         "CREATE TABLE User(idUser INTEGER PRIMARY KEY , name TEXT, password TEXT, email TEXT, address TEXT , number TEXT );");
     await db.execute(
-        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR);");
+        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT, address TEXT);");
     await db.execute(
       "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco INT , idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
       'CREATE TABLE ImagesRestaurant (idImage INTEGER PRIMARY KEY, url VARCHAR NOT NULL, idRest INTEGER, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));');
-   
+    await db.execute(
+      'CREATE TABLE TipoPrato( idTipo INTEGER PRIMARY KEY, tipo VARCHAR, idRest INTEGER, idPrato INTEGER , FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))'
+    );
   }
 
 //insertion
@@ -72,7 +74,6 @@ class DatabaseHelper{
     where: "email =?",
     whereArgs: ["$email"]
     );
-    print(test);
 
     try{
       if(test[0]['password'] == pass){
@@ -87,7 +88,7 @@ class DatabaseHelper{
    Future<bool> existRest(String email, String pass) async{
     var dbClient = await db;
     dynamic test = await dbClient.query("Restaurant",
-    columns: ["password", "name", 'idRest', 'numPedidos'],
+    columns: ["password", "name"],
     where: "name =?",
     whereArgs: ["$email"]
     );
@@ -136,20 +137,21 @@ class DatabaseHelper{
   Future<Restaurant> getRest(String name) async{
     var dbClient = await db;
     dynamic test = await dbClient.query("Restaurant",
-    columns: ["numPedidos", 'idRest', 'urlImage'],
+    columns: ['idRest, name, password , numPedidos , image , description , email, address, num'],
     where: "name =?",
     whereArgs: ["$name"]
     );
     print(test);
 
     try{
-        Restaurant temp = new Restaurant(name,000, null, test[0]['idRest'], test[0]['urlImage'], test[0]['description']) ;
+        Restaurant temp = Restaurant.map(test[0]);
+        print('Rest --->');
         return temp;
       
     }catch(e){
       print(e.toString());
+      return null;
     }
-    return null;
   }
 
   Future<List<Prato>> getPratos(int idRest) async{
@@ -174,10 +176,6 @@ class DatabaseHelper{
     }
     return null;
   }
-
-
-
-  
 
   //deletion
   Future<int> deleteUser(User user) async {

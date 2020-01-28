@@ -37,7 +37,7 @@ class _HomePageStateUser extends State<HomePageUser>{
        
       children: <Widget>[
             Padding(padding: EdgeInsets.only(top: 50),),
-           Text('Restaurantes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),),
+            Text('Restaurantes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),),
         
       
     
