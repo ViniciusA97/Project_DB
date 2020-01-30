@@ -24,49 +24,108 @@ class _SignUpState extends State<SignUp>{
   Widget build(BuildContext context) {
     return Scaffold(
       key: scafolldKey,
-      appBar: AppBar(title: Text("Create a user a accont"),),
       body: Center(
         child:Column(
           children: <Widget>[
-            Form(
-              key: formKey,
-              child:Column(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Name'),
-                    onSaved: (val) => name = val,
-                  ),
-                  Padding(padding: EdgeInsets.all(10),),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Email'),
-                    onSaved: (val) => email = val,
-                  ),
-                  Padding(padding: EdgeInsets.all(10),),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Password',),
+            Container(child: 
+              Form(
+                key: formKey,
+                child:Column(
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 20),),
+                    Text('Create your account',style: TextStyle(fontSize: 20),),
+                    Padding(padding: EdgeInsets.only(top: 20),),
+                    TextFormField(
+                      decoration: InputDecoration(
+                      hintText: 'name',
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                       borderRadius: BorderRadius.circular(20)
+                      )
+                      ),
+                      onSaved: (val) => name = val,
+                    
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: 'email',
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)
+                        )
+                      ),
+                    
+                      onSaved: (val) => email = val,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(hintText: 'password',
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)
+                        )
+                      ),
                     onSaved: (val) => pass = val,
-                  ),
-                  Padding(padding: EdgeInsets.all(10),),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Number'),
-                    onSaved: (val) => number = val,
-                  ),
-                  Padding(padding: EdgeInsets.all(10),),
-                  TextFormField(
-                    decoration: InputDecoration(labelText: 'Address'),
-                    onSaved: (val) => address = val,
-                  ),
-                  Padding(padding: EdgeInsets.all(10),),
-                  RaisedButton(
-                    onPressed:_create,
-                    child: Text('Create'),
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(hintText: 'number',
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)
+                        )
+                      ),
+                      onSaved: (val) => number = val,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(hintText: 'address',
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)
+                        )
+                      ),
+                      onSaved: (val) => address = val,
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 20),),
+                    RaisedButton(
+                      color: Colors.white,
+                      onPressed:_create,
+                      child: Text('Create'),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 20),),
+                  ],
+                )
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height/3,
+              child:Stack(
+                 
+                  children: <Widget>[
+                    Container(
+                      child:
+                    Positioned(
+                      child:
+                      new Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: Image.asset('./assets/comida4.jpg'),
+                    )
+                    
                   )
+                    )
+                  ],
+
+               ))
                 ],
               ) ,
             )
-          ],
-        ) ,
-      ),
+          
+        
+      
     );
   }
 

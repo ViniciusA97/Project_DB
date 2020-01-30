@@ -25,16 +25,27 @@ class _SignUpRestState extends State<SignUpRest>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.red,
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       key: scafolldKey,
-      appBar: AppBar(title: Text("Create a Restaurant a accont"),),
       body: Center(
         child:Column(
           children: <Widget>[
             new Form(
               key: formKey,
-              child:Column(
+              child:
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+
+              child:
+              Column(
+                
                 children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 20),),
+                  Text('Create your Restaurant Account',style: TextStyle(fontSize: 20),),
+                  Padding(padding: EdgeInsets.only(top:20),),
+                  
                   TextFormField(
                     decoration: InputDecoration(
                     hintText: 'Name',
@@ -114,13 +125,31 @@ class _SignUpRestState extends State<SignUpRest>{
                   RaisedButton(
                     onPressed:_create,
                     child: Text('Create'),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+              
+              Padding(padding: EdgeInsets.only(top: 10),),
+                Stack(
+                 
+                children: <Widget>[
+                  Positioned(
+                    child:
+                    new Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Image.asset('./assets/comida3.jpg'),
+                    )
+                    
                   )
+                  
+                  ],
+
+               )
                 ],
               ) ,
             )
-          ],
-        ) ,
-      ),
+            )],
+        ) ),
+      
     );
   }
 

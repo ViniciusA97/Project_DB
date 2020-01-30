@@ -105,8 +105,8 @@ class _LoginPageState extends State<LoginPage>{
                   ],
                 ),
                 Container(
-                  height: MediaQuery.of(context).size.height/3,
-                  width: MediaQuery.of(context).size.width-100,
+                  height: MediaQuery.of(context).size.height/2,
+                  width: MediaQuery.of(context).size.width-50,
                   child: TabBarView(
                     children: <Widget>[
                       getUserLogin(),
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage>{
                     ],
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(top: 10),),
+                Padding(padding: EdgeInsets.only(top: 5),),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -183,6 +183,7 @@ class _LoginPageState extends State<LoginPage>{
                 onSaved: (value)=> password = value,
               ),
               Padding(padding: EdgeInsets.all(5),),
+          
               RaisedButton(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -196,6 +197,9 @@ class _LoginPageState extends State<LoginPage>{
                   Navigator.push(context, MaterialPageRoute(builder:(context)=> SignUp()));
                 } ,
               ),
+
+
+              
             ],
           ),
         ),
