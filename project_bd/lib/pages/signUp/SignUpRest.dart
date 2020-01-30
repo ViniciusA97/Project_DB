@@ -35,7 +35,7 @@ class _SignUpRestState extends State<SignUpRest>{
               key: formKey,
               child:
               Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height/4*3,
                 width: MediaQuery.of(context).size.width,
 
               child:
@@ -127,8 +127,11 @@ class _SignUpRestState extends State<SignUpRest>{
                     child: Text('Create'),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
+              ]))),
               
-              Padding(padding: EdgeInsets.only(top: 10),),
+              Container(
+                height: MediaQuery.of(context).size.height/4,
+                child:
                 Stack(
                  
                 children: <Widget>[
@@ -144,11 +147,12 @@ class _SignUpRestState extends State<SignUpRest>{
                   ],
 
                )
-                ],
+                
               ) ,
-            )
-            )],
-        ) ),
+          ])
+            
+            
+      )
       
     );
   }

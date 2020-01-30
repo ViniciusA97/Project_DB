@@ -27,7 +27,9 @@ class _SignUpState extends State<SignUp>{
       body: Center(
         child:Column(
           children: <Widget>[
-            Container(child: 
+            Container(
+              height: MediaQuery.of(context).size.height/3*2,
+              child: 
               Form(
                 key: formKey,
                 child:Column(
