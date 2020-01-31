@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_bd/Pratos.dart';
 import 'package:project_bd/pages/login/loginPage.dart';
 
 void main()=> runApp(MyApp());
