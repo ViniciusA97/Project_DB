@@ -54,7 +54,7 @@ class DatabaseHelper{
 
   Future<int> saveRest(Restaurant rest) async {
     var dbClient = await db;
-    int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description) VALUES(?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion]);
+    int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
     return res;
   }
 
@@ -145,7 +145,7 @@ class DatabaseHelper{
 
     try{
         Restaurant temp = Restaurant.map(test[0]);
-        print('Rest --->');
+        
         return temp;
       
     }catch(e){

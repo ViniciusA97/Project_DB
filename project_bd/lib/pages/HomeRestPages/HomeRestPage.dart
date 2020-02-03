@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
 
 class RestPage extends StatefulWidget{
   Restaurant _rest;
@@ -13,133 +14,50 @@ class RestPage extends StatefulWidget{
 class _RestPageState extends State<RestPage>{
  
 
+  _RestPageState(this._rests);
+
   final scaffolKey = GlobalKey<ScaffoldState>();
   Restaurant _rests;
- 
-  int _selectedPage = 0;
+  int current = 0;
+  InitRest _homeRest ;
+  List<Widget> pages;
+  Widget currentPage;
+
+
+  @override
+  void initState(){
+    _homeRest = InitRest(_rests);
+    pages=[_homeRest];
+    currentPage = _homeRest;
+    super.initState();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     print(this._rests);
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       key: scaffolKey,
       backgroundColor: Colors.white,
-      body:null ,
-      bottomNavigationBar: bottomAppBar(context));
+      body:currentPage ,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: current,
+        onTap: (int index){
+          setState((){
+            current = index;
+            currentPage= pages[index];
+            });
+        },
+        items:<BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home) , title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.list), title: Text('Cardapio')),
+          BottomNavigationBarItem(icon: Icon(Icons.room_service), title: Text('Pedidos'))
+        ] ,
 
-  }
+      )
+    );
 
-
-  Widget test(){
-    print(_rests);
-
-    return 
-    Column(
-       mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[   
-          
-          Container(
-            decoration: new BoxDecoration(
-              color: Colors.white,
-              borderRadius: new BorderRadius.only(bottomLeft: const Radius.circular(20), bottomRight: const Radius.circular(20),topLeft: const Radius.circular(20),topRight: const Radius.circular(20))
-            ),
-            width: MediaQuery.of(context).size.width,
-            child: Image.network(_rests.url),
-          ),
-        
-        Padding(padding: EdgeInsets.only(top: 15),),
-      
-           Container(
-            width: MediaQuery.of(context).size.width-30,
-            child: Text('${this._rests.name}', style: TextStyle(fontSize: 30),textAlign: TextAlign.center,),
-            color: Colors.white,
-        
-          ),
-        
-    
-    ]);
-    
   } 
-
-  Widget bottomAppBar(context) {
-    return BottomAppBar(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Expanded(
-              child: IconCall(
-            icone: Icons.list,
-            nome: "Home",
-            tamanho: 60.0,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => homeRest());
-            },
-          )),
-          Expanded(
-            child: IconCall(
-              icone: Icons.content_paste,
-              nome: "Cardapio",
-              tamanho: 60,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            cardapioRest()));
-              },
-            ),
-          ),
-          Expanded(
-            child: IconCall(
-              icone: Icons.comment,
-              nome: "Pedidos",
-              tamanho: 60,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => pedidosRest,
-                    ),
-                  );
-                },
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-
 }
-
-class IconCall extends StatelessWidget {
-  final String nome;
-  final IconData icone;
-  final double tamanho;
-  final VoidCallback onPressed;
-
-  IconCall.small({this.nome, this.icone, this.onPressed}) : this.tamanho = 60.0;
-
-  IconCall({this.nome, this.icone, this.onPressed, this.tamanho});
-
-  Widget build(BuildContext context) {
-    return Container(
-      width: tamanho + 10,
-      height: tamanho + 10,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          RawMaterialButton(
-            onPressed: onPressed,
-            child: Icon(icone),
-          ),
-          Text(nome),
-        ],
-      ),
-    );
-  }
-}
-
