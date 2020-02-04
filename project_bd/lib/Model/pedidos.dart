@@ -1,32 +1,32 @@
-import 'package:project_bd/Model/pratos.dart';
-import 'package:project_bd/Model/restaurant.dart';
-import 'package:project_bd/Model/user.dart';
 
 class Pedido{
 
-  User _user;
-  Restaurant _restaurant;
-  Prato _prato;
-  int _pedidoId;
+  int _userId;
+  int _restId;
+  int _pratoId;
+  DateTime _data;
 
-  Pedido(this._user,this._restaurant, this._prato, this._pedidoId);
+  Pedido(this._pratoId,this._restId,this._userId, this._data);
 
   Pedido.map(dynamic obj){
-    _pedidoId = obj['pedidoId'];
-    int userId = obj['userId'];
-    int restaurantId = obj['restId'];
-    int pratoId = obj['pratoId'];
-    //query userId, restaurantId , pratoId ----- create the models
+    _userId = obj['userId'];
+    _restId = obj['restId'];
+    _pratoId = obj['pratoId'];
+    _data = obj['data'];
   }
 
   Map<String, dynamic> getMap(){
     Map<String, dynamic> map;
-    map['userId'] = _user.id;
-    map['pedidoId'] =_pedidoId;
-    map['restId'] = _restaurant.id;
-    map['pratoId'] = _prato.id;
+    map['userId'] = this._userId;
+    map['restId'] = this._restId;
+    map['pratoId'] = this._pratoId;
+    map['data'] = this._data.toString();
     return map;
   }
-  
+
+  int get idUser => this._userId;
+  int get idRest => this._restId;
+  int get idPrato => this._pratoId;
+  DateTime get data=> this.data;
 
 }

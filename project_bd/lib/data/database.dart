@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
+import 'package:project_bd/Model/pedidos.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
@@ -39,10 +40,17 @@ class DatabaseHelper{
     await db.execute(
       "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco INT , idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
-      'CREATE TABLE ImagesRestaurant (idImage INTEGER PRIMARY KEY, url VARCHAR NOT NULL, idRest INTEGER, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));');
+      'CREATE TABLE TipoPrato( idTipo INTEGER PRIMARY KEY, tipo VARCHAR, idRest INTEGER, idPrato INTEGER , FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
     await db.execute(
-      'CREATE TABLE TipoPrato( idTipo INTEGER PRIMARY KEY, tipo VARCHAR, idRest INTEGER, idPrato INTEGER , FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))'
-    );
+      'CREATE TABLE Pedidos(idPedido INTEGER PRIMARY KEY, data DATATIME)');
+    await db.execute(
+      'CREATE TABLE PedidoPratoRestUser(idPrato INTEGER, idRest INTEGER, idUser, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato), FOREIGN KEY(idUser) REFERENCES User(idUser), FOREIGN KEY (idRest) REFERENCES Restaurant(idRest))');
+   
+    //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
+    //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
+    //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
+    //Pedidos(idPedido: 1, data: 03/02/2020)
+    //PedidoPratoRestUser( idPrato: 20, idRest:0, idUser: 1)
   }
 
 //insertion
@@ -64,6 +72,11 @@ class DatabaseHelper{
     return res;
   }
 
+  Future<int> savePedido(Pedido p) async{
+    var dbClient = await db;
+    return
+    dbClient.rawInsert('INSERT INTO Pedidos(data) VALUES(?)',[p.data]);
+  }
 
 
   //confere se existe user

@@ -21,62 +21,68 @@ class _InitRestState extends State<InitRest>{
   Widget build(BuildContext context) {
     
     return Scaffold(
-      
       backgroundColor: Colors.white,
       body: body(),
+      //drawer: getDrawer(),
+    );
+  }
+
+  Drawer getDrawer(){
+    return Drawer(
+      child: ListView(
+          padding: EdgeInsets.zero,
+        children: <Widget>[
+           Image.network('${this._rest.url}'),
+           ListTile(
+             title:Text('${this._rest.address}')
+           ),
+           ListTile(
+            title:Text('${this._rest.name}',style: TextStyle(fontSize:25),textAlign: TextAlign.center,)
+           ),
+           Column(
+             mainAxisSize: MainAxisSize.max,
+             mainAxisAlignment: MainAxisAlignment.start,
+             crossAxisAlignment: CrossAxisAlignment.center,
+             children: <Widget>[
+               RaisedButton(
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                 child: Text('Sign Out'),
+                 onPressed:(){
+                   Navigator.pop(context);
+                 }
+               )
+             ],
+           )
+            
+          
+        ],),
     );
   }
 
   Widget body(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return 
+    Center(
+      
+      child:Column(
       children: <Widget>[
         Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height-100,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(padding: EdgeInsets.only(top:30)),
-              Text('${_rest.name}',style: TextStyle(fontSize: 30),),
-              Padding(padding: EdgeInsets.only(top:20)),
-
-              Image.network(_rest.url),
-             Container( 
-               margin: EdgeInsets.only(top:10,bottom:10),
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text('${_rest.address}',style: TextStyle(fontSize: 16, fontStyle: FontStyle.italic),),
-
-                  ],
-                ),
-              ),
-              
-
-              Padding(padding: EdgeInsets.only(top:20)),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                color: Color.fromRGBO(233, 233, 233, 1),
-                child: Text('${_rest.descriprion}',textAlign: TextAlign.center,),
-              )
-              ,
-              Padding(padding: EdgeInsets.only(top:20)),
-              
-              Padding(padding: EdgeInsets.only(top:20)),
-              Text('${_rest.email}')
-
-
-            ],
-          ),
-
-        ),
-
+          child: 
+            SizedBox(
+              child:
+              Image.network('${this._rest.url}'),
+            
+              width: MediaQuery.of(context).size.width,
+            )
+        ) ,
+        Padding(padding: EdgeInsets.only(top:5)),
+        
+        Container(
+          height: 10,
+          color: Colors.grey.shade100,
+        )
       ],
 
-    );
+    ));
   }
 
   Widget test(){

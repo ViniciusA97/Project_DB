@@ -94,7 +94,10 @@ class _LoginPageState extends State<LoginPage>{
             initialIndex: 0,
             child: Column(
               children: <Widget>[
-                Image.asset('./assets/comida.jpg'),
+               Container(
+                 child:
+                Image.asset('./assets/comida.jpg')
+               ),
                 Padding(padding: EdgeInsets.only(top:20),),
                 TabBar(
                   isScrollable: true,
