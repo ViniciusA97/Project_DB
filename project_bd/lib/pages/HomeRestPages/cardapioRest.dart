@@ -78,9 +78,9 @@ class _CardapioPageState extends State<CardapioPage>{
                   height: 250,
                   width: MediaQuery.of(context).size.width-40,
                   child: ClipRRect(
-                    
-                    child: Image.network('${this._pratos[index].img}'),
+                    child: Image.network('${this._pratos[index].img}',fit: BoxFit.fill,),
                     borderRadius: BorderRadius.circular(20),
+                    
                     )
                 ),
                 Positioned(
