@@ -27,6 +27,7 @@ class Restaurant implements Client{
     _num = obj['num'];
     _adress= obj['address'];
     _email = obj['email'];
+    _cardapio = obj['pratos'];
   }
 
   Map<String, dynamic> map(){
@@ -40,6 +41,7 @@ class Restaurant implements Client{
     map['num'] =_num;
     map['email']= _email;
     map['address']= _adress;
+    map['pratos'] = _cardapio;
     return map;
   }
   
@@ -54,5 +56,7 @@ class Restaurant implements Client{
   String get nume =>_num;
   String get email =>_email;
   String get address =>_adress;
+
+  void setCardapio(List<Prato> list) => this._cardapio = list;
 
 }

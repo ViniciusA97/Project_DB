@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage>{
       var db = DatabaseHelper();
     bool utilUser = await db.existUser(email,password);
     if(utilUser){
-      List<Map> rests = await db.getAllRest();
+      List<Restaurant> rests = await db.getAllRest();
       Navigator.push(context, MaterialPageRoute(builder:(context)=> HomePageUser(rests)));
     }else{
       _showSnackBar('User dont exist');
@@ -60,6 +60,7 @@ class _LoginPageState extends State<LoginPage>{
         setState(() {
           form.save();
           isLoading = true;
+          
         });
       }
     var db = DatabaseHelper();

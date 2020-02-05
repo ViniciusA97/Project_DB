@@ -38,11 +38,11 @@ class DatabaseHelper{
     await db.execute(
         "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT, address TEXT);");
     await db.execute(
-      "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco INT , idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
+      "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco REAL ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
       'CREATE TABLE TipoPrato( idTipo INTEGER PRIMARY KEY, tipo VARCHAR, idRest INTEGER, idPrato INTEGER , FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
     await db.execute(
-      'CREATE TABLE Pedidos(idPedido INTEGER PRIMARY KEY, data DATATIME)');
+      'CREATE TABLE Pedidos(idPedido INTEGER PRIMARY KEY, data DATATIME , preco INTEGER)');
     await db.execute(
       'CREATE TABLE PedidoPratoRestUser(idPrato INTEGER, idRest INTEGER, idUser, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato), FOREIGN KEY(idUser) REFERENCES User(idUser), FOREIGN KEY (idRest) REFERENCES Restaurant(idRest))');
    
@@ -68,7 +68,7 @@ class DatabaseHelper{
 
   Future<int> savePrato(Prato prato, int idRest) async {
     var dbClient = await db;
-    int res = await dbClient.rawInsert("INSERT INTO Prato (name,descricao, preco, idRest) VALUES(${prato.name},${prato.descricao},${prato.preco}, ${prato.id})");
+    int res = await dbClient.rawInsert("INSERT INTO Prato (name,descricao, preco, idRest,img) VALUES(?,?,?,?,?)",[prato.name,prato.descricao,prato.preco,idRest,prato.img]);
     return res;
   }
 
@@ -116,15 +116,22 @@ class DatabaseHelper{
     }
     return false;
   }
+  
   //Busca
-
-  Future<List<Map<String,dynamic>>> getAllRest() async{
+  Future<List<Restaurant>> getAllRest() async{
     var dbClit = await db;
     dynamic resp = await dbClit.query('Restaurant');
-    return resp;
+    dynamic prato;
+    List<Restaurant> list = new List<Restaurant>();    
+    for(dynamic i in resp){
+      prato = getPratos(i['idRest']);
+      i['pratos']= prato;
+      list.add(Restaurant.map(i));
+    }
+
+    return list;
 
   }
-
 
   Future<User> getUser(String email, String pass) async{
     var dbClient = await db;
@@ -133,13 +140,10 @@ class DatabaseHelper{
     where: "email =?",
     whereArgs: ["$email"]
     );
-    print(test);
-
     try{
       if(test[0]['password'] == pass){
-        User a = User.map(test);
-        User temp = new User( test[0]['name'],pass,email,test[0]['address'],test[0]['number'] );
-        return temp;
+        User a = User.map(test[0]);
+        return a;
       }
     }catch(e){
       print(e.toString());
@@ -154,12 +158,11 @@ class DatabaseHelper{
     where: "name =?",
     whereArgs: ["$name"]
     );
-    print(test);
-
     try{
-        Restaurant temp = Restaurant.map(test[0]);
-        
-        return temp;
+      Restaurant temp = Restaurant.map(test[0]);
+      List<Prato> listPratos= await getPratos(temp.id);
+      temp.setCardapio(listPratos);
+      return temp;
       
     }catch(e){
       print(e.toString());
@@ -169,17 +172,15 @@ class DatabaseHelper{
 
   Future<List<Prato>> getPratos(int idRest) async{
     var dbClient = await db;
-    dynamic test = await dbClient.query("Pratos",
+    dynamic test = await dbClient.query("Prato",
     columns: ["preco", 'descricao','name'],
     where: "idRest =?",
     whereArgs: ["$idRest"]
     );
-    print(test);
-
     try{
         List<Prato> cardapio = new List<Prato>();
         for(var a in test){
-          Prato usual = new Prato(idRest,a['name'], a['preco'], a['descricao']) ;
+          Prato usual = new Prato(idRest,a['name'], a['preco'], a['descricao'],a['img']) ;
           cardapio.add(usual);
         }
         return cardapio;
@@ -189,6 +190,18 @@ class DatabaseHelper{
     }
     return null;
   }
+
+  Future<Prato> getPrato(int idPrato) async{
+    var dbClient = await db;
+    dynamic map = dbClient.query('Prato',
+      columns:['preco', 'descricao','name'],
+      where: 'idPrato=?',
+      whereArgs:[idPrato] 
+    );
+    Prato prato = Prato.map(map[0]);
+    return prato;
+  }
+
 
   //deletion
   Future<int> deleteUser(User user) async {

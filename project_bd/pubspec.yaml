@@ -47,7 +47,7 @@ flutter:
     - ./assets/comida2.jpg
     - ./assets/comida3.jpg
     - ./assets/comida4.jpg
-    - ./assets/comida5.png
+    - ./assets/comida5.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

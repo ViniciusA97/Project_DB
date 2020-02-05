@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/data/database.dart';
+import 'package:project_bd/pages/HomeRestPages/CardapioRest.dart';
 import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
 
 class RestPage extends StatefulWidget{
@@ -20,14 +23,16 @@ class _RestPageState extends State<RestPage>{
   Restaurant _rests;
   int current = 0;
   InitRest _homeRest ;
+  CardapioPage _cardapioPage;
   List<Widget> pages;
   Widget currentPage;
 
 
   @override
-  void initState(){
+  void initState() {
+    _cardapioPage = CardapioPage(this._rests.cardapio,this._rests.id);
     _homeRest = InitRest(_rests);
-    pages=[_homeRest];
+    pages=[_homeRest, _cardapioPage];
     currentPage = _homeRest;
     super.initState();
 

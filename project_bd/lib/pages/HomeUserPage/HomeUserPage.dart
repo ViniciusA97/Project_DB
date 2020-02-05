@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Model/restaurant.dart';
 
 class HomePageUser extends StatefulWidget{
-  List<Map> _rest;
+  List<Restaurant> _rest;
   
   HomePageUser(this._rest);
   @override
@@ -13,7 +14,7 @@ class _HomePageStateUser extends State<HomePageUser>{
  
 
   final scaffolKey = GlobalKey<ScaffoldState>();
-  List<Map> _rests;
+  List<Restaurant> _rests;
  int currentIndex;
   _HomePageStateUser(this._rests);
 
@@ -66,7 +67,7 @@ class _HomePageStateUser extends State<HomePageUser>{
 
               child: Row(
                 children: <Widget>[
-                  new Image.network(_rests[index]['image'],
+                  new Image.network(_rests[index].url,
                     fit: BoxFit.cover,
                     width: 130.0,
                     height: 150.0
@@ -77,9 +78,9 @@ class _HomePageStateUser extends State<HomePageUser>{
                       child: new Column(  
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(_rests[index]['name'], style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                          Text(_rests[index].name, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
                           Padding(padding: EdgeInsets.only(top: 5),),
-                          Text(_rests[index]['description'],style: TextStyle(fontSize: 15),)
+                          Text(_rests[index].descriprion,style: TextStyle(fontSize: 15),)
                         ],
                       ),
                     ),
@@ -100,7 +101,7 @@ class _HomePageStateUser extends State<HomePageUser>{
     return ListView.builder(
       itemCount: _rests.length,
       itemBuilder: (BuildContext context, index){
-        return Card(child: Text(_rests[index]['name']),);
+        return Card(child: Text(_rests[index].name),);
       },
     );
   }
