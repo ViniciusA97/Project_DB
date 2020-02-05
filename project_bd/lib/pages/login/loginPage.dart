@@ -67,6 +67,7 @@ class _LoginPageState extends State<LoginPage>{
     bool utilRest = await db.existRest(email, password);
     if(utilRest){
       Restaurant restaurant = await db.getRest(email);
+      print(restaurant);
       Navigator.push(context, MaterialPageRoute(builder:(context)=> RestPage(restaurant)));
     }else{
       _showSnackBar('Restaurant dont exist');

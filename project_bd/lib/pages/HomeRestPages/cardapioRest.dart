@@ -40,49 +40,39 @@ class _CardapioPageState extends State<CardapioPage>{
         child: Icon(Icons.add),
         backgroundColor: 
         Colors.green.shade100,),
-      body: cardapio(),
+      body: cardapio()
     );
   }
 
   Widget cardapio(){
-    return Container(
-      margin: EdgeInsets.fromLTRB(10, 30, 10, 20),
+    return
+     Container(
+      margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height-100,
       child: Column(
         children: <Widget>[
+          Padding(padding: EdgeInsets.only(top:30),),
           Text('Pratos', style: TextStyle(color:Colors.black,fontWeight: FontWeight.w400, fontSize: 20),),
-          Padding(padding: EdgeInsets.only(top:10),),
+          Padding(padding: EdgeInsets.only(top:5),),
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: Colors.grey.shade300,
               borderRadius: BorderRadius.all(Radius.circular(20))
             ),
             width: MediaQuery.of(context).size.width-20,
-            height: MediaQuery.of(context).size.height-150,
-            child: getListView(),
-          )
-        ],
-      ),
-    );
-  }
-
-
-  Widget getListView(){
-
-
-    if(this._pratos == null){
-      return Center(child: Text('Não há pratos cadastrados.', style: TextStyle(fontSize: 20),),);
-    }else{
-      return ListView.builder(
+            height: MediaQuery.of(context).size.height-160,
+            child:  ListView.builder(
         itemCount: this._pratos.length,
         itemBuilder: (BuildContext cntx , int index){
           
-          return Container(
-            padding: EdgeInsets.only(left:10),
-            height: 250,
-            width: MediaQuery.of(context).size.width-40,
-            child: Stack(
+          return 
+          Container(
+            padding: EdgeInsets.only(left: 10),
+            width: MediaQuery.of(context).size.width-30,
+            height: 300,
+            child:
+            Stack(
               children: <Widget>[
                 Positioned(
                   height: 250,
@@ -105,18 +95,34 @@ class _CardapioPageState extends State<CardapioPage>{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text('${this._pratos[index].name}'),
-                        Text('\$${this._pratos[index].preco}')
+                        Text('${this._pratos[index].name}',style: TextStyle(color: Colors.black,fontSize: 15),),
+                        Text('\$${this._pratos[index].preco}',style: TextStyle(color: Colors.black,fontSize: 15))
                       ],
                     ),
                   )
                 )
               ],
-            )
             
+            )
           );
         }
-      );
+      ),
+          )
+        ],
+      ),
+    );
+  }
+
+
+  Widget getListView(){
+
+
+    if(this._pratos == null){
+      return Center(child: Text('Não há pratos cadastrados.', style: TextStyle(fontSize: 20),),);
+    }else{
+      return null;
+      
+     
     }
   }
 

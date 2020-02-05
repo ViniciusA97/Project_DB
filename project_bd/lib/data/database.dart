@@ -158,6 +158,7 @@ class DatabaseHelper{
     where: "name =?",
     whereArgs: ["$name"]
     );
+    print(test);
     try{
       Restaurant temp = Restaurant.map(test[0]);
       List<Prato> listPratos= await getPratos(temp.id);
@@ -173,10 +174,11 @@ class DatabaseHelper{
   Future<List<Prato>> getPratos(int idRest) async{
     var dbClient = await db;
     dynamic test = await dbClient.query("Prato",
-    columns: ["preco", 'descricao','name'],
+    columns: ["preco", 'descricao','name','img'],
     where: "idRest =?",
     whereArgs: ["$idRest"]
     );
+    print(test);
     try{
         List<Prato> cardapio = new List<Prato>();
         for(var a in test){
