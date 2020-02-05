@@ -6,6 +6,8 @@ import 'package:project_bd/data/database.dart';
 import 'package:project_bd/pages/HomeRestPages/CardapioRest.dart';
 import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
 
+import 'pedidosRest.dart';
+
 class RestPage extends StatefulWidget{
   Restaurant _rest;
   
@@ -24,6 +26,7 @@ class _RestPageState extends State<RestPage>{
   int current = 0;
   InitRest _homeRest ;
   CardapioPage _cardapioPage;
+  PedidosRest _pedidosRest;
   List<Widget> pages;
   Widget currentPage;
 
@@ -32,7 +35,8 @@ class _RestPageState extends State<RestPage>{
   void initState() {
     _cardapioPage = CardapioPage(this._rests.cardapio,this._rests.id);
     _homeRest = InitRest(_rests);
-    pages=[_homeRest, _cardapioPage];
+    _pedidosRest = PedidosRest(this._rests);
+    pages=[_homeRest, _cardapioPage, _pedidosRest];
     currentPage = _homeRest;
     super.initState();
 

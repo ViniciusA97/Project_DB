@@ -9,7 +9,13 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../Model/pedidos.dart';
+import '../Model/pedidos.dart';
+import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
+import '../Model/pratos.dart';
+import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
 class DatabaseHelper{
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
   factory DatabaseHelper() => _instance;
@@ -44,9 +50,9 @@ class DatabaseHelper{
     await db.execute(
       'CREATE TABLE TipoPrato( idTipo INTEGER PRIMARY KEY, tipo VARCHAR, idRest INTEGER, idPrato INTEGER , FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
     await db.execute(
-      'CREATE TABLE Pedidos(idPedido INTEGER PRIMARY KEY, data DATATIME , preco INTEGER, idUser INTEGER, )');
+      'CREATE TABLE Pedidos(idPrato INTEGER,idPedido INTEGER PRIMARY KEY, data DATATIME , preco INTEGER, idUser INTEGER, FOREIGN KEY(idUser) REFERENCES User(idUser), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato) )');
     await db.execute(
-      'CREATE TABLE PedidoPratoUser(idRest INTEGER,idPrato INTEGER,  idUser INTEGER, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser), FOREIGN KEY (idRest) REFERENCES Restaurant(idRest))');
+      'CREATE TABLE PedidoPratoUser(idPrato INTEGER,  idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Prato(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato))');
    
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
@@ -244,33 +250,46 @@ class DatabaseHelper{
     return null;
   }
 
-  Future<List<Pedido>> getPedidosByRest(int idRest) async{
-    var dbClient = await db;
-    dynamic test = dbClient.query('Pedidos',
-    columns: ['idRest', 'idPrato', 'idUser'],
-    where: 'idRest=?',
-    whereArgs: ['$idRest']
-    );
-    // test[['idRest: 1 , idPrato: 1, idUser: 1]]
-    List<Pedido> pedidos = new List<Pedido>();
-    User u;
-    Restaurant r;
-    Prato p;
-    for(dynamic a in test){
-      u = await getUserById(a['idUser']) ;
-      r = await getRestById(a['idRest']);
-      p = await getPratoById(a['idPrato']);
-      a['user'] =u;
-      a['rest'] = r;
-      a['prato'] = p;
-
-      pedidos.add(Pedido.map(a));
+  Future<List<Pedido>> getPedidosByRest(Restaurant rest) async{
+    List<Prato> pratos = await getPratos(rest.id);
+    List<Pedido> list = List<Pedido>();
+    for(Prato a in pratos){
+      list.add(await getPedido(a.idPrato));
     }
-    return pedidos;
-
-
-
+    return list;
   }
+
+  Future<Pedido> getPedido(int idPrato) async{
+    var dbClient = await db;
+    dynamic map = dbClient.query('PedidoPratoUser',
+    columns:['idPedido'],
+    where: 'idPrato=?',
+    whereArgs: [idPrato] 
+    );
+    Pedido pedido = await getPedidoById(map['idPedido']);
+    return pedido;
+  }
+
+  Future<Pedido> getPedidoById(int idPedido) async{
+    var dbClient = await db;
+    dynamic map = dbClient.query('Pedido',
+    columns: ['idUser', 'idPrato','data'],
+    where: 'idPedido=?',
+    whereArgs: [idPedido]
+    );
+    User u = await getUserById(map['idUser']);
+    Prato p = await getPratoById(map['idPrato']);
+    dynamic fin;
+    fin['idPedido'] = idPedido;
+    fin['user']=u;
+    fin['prato']=p;
+    Restaurant r = await getRestById(p.idRest); 
+    fin['rest']=r;
+    fin['data'] = map['data'];
+    Pedido pedido = Pedido.map(fin);
+    return pedido;
+  }
+
 
   Future<Prato> getPrato(int idPrato) async{
     var dbClient = await db;

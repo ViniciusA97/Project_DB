@@ -3,16 +3,16 @@ import 'package:project_bd/Model/pratos.dart';
 
 class Restaurant implements Client{
 
+  int _numPedidos;
+  int _id;
   String _name;
   String _password;
-  int _numPedidos;
-  List<Prato> _cardapio;
-  int _id;
   String _urlImage;
   String _description;
   String _num;
   String _adress;
   String _email;
+  List<Prato> _cardapio;
 
   Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage,
               this._description,this._num, this._email,this._adress);
