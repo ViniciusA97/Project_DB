@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project_bd/Model/pratos.dart';
+import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
+
+import 'HomeRestPage.dart';
 
 class AddPrato extends StatefulWidget{
   int _id;
@@ -129,8 +132,9 @@ class _AddPratoState extends State<AddPrato>{
     DatabaseHelper db = DatabaseHelper.internal();
     Prato prato = Prato(_id, name, preco, descricao, img);
     int rest = await db.savePrato(prato, _id);
-
-    Navigator.pop(context);
+    Restaurant res = await db.getRestById(this._id);
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res)));
+    
       
   }
 

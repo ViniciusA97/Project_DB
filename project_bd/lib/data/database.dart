@@ -195,7 +195,7 @@ class DatabaseHelper{
     var dbClient = await db;
     dynamic test = await dbClient.query("Restaurant",
     columns: ['idRest, name, password , numPedidos , image , description , email, address, num'],
-    where: "id =?",
+    where: "idRest =?",
     whereArgs: ["$id"]
     );
     print(test);

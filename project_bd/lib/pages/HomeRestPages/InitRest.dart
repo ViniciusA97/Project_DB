@@ -112,7 +112,18 @@ class _InitRestState extends State<InitRest>{
         Container(
           height: 10,
           color: Colors.grey.shade100,
-        )
+        ),
+        Padding(padding: EdgeInsets.only(top:10)),
+        Container(
+          margin: EdgeInsets.fromLTRB(15, 5, 15, 0),
+          child: 
+          Text('${this._rest.descriprion}:',
+            textAlign: TextAlign.start,
+            style: TextStyle(fontSize: 15,color:Colors.black),),
+
+        ),
+
+
       ],
 
     );

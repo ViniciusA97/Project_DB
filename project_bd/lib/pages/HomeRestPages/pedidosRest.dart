@@ -73,7 +73,11 @@ class _PedidosRestState extends State<PedidosRest>{
 
   Widget pedidos(){
     if(this._pedidos==null){
-      return(Text('Nenhum pedido cadastrado'));
+      return(
+        Center(child: 
+          Text('Nenhum pedido cadastrado')
+        )
+        );
     }else{
       return 
       ListView.builder(
