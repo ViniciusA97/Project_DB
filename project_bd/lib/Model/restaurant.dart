@@ -1,3 +1,4 @@
+import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/client.dart';
 import 'package:project_bd/Model/pratos.dart';
 
@@ -13,6 +14,7 @@ class Restaurant implements Client{
   String _adress;
   String _email;
   List<Prato> _cardapio;
+  List<Categories> _categories;
 
   Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage,
               this._description,this._num, this._email,this._adress);
@@ -28,6 +30,7 @@ class Restaurant implements Client{
     _adress= obj['address'];
     _email = obj['email'];
     _cardapio = obj['pratos'];
+    _categories = obj['categoria'];
   }
 
   Map<String, dynamic> map(){
@@ -42,6 +45,7 @@ class Restaurant implements Client{
     map['email']= _email;
     map['address']= _adress;
     map['pratos'] = _cardapio;
+    map['categorias'] = _categories;
     return map;
   }
   
@@ -56,7 +60,7 @@ class Restaurant implements Client{
   String get nume =>_num;
   String get email =>_email;
   String get address =>_adress;
-
+  List<Categories> get categories => _categories;
   void setCardapio(List<Prato> list) => this._cardapio = list;
 
 }

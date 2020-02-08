@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
+import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/pedidos.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
@@ -48,7 +49,9 @@ class DatabaseHelper{
     await db.execute(
       "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco REAL ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
-      'CREATE TABLE TipoPrato( idTipo INTEGER PRIMARY KEY, tipo VARCHAR, idRest INTEGER, idPrato INTEGER , FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
+      'CREATE TABLE Categoria (idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
+    await db.execute(
+      'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
     await db.execute(
       'CREATE TABLE Pedidos(idPrato INTEGER,idPedido INTEGER PRIMARY KEY, data DATATIME , preco INTEGER, idUser INTEGER, FOREIGN KEY(idUser) REFERENCES User(idUser), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato) )');
     await db.execute(
@@ -73,6 +76,15 @@ class DatabaseHelper{
     int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
     return res;
   }
+  Future<int> saveRestWithCategorie(Restaurant rest, List<Categories> list) async {
+    var dbClient = await db;
+    int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
+    for(Categories i in list){
+      await dbClient.rawInsert('INSERT INTO CategoriasRest(idRest, idCategoria) VALUES(?,?)',[rest.id,i.id]);
+    }
+    return res;
+  }
+
 
   Future<int> savePrato(Prato prato, int idRest) async {
     var dbClient = await db;
@@ -87,6 +99,16 @@ class DatabaseHelper{
 
   }
 
+  Future<int> saveCategoria(String name, String img) async{
+    var dbClient = await db;
+    return dbClient.rawInsert('INSERT INTO CategoriaRest(name, image) VALUES(?,?)',[name,img]);
+
+  }
+
+  Future<int> relacionCatRest(int idRest, int idCat)async{
+    var dbClient = await db;
+    return dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) , VALUES(?,?)',[idRest,idCat]);
+  }
 
   //confere se existe user
   Future<bool> existUser(String email, String pass) async{
@@ -127,6 +149,25 @@ class DatabaseHelper{
   }
   
   //Busca
+
+  Future<List<Categories>> getAllCategories() async{
+    var dbClient = await db;
+    dynamic response = dbClient.rawQuery('SELECT name,idCategoria, image FROM CategoriaRest');
+    List<Categories> list;
+    for(dynamic i in response){
+      list.add(Categories.map(i));
+    }
+    return list;
+  }
+
+  Future<Categories> getCategorieByID(int idRest)async{
+    var dbClient = await db;
+    dynamic resp= dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE(idRest = $idRest)');
+    dynamic resp2 = await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE (idCategoria =${resp[0]['idCategoria']})');
+    return  Categories.map(resp2[0]);
+    
+  }
+
   Future<List<Restaurant>> getAllRest() async{
     var dbClit = await db;
     List<Map<String,dynamic>> resp = await dbClit.query('Restaurant');
@@ -312,6 +353,13 @@ class DatabaseHelper{
     int res = await dbClient.delete("User");
     return res;
   }
+
+  //update
+  Future<int> updateRestByCategoria(){
+
+  }
 }
 
 
+// Categoria : Padaria, Doces & Bolos, Salgados,  Saudavel , Brasileira, cozinha rapida, lanches
+//  pizza, japonesa , poke , espetinhos , Hot Dog, Carnes, Açaí
