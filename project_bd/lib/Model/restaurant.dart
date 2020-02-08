@@ -61,6 +61,8 @@ class Restaurant implements Client{
   String get email =>_email;
   String get address =>_adress;
   List<Categories> get categories => _categories;
+
+  void setCategories(List<Categories> cat) =>this._categories=cat;
   void setCardapio(List<Prato> list) => this._cardapio = list;
 
 }

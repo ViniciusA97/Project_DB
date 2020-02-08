@@ -85,7 +85,6 @@ class DatabaseHelper{
     return res;
   }
 
-
   Future<int> savePrato(Prato prato, int idRest) async {
     var dbClient = await db;
     int res = await dbClient.rawInsert("INSERT INTO Prato (name,descricao, preco, idRest,img) VALUES(?,?,?,?,?)",[prato.name,prato.descricao,prato.preco,idRest,prato.img]);
@@ -153,19 +152,35 @@ class DatabaseHelper{
   Future<List<Categories>> getAllCategories() async{
     var dbClient = await db;
     dynamic response = dbClient.rawQuery('SELECT name,idCategoria, image FROM CategoriaRest');
-    List<Categories> list;
+    List<Categories> list = List<Categories>();
     for(dynamic i in response){
       list.add(Categories.map(i));
     }
     return list;
   }
 
-  Future<Categories> getCategorieByID(int idRest)async{
+  Future<List<Categories>> getCategorieByIdRest(int idRest)async{
     var dbClient = await db;
     dynamic resp= dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE(idRest = $idRest)');
-    dynamic resp2 = await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE (idCategoria =${resp[0]['idCategoria']})');
-    return  Categories.map(resp2[0]);
+    dynamic resp2 ;
+    List<Categories> cat = List<Categories>();
+    for(dynamic i in resp){
+      resp2= await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE idCategoria =${resp[0]['idCategoria']}');
+      cat.add(Categories.map(resp2[0]));
+    }
     
+    return  cat;
+    
+  }
+
+  Future<List<Restaurant>> getRestByIdCategories(int idCat) async{
+    var dbClient  = await db;
+    dynamic resp = await dbClient.rawQuery('SELECT idRest FROM CategoriaRest WHERE idCategoria = $idCat');
+    List<Restaurant> rests = List<Restaurant>();
+    for(dynamic i in resp){
+      rests.add(Restaurant.map(i));
+    }
+    return rests;
   }
 
   Future<List<Restaurant>> getAllRest() async{
@@ -355,9 +370,7 @@ class DatabaseHelper{
   }
 
   //update
-  Future<int> updateRestByCategoria(){
 
-  }
 }
 
 

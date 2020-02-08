@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
+import 'package:project_bd/data/database.dart';
 
 class HomePageUser extends StatefulWidget {
   List<Restaurant> _rest;
@@ -18,6 +20,18 @@ class _HomePageStateUser extends State<HomePageUser> {
   User _user;
   int currentIndex;
   _HomePageStateUser(this._rests, this._user);
+  List<Categories> _categories;
+
+  @override
+  initState(){
+    _getDependencies();
+    super.initState();
+  }
+
+  _getDependencies() async{
+    DatabaseHelper db;
+    this._categories = await db.getAllCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,66 +45,96 @@ class _HomePageStateUser extends State<HomePageUser> {
   Widget test() {
     print(_rests);
 
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+        Widget>[
+      Stack(
         children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Positioned(
-                
-                child: 
-                  Container(
-                  child:  Image.asset('./assets/pizza.jpg',fit: BoxFit.fill,),
-                height: 170,
-                width: MediaQuery.of(context).size.width,
-                )
-             
-              ),
-              Positioned(
-                top: 100,
-                child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Container(
-                      height: 150,
-                        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Entrega',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
-                              textAlign: TextAlign.start,
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 5)),
-                            Text(
-                              '${this._user.address}',
-                              style: TextStyle(color: Colors.grey.shade500),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                          ],
-                        ))),
-              ),
-            ],
-          ),
-          Container(
-            color: Colors.grey.shade300,
-            height: 5,
+          Positioned(
+              child: Container(
+            child: Image.asset(
+              './assets/pizza.jpg',
+              fit: BoxFit.fill,
+            ),
+            height: 170,
             width: MediaQuery.of(context).size.width,
+          )),
+          Positioned(
+            top: 100,
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 100,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Container(
+                    height: 150,
+                    margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Entrega',
+                          style: TextStyle(fontSize: 20, color: Colors.black),
+                          textAlign: TextAlign.start,
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 5)),
+                        Text(
+                          '${this._user.address}',
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                        ),
+                      ],
+                    ))),
           ),
-          Container(
-            height: 200,
-            width: MediaQuery.of(context).size.width - 30,
-            alignment: Alignment.center,
-            // child: allWidgetRest(),
+        ],
+      ),
+      Container(
+        height: 200, 
+        width: MediaQuery.of(context).size.width-20,
+        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.grey.shade100
+        ),
+        child: Column(
+          
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Categorias', style: TextStyle(fontSize: 16,color: Colors.black),textAlign: TextAlign.start,),
+            Padding(padding: EdgeInsets.only(top:20))
+          ],
+        )
+
+          // child: allWidgetRest(),
           )
-        ]);
+    ]);
+  }
+
+  Widget getListView() {
+    if (this._categories == null) {
+      return Center(
+        child: Text('Sem categorias cadastradas'),
+      );
+    } else {
+      return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: this._categories.length,
+          itemBuilder: (BuildContext context, int index) {
+            return ClipRRect(
+              
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                '${this._categories[index].image}',
+                fit: BoxFit.fill,
+                width: 150,
+                height: 80,
+              ),
+            );
+          });
+    }
   }
 
   Widget allWidgetRest() {
