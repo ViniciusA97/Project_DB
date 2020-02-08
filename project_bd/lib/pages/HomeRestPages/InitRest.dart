@@ -30,38 +30,6 @@ class _InitRestState extends State<InitRest>{
     );
   }
 
-  Drawer getDrawer(){
-    return Drawer(
-      child: ListView(
-          padding: EdgeInsets.zero,
-        children: <Widget>[
-           Image.network('${this._rest.url}'),
-           ListTile(
-             title:Text('${this._rest.address}')
-           ),
-           ListTile(
-            title:Text('${this._rest.name}',style: TextStyle(fontSize:25),textAlign: TextAlign.center,)
-           ),
-           Column(
-             mainAxisSize: MainAxisSize.max,
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.center,
-             children: <Widget>[
-               RaisedButton(
-                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                 child: Text('Sign Out'),
-                 onPressed:(){
-                   Navigator.pop(context);
-                 }
-               )
-             ],
-           )
-            
-          
-        ],),
-    );
-  }
-
   Widget body(){
     return 
       Column(

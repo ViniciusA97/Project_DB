@@ -129,13 +129,16 @@ class DatabaseHelper{
   //Busca
   Future<List<Restaurant>> getAllRest() async{
     var dbClit = await db;
-    dynamic resp = await dbClit.query('Restaurant');
-    dynamic prato;
-    List<Restaurant> list = new List<Restaurant>();    
-    for(dynamic i in resp){
-      prato = getPratos(i['idRest']);
-      i['pratos']= prato;
-      list.add(Restaurant.map(i));
+    List<Map<String,dynamic>> resp = await dbClit.query('Restaurant');
+    List<Prato> prato;
+    List<Restaurant> list = new List<Restaurant>();  
+    Restaurant rest;  
+    print('resp ---> $resp');
+    for(int i =0 ; i<resp.length; i++){
+      prato = await getPratos(resp[i]['idRest']);
+      rest = Restaurant.map(resp[i]);
+      rest.setCardapio(prato);
+      list.add(rest);
     }
 
     return list;

@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
 import 'package:project_bd/pages/HomeRestPages/HomeRestPage.dart';
 import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
@@ -45,9 +46,11 @@ class _LoginPageState extends State<LoginPage>{
       }
       var db = DatabaseHelper();
     bool utilUser = await db.existUser(email,password);
+    User u;
     if(utilUser){
       List<Restaurant> rests = await db.getAllRest();
-      Navigator.push(context, MaterialPageRoute(builder:(context)=> HomePageUser(rests)));
+      u =await db.getUser(email, password);
+      Navigator.push(context, MaterialPageRoute(builder:(context)=> HomePageUser(rests,u)));
     }else{
       _showSnackBar('User dont exist');
     }
