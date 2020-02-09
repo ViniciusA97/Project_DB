@@ -35,6 +35,7 @@ class _RestPageState extends State<RestPage>{
   void initState() {
     _cardapioPage = CardapioPage(this._rests.cardapio,this._rests.id);
     _homeRest = InitRest(_rests);
+    print(_homeRest);
     _pedidosRest = PedidosRest(this._rests);
     pages=[_homeRest, _cardapioPage, _pedidosRest];
     currentPage = _homeRest;
