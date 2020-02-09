@@ -49,7 +49,7 @@ class DatabaseHelper{
     await db.execute(
       "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco REAL ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
-      'CREATE TABLE Categoria (idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
+      'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
     await db.execute(
       'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
     await db.execute(
@@ -98,15 +98,18 @@ class DatabaseHelper{
 
   }
 
-  Future<int> saveCategoria(String name, String img) async{
+  Future<Categories> saveCategoria(String name, String img) async{
     var dbClient = await db;
-    return dbClient.rawInsert('INSERT INTO CategoriaRest(name, image) VALUES(?,?)',[name,img]);
+     dbClient.rawInsert('INSERT INTO Categoria(name, image) VALUES(?,?)',[name,img]);
+     dynamic resp = await dbClient.rawQuery('SELECT idCategoria,name,image FROM Categoria WHERE name =?',[name]);
+     return Categories.map(resp[0]);
+    
 
   }
 
   Future<int> relacionCatRest(int idRest, int idCat)async{
     var dbClient = await db;
-    return dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) , VALUES(?,?)',[idRest,idCat]);
+    return await dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',[idRest,idCat]);
   }
 
   //confere se existe user
@@ -161,11 +164,12 @@ class DatabaseHelper{
 
   Future<List<Categories>> getCategorieByIdRest(int idRest)async{
     var dbClient = await db;
-    dynamic resp= dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE(idRest = $idRest)');
+    dynamic resp= await dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE(idRest = $idRest)');
+    print('resp --> $resp');
     dynamic resp2 ;
     List<Categories> cat = List<Categories>();
-    for(dynamic i in resp){
-      resp2= await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE idCategoria =${resp[0]['idCategoria']}');
+    for(int i=0; i<resp.length;i++){
+      resp2= await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE idCategoria =?',[resp[0]['idCategoria']]);
       cat.add(Categories.map(resp2[0]));
     }
     
@@ -182,6 +186,7 @@ class DatabaseHelper{
     }
     return rests;
   }
+
 
   Future<List<Restaurant>> getAllRest() async{
     var dbClit = await db;

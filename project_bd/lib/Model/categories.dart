@@ -8,7 +8,7 @@ class Categories{
 
   Categories.map(dynamic obj){
     this._idCategorie = obj['idCategoria'];
-    this._image = obj['iamge'];
+    this._image = obj['image'];
     this._name = obj['name'];
   }
 
