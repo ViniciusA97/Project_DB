@@ -25,6 +25,7 @@ class _InitRestState extends State<InitRest> {
   String name;
   String img;
   String search;
+  bool isSubindo = false;
   Widget _search = Container(
     width: 0,
     height: 0,
@@ -63,18 +64,19 @@ class _InitRestState extends State<InitRest> {
         child: Column(children: <Widget>[
           Stack(
             children: <Widget>[
-              Positioned(child: Image.network('${this._rest.url}')),
+              Positioned(child:ClipRRect(child: Image.network('${this._rest.url}',fit: BoxFit.fill, height: 250,width: MediaQuery.of(context).size.width,))),
               Positioned(
                 top: 150,
                 child: Container(
                   decoration: new BoxDecoration(
+                    
                       color: Colors.white,
                       borderRadius: new BorderRadius.only(
                           bottomLeft: const Radius.circular(20),
                           bottomRight: const Radius.circular(20),
                           topLeft: const Radius.circular(20),
                           topRight: const Radius.circular(20))),
-                  height: 200,
+                  height: MediaQuery.of(context).size.height-400,
                   width: MediaQuery.of(context).size.width,
                   child: Container(
                       margin: EdgeInsets.only(top: 10, left: 10),
@@ -110,7 +112,12 @@ class _InitRestState extends State<InitRest> {
                                 ],
                               ),
                             ),
-                          ])),
+
+
+                            
+                          ]
+                          )
+                          ),
                 ),
               )
             ],
@@ -122,6 +129,14 @@ class _InitRestState extends State<InitRest> {
             margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
             decoration: BoxDecoration(
+              boxShadow:  [
+                      new BoxShadow(
+                      color: Colors.grey.shade500,
+                        offset: new Offset(0, 0.0),
+                        blurRadius: 1
+                      )
+                        ],
+                     
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.grey.shade100),
             child: Column(
@@ -144,17 +159,32 @@ class _InitRestState extends State<InitRest> {
       Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
         Stack(children: <Widget>[
           Positioned(
-              child: AnimatedContainer(
+              child:
+               AnimatedContainer(
                   alignment: alignment,
                   onEnd: (){
-                    _setCreate();
-                    _setSerch();
-                    _getTabView();
+                    if(isSubindo){
+                      print('n foi');
+                      _setCreate();
+                      _setSerch();
+                      _getTabView();
+                    }else{
+                      setState(() {
+                        tab = Container(width: 0,height: 0,);
+                      });
+                    }
                   },
                   duration: Duration(seconds: 1),
                   height: x,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
+                    boxShadow: [
+                      new BoxShadow(
+                      color: Colors.grey.shade500,
+                        offset: new Offset(0, -1.0),
+                        blurRadius: 2
+                      )
+                        ],
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20)),
@@ -179,6 +209,7 @@ class _InitRestState extends State<InitRest> {
                 setState(() {
                   x = 290;
                   alignment = Alignment.center;
+                  isSubindo = true;
                 });
               },
             ),
@@ -249,10 +280,12 @@ class _InitRestState extends State<InitRest> {
                         onPressed: () {
                           _save();
                           setState(() {
+                            isSubindo = false;
                             x=0;
                             this._search= Container(height: 0,width: 0,);
                             this._create= Container(height: 0,width: 0,);
                             tab = Container(height: 0,width: 0,);
+
 
                           });
                         }),
@@ -263,13 +296,14 @@ class _InitRestState extends State<InitRest> {
                             borderRadius: BorderRadius.circular(20)),
                         onPressed: () {
                           setState(() {
+                            isSubindo=false;
                             x=0;
                             this._search= Container(height: 0,width: 0,);
                             this._create= Container(height: 0,width: 0,);
                             tab = Container(height: 0,width: 0,);
                             
                           });
-                        })
+                        }),
                   ],
                 )
               ],
