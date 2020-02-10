@@ -164,12 +164,13 @@ class DatabaseHelper{
 
   Future<List<Categories>> getCategorieByIdRest(int idRest)async{
     var dbClient = await db;
-    dynamic resp= await dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE(idRest = $idRest)');
+    dynamic resp= await dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE idRest = ?', [idRest]);
     print('resp --> $resp');
     dynamic resp2 ;
     List<Categories> cat = List<Categories>();
     for(int i=0; i<resp.length;i++){
       resp2= await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE idCategoria =?',[resp[0]['idCategoria']]);
+      print('Resp --> $resp2');
       cat.add(Categories.map(resp2[0]));
     }
     
