@@ -48,6 +48,7 @@ class _InitRestState extends State<InitRest> {
   _initCategories() async {
     var db = DatabaseHelper.internal();
     this._categories = await db.getCategorieByIdRest(_rest.id);
+    print(this._categories);
     print('Tadento');
   }
 
@@ -63,87 +64,86 @@ class _InitRestState extends State<InitRest> {
   }
 
   Widget body() {
-    return 
+    return Stack(children: <Widget>[
       Container(
         height: MediaQuery.of(context).size.height,
-        
         child: Column(children: <Widget>[
-          Stack(
-            children: <Widget>[
-              Positioned(
-                  child: ClipRRect(
-                      child: Image.network(
-                '${this._rest.url}',
-                fit: BoxFit.fill,
-                height: 250,
-                width: MediaQuery.of(context).size.width,
-              ))),
-              Positioned(
+          Stack(children: <Widget>[
+            Positioned(
+                child: ClipRRect(
+                    child: Image.network(
+              '${this._rest.url}',
+              fit: BoxFit.fill,
+              height: 250,
+              width: MediaQuery.of(context).size.width,
+            ))),
+            Positioned(
                 top: 150,
                 child: Container(
-                  decoration: new BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: new BorderRadius.only(
-                          bottomLeft: const Radius.circular(20),
-                          bottomRight: const Radius.circular(20),
-                          topLeft: const Radius.circular(20),
-                          topRight: const Radius.circular(20))),
-                  height: MediaQuery.of(context).size.height - 400,
-                  width: MediaQuery.of(context).size.width,
-                  child: Container(
-                      margin: EdgeInsets.only(top: 10, left: 10),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              '${this._rest.address}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 5)),
-                            Text(
-                              '${this._rest.name}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 25),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 10, right: 20),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text('${this._rest.email}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey)),
-                                  Text('${this._rest.nume}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey))
-                                ],
+                    decoration: new BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: new BorderRadius.only(
+                            bottomLeft: const Radius.circular(20),
+                            bottomRight: const Radius.circular(20),
+                            topLeft: const Radius.circular(20),
+                            topRight: const Radius.circular(20))),
+                    height: MediaQuery.of(context).size.height - 400,
+                    width: MediaQuery.of(context).size.width,
+                    child: Container(
+                        margin: EdgeInsets.only(top: 10, left: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                '${this._rest.address}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey),
                               ),
-                            ),
-                          ])),
-                ),
-              )
-            ],
-          ),
-          Container(height: 10,color: Colors.grey.shade100,),
+                              Padding(padding: EdgeInsets.only(top: 5)),
+                              Text(
+                                '${this._rest.name}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 25),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 10, right: 20),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text('${this._rest.email}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey)),
+                                    Text('${this._rest.nume}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey))
+                                  ],
+                                ),
+                              ),
+                            ])))),
+          ]),
           Container(
-            height: 120,
+            height: 10,
+            color: Colors.grey.shade100,
+          ),
+          Container(
+            height: 210,
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            decoration: BoxDecoration(
-                
-                color: Colors.white),
+            decoration: BoxDecoration(color: Colors.white),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   'Categorias',
-                  style: TextStyle(fontSize: 16, color: Colors.grey.shade800,fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey.shade800,
+                      fontWeight: FontWeight.w500),
                   textAlign: TextAlign.start,
                 ),
                 Padding(padding: EdgeInsets.only(top: 10)),
@@ -151,52 +151,59 @@ class _InitRestState extends State<InitRest> {
               ],
             ),
           ),
-        
-      
-      // child: allWidgetRest(),
-
-          
-        
-      Stack(
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children:<Widget>[ AnimatedContainer(
-              height: x,
-              child: tab,
-              duration: Duration(seconds: 1),
-              alignment: alignment,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100
-              ),
-              onEnd: (){ setState(() {
-                print('a');
-              });},
-              )
-            ])
-          
-
-
-        ],
-
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+          ),
+          Container(
+            height: 10,
+            color: Colors.grey.shade100,
+          ),
+        ]),
       ),
-               
-
-      ]
-      )
-      );
-    
+      Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+        Stack(children: <Widget>[
+          Positioned(
+              child: AnimatedContainer(
+            height: x,
+            child: tab,
+            duration: Duration(seconds: 1),
+            alignment: alignment,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade100),
+            onEnd: () {
+              setState(() {
+                if(isSubindo){
+                  print('a');
+                  _setCreate();
+                  _setSerch();
+                  _getTabView();
+                }
+                else{
+                  print('b');
+                  this._search =Container(height: 0,width: 0,);
+                  this._create =Container(height: 0,width: 0,);
+                  this.tab =Container(height: 0,width: 0,);
+                }
+              });
+            },
+          ))
+        ]),
+      ])
+    ]);
   }
 
-  Widget getListView(){
+  Widget getListView() {
     if (this._categories == null) {
       return Column(
         children: <Widget>[
           Container(
-            height:40,
+            padding: EdgeInsets.only(top: 15),
+            height: 125,
+            width: 190,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20), color: Colors.grey.shade100),
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade100),
             child: FlatButton(
               child: Icon(Icons.add),
               onPressed: () {
@@ -204,39 +211,106 @@ class _InitRestState extends State<InitRest> {
                   x = 290;
                   alignment = Alignment.center;
                   isSubindo = true;
-                  
                 });
               },
             ),
           ),
-          Padding(padding: EdgeInsets.only(top: 3)),
+          Padding(padding: EdgeInsets.only(top: 10)),
           Text(
             'Adicione uma categoria',
-            style: TextStyle(fontSize: 8),
+            style: TextStyle(fontSize: 12),
+          )
+        ],
+      );
+    } else if (this._categories.length == 0) {
+      return Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(top: 20),
+            height: 125,
+            width: 190,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade100),
+            child: FlatButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                setState(() {
+                  x = 290;
+                  alignment = Alignment.center;
+                  isSubindo = true;
+                });
+              },
+            ),
+          ),
+          Padding(padding: EdgeInsets.only(top: 10)),
+          Text(
+            'Adicione uma categoria',
+            style: TextStyle(fontSize: 12),
           )
         ],
       );
     } else {
-      return
-      SizedBox(
-        height: 40,
-        width: 50,
-        child: 
-       ListView.builder(
-          itemCount: this._categories.length,
-          itemBuilder: (BuildContext cntx, int index) {
-            return Column(
-              children: <Widget>[
-                Container(
-                  height: 40,
-                  child: Image.network(this._categories[index].image, fit: BoxFit.fill,),
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                ),
-                Text('${this._categories[index].name}')
-              ],
-            );
-          }));
+      return SizedBox(
+          height: 165,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: this._categories.length + 1,
+              itemBuilder: (BuildContext cntx, int index) {
+                print(index);
+                if (index == 0) {
+                  return Column(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.fromLTRB(5, 10, 5, 0)),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        height: 125,
+                        width: 190,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey.shade100),
+                        child: FlatButton(
+                          child: Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              x = 290;
+                              alignment = Alignment.center;
+                              isSubindo = true;
+                            });
+                          },
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.only(top: 10)),
+                      Text(
+                        'Adicione uma categoria',
+                        style: TextStyle(fontSize: 12),
+                      )
+                    ],
+                  );
+                }
+                return Container(
+                    padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                    height: 125,
+                    width: 190,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            this._categories[index - 1].image,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                        ),
+                        Text('${this._categories[index - 1].name}')
+                      ],
+                    ));
+              }));
     }
   }
 
@@ -396,10 +470,9 @@ class _InitRestState extends State<InitRest> {
     });
   }
 
-  void _setFulWidget(){
-      _setCreate();
-      _setSerch();
-      _getTabView();
-                   
+  void _setFulWidget() {
+    _setCreate();
+    _setSerch();
+    _getTabView();
   }
 }
