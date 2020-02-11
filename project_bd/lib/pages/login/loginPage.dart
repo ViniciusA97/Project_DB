@@ -37,6 +37,7 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   void _submitUser() async {
+
       final form = formKey.currentState;
       if(form.validate()){
         setState(() {
@@ -67,6 +68,7 @@ class _LoginPageState extends State<LoginPage>{
         });
       }
     var db = DatabaseHelper();
+    db.getRestByID(email);
     bool utilRest = await db.existRest(email, password);
     if(utilRest){
       Restaurant restaurant = await db.getRest(email);

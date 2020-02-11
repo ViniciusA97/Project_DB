@@ -41,15 +41,8 @@ class _InitRestState extends State<InitRest> {
 
   @override
   void initState() {
-    _initCategories();
+    this._categories = _rest.categories;
     super.initState();
-  }
-
-  _initCategories() async {
-    var db = DatabaseHelper.internal();
-    this._categories = await db.getCategorieByIdRest(_rest.id);
-    print(this._categories);
-    print('Tadento');
   }
 
   @override
@@ -262,55 +255,60 @@ class _InitRestState extends State<InitRest> {
                 if (index == 0) {
                   return Column(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.fromLTRB(5, 10, 5, 0)),
                       Container(
-                        margin: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        height: 125,
+                        margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                        height: 129,
                         width: 190,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.grey.shade100),
-                        child: FlatButton(
-                          child: Icon(Icons.add),
+                        child: IconButton(
+                          
+                          
                           onPressed: () {
                             setState(() {
                               x = 290;
                               alignment = Alignment.center;
                               isSubindo = true;
                             });
-                          },
+                          }, icon: Icon(Icons.add),
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(top: 10)),
                       Text(
                         'Adicione uma categoria',
-                        style: TextStyle(fontSize: 12),
                       )
                     ],
                   );
                 }
-                return Container(
-                    padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
-                    height: 125,
-                    width: 190,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            this._categories[index - 1].image,
-                            fit: BoxFit.fill,
+                return 
+                Column(children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                      height: 139,
+                      width: 190,
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      child:
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              this._categories[index - 1].image,
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 10),
-                        ),
-                        Text('${this._categories[index - 1].name}')
-                      ],
-                    ));
+                  ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
+                          ),
+                          Text('${this._categories[index - 1].name}')
+                
+                ]
+                );
               }));
+
+                
     }
   }
 
@@ -470,9 +468,4 @@ class _InitRestState extends State<InitRest> {
     });
   }
 
-  void _setFulWidget() {
-    _setCreate();
-    _setSerch();
-    _getTabView();
-  }
 }

@@ -164,12 +164,12 @@ class DatabaseHelper{
 
   Future<List<Categories>> getCategorieByIdRest(int idRest)async{
     var dbClient = await db;
-    dynamic resp= await dbClient.rawQuery('SELECT idCategoria FROM CategoriaRest WHERE idRest = ?', [idRest]);
-    print('resp --> $resp');
+    dynamic resp= await dbClient.rawQuery('SELECT * FROM CategoriaRest WHERE idRest = ?', [idRest]);
+    print('categoria --> $resp');
     dynamic resp2 ;
     List<Categories> cat = List<Categories>();
     for(int i=0; i<resp.length;i++){
-      resp2= await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE idCategoria =?',[resp[0]['idCategoria']]);
+      resp2= await dbClient.rawQuery('SELECT name, image, idCategoria FROM Categoria WHERE idCategoria =?',[resp[i]['idCategoria']]);
       print('Resp --> $resp2');
       cat.add(Categories.map(resp2[0]));
     }
@@ -247,7 +247,9 @@ class DatabaseHelper{
     try{
       Restaurant temp = Restaurant.map(test[0]);
       List<Prato> listPratos= await getPratos(temp.id);
+      List<Categories> categorias = await getCategorieByIdRest(temp.id);
       temp.setCardapio(listPratos);
+      temp.setCategories(categorias);
       return temp;
       
     }catch(e){
@@ -313,6 +315,14 @@ class DatabaseHelper{
       print(e.toString());
     }
     return null;
+  }
+
+  Future<void> getRestByID(String name) async {
+    var dbClient = await db;
+    dynamic resp = await dbClient.rawQuery('SELECT * FROM Restaurant  JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest ');
+    //'SELECT * FROM Restaurant  LEFT JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest LEFT JOIN Categoria ON CategoriaRest.idCategoria WHERE name =$name'
+    print('\  n response -> $resp');
+ 
   }
 
   Future<List<Pedido>> getPedidosByRest(Restaurant rest) async{
