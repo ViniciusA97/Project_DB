@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
@@ -51,7 +52,8 @@ class _LoginPageState extends State<LoginPage>{
     if(utilUser){
       List<Restaurant> rests = await db.getAllRest();
       u =await db.getUser(email, password);
-      Navigator.push(context, MaterialPageRoute(builder:(context)=> HomePageUser(rests,u)));
+      List<Categories> cat = await db.getAllCategories();
+      Navigator.push(context, MaterialPageRoute(builder:(context)=> HomePageUser(rests,u,cat)));
     }else{
       _showSnackBar('User dont exist');
     }

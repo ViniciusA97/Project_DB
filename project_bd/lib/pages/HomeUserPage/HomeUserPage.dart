@@ -7,11 +7,12 @@ import 'package:project_bd/data/database.dart';
 
 class HomePageUser extends StatefulWidget {
   List<Restaurant> _rest;
+  List<Categories> _cat;
   User _user;
 
-  HomePageUser(this._rest, this._user);
+  HomePageUser(this._rest, this._user, this._cat);
   @override
-  State<StatefulWidget> createState() => _HomePageStateUser(_rest, this._user);
+  State<StatefulWidget> createState() => _HomePageStateUser(_rest, this._user, this._cat);
 }
 
 class _HomePageStateUser extends State<HomePageUser> {
@@ -19,19 +20,8 @@ class _HomePageStateUser extends State<HomePageUser> {
   List<Restaurant> _rests;
   User _user;
   int currentIndex;
-  _HomePageStateUser(this._rests, this._user);
+  _HomePageStateUser(this._rests, this._user, this._categories);
   List<Categories> _categories;
-
-  @override
-  initState(){
-    _getDependencies();
-    super.initState();
-  }
-
-  _getDependencies() async{
-    DatabaseHelper db;
-    this._categories = await db.getAllCategories();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +35,9 @@ class _HomePageStateUser extends State<HomePageUser> {
   Widget test() {
     print(_rests);
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-        Widget>[
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start, 
+      children: <Widget>[
       Stack(
         children: <Widget>[
           Positioned(
@@ -91,25 +82,35 @@ class _HomePageStateUser extends State<HomePageUser> {
         ],
       ),
       Container(
-        height: 200, 
-        width: MediaQuery.of(context).size.width-20,
-        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        height: 10, 
+        width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.grey.shade100
+        color: Colors.grey.shade100,
+        
         ),
-        child: Column(
-          
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Categorias', style: TextStyle(fontSize: 16,color: Colors.black),textAlign: TextAlign.start,),
-            Padding(padding: EdgeInsets.only(top:20))
-          ],
-        )
 
           // child: allWidgetRest(),
-          )
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Categorias', style: TextStyle(fontSize: 18,color: Colors.black, fontWeight: FontWeight.w400),textAlign: TextAlign.start,),
+                Padding(padding: EdgeInsets.only(top:10)),
+
+                 getListView()
+              ],
+            ),
+          ),
+          Container(
+        height: 10, 
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
+        color: Colors.grey.shade100,
+        
+        ),
     ]);
   }
 
@@ -119,21 +120,36 @@ class _HomePageStateUser extends State<HomePageUser> {
         child: Text('Sem categorias cadastradas'),
       );
     } else {
-      return ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: this._categories.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ClipRRect(
-              
-              borderRadius: BorderRadius.circular(20),
-              child: Image.network(
-                '${this._categories[index].image}',
-                fit: BoxFit.fill,
-                width: 150,
-                height: 80,
-              ),
-            );
-          });
+      return 
+      SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 150,
+        child:
+          ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: this._categories.length,
+              itemBuilder: (BuildContext context, int index) {
+                return 
+                  Column(
+                    children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(
+                            '${this._categories[index].image}',
+                            fit: BoxFit.fill,
+                            width: 200,
+                            height: 120,
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(top:5)),
+                        Text('${this._categories[index].name}', style: TextStyle(fontSize:14),)
+
+                    ],
+                  );
+              })
+         
+         ,
+         );
     }
   }
 

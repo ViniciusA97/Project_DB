@@ -154,11 +154,16 @@ class DatabaseHelper{
 
   Future<List<Categories>> getAllCategories() async{
     var dbClient = await db;
-    dynamic response = dbClient.rawQuery('SELECT name,idCategoria, image FROM CategoriaRest');
+    dynamic response = await dbClient.rawQuery('SELECT * FROM CategoriaRest');
+    print(response);
     List<Categories> list = List<Categories>();
+    dynamic usual;
     for(dynamic i in response){
-      list.add(Categories.map(i));
+      usual = await dbClient.rawQuery('SELECT * FROM Categoria WHERE idCategoria=?',[i['idCategoria']]);
+      print(usual);
+      list.add(Categories.map(usual[0]));
     }
+    print(list);
     return list;
   }
 
