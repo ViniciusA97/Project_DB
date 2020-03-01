@@ -178,7 +178,6 @@ class DatabaseHelper{
       print('Resp --> $resp2');
       cat.add(Categories.map(resp2[0]));
     }
-    
     return  cat;
     
   }
@@ -188,7 +187,7 @@ class DatabaseHelper{
     dynamic resp = await dbClient.rawQuery('SELECT idRest FROM CategoriaRest WHERE idCategoria = $idCat');
     List<Restaurant> rests = List<Restaurant>();
     for(dynamic i in resp){
-      rests.add(Restaurant.map(i));
+      rests.add(await this.getRestById(i['idRest']));
     }
     return rests;
   }

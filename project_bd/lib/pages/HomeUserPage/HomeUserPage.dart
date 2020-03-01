@@ -4,6 +4,7 @@ import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
+import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
 
 class HomePageUser extends StatefulWidget {
   List<Restaurant> _rest;
@@ -122,6 +123,7 @@ class _HomePageStateUser extends State<HomePageUser> {
     } else {
       return 
       SizedBox(
+    
         width: MediaQuery.of(context).size.width,
         height: 150,
         child:
@@ -130,22 +132,27 @@ class _HomePageStateUser extends State<HomePageUser> {
               itemCount: this._categories.length,
               itemBuilder: (BuildContext context, int index) {
                 return 
+                FlatButton(onPressed: (){call(this._categories[index]);}, 
+                child: 
                   Column(
                     children: <Widget>[
+                        
                         ClipRRect(
+                          
                           borderRadius: BorderRadius.circular(20),
                           child: Image.network(
                             '${this._categories[index].image}',
                             fit: BoxFit.fill,
                             width: 200,
-                            height: 120,
+                            height: 126,
                           ),
                         ),
                         Padding(padding: EdgeInsets.only(top:5)),
-                        Text('${this._categories[index].name}', style: TextStyle(fontSize:14),)
+                        Text('${this._categories[index].name}', style: TextStyle(fontSize:16),),
+                       
 
                     ],
-                  );
+                  ));
               })
          
          ,
@@ -209,5 +216,11 @@ class _HomePageStateUser extends State<HomePageUser> {
         );
       },
     );
+  }
+
+  void call(Categories c) async{
+    DatabaseHelper db = DatabaseHelper.internal();
+    List<Restaurant> rests = await db.getRestByIdCategories(c.id);
+    Navigator.push(context, MaterialPageRoute(builder:(context)=> RestForCategoriesPage(rests, c)));
   }
 }
