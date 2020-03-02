@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
@@ -132,8 +133,9 @@ class _AddPratoState extends State<AddPrato>{
     DatabaseHelper db = DatabaseHelper.internal();
     Prato prato = Prato(_id, name, preco, descricao, img);
     int rest = await db.savePrato(prato, _id);
+    List<Categories> cat = await db.getAllCategories();
     Restaurant res = await db.getRestById(this._id);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res,cat)));
     
       
   }

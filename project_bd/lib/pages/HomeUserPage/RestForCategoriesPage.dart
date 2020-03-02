@@ -37,7 +37,6 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
           Padding(
             padding: EdgeInsets.only(top: 30),
           ),
-          
           Container(
               height: 30,
               child: Row(
@@ -57,14 +56,14 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                           right: MediaQuery.of(context).size.width / 6)),
                   Text(
                     '${this._categories.name}',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center,
                   ),
                 ],
               )),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                  ),
+          Padding(
+            padding: EdgeInsets.only(top: 20),
+          ),
           Container(
             height: 10,
             width: MediaQuery.of(context).size.width,
@@ -77,62 +76,65 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
               child: ListView.builder(
                   itemCount: this._restaurant.length,
                   itemBuilder: (BuildContext cntx, int index) {
-                    return Container(
-                        width: MediaQuery.of(context).size.width - 20,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade200,
-                              spreadRadius: 1.0, //ext
-                            )
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.white,
-                        ),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                height: 130,
-                                width: 190,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: const Radius.circular(20),
-                                  ),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: const Radius.circular(20),
-                                      bottomLeft: const Radius.circular(20)),
-                                  child: Image.network(
-                                    '${this._restaurant[index].url}',
-                                    fit: BoxFit.fill,
-                                  ),
-                                )),
-                            Container(
-                                height: 130,
-                                margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      '${this._restaurant[index].name}',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500),
+                    return RawMaterialButton(
+                        onPressed: (){goToRest(index);},
+                        child: Container(
+                            width: MediaQuery.of(context).size.width - 20,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  spreadRadius: 1.0, //ext
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                    height: 80,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: const Radius.circular(20),
+                                      ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                    ),
-                                    Text(
-                                        '${this._restaurant[index].descriprion}')
-                                  ],
-                                ))
-                          ],
-                        ));
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: const Radius.circular(20),
+                                          bottomLeft:
+                                              const Radius.circular(20)),
+                                      child: Image.network(
+                                        '${this._restaurant[index].url}',
+                                        fit: BoxFit.fill,
+                                      ),
+                                    )),
+                                Container(
+                                    height: 130,
+                                    margin: EdgeInsets.fromLTRB(15, 0, 10, 0),
+                                    child: Center(
+                                      child: Text(
+                                        '${this._restaurant[index].name}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black
+                                            ),
+                                      ),
+                                    ))
+                              ],
+                            )));
                   }))
         ],
       ),
     );
   }
+
+  void goToRest(int index){
+    //vai para o restaurante selecionado
+  }
+
+
 }

@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/categories.dart';
@@ -7,18 +5,20 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
 
 class InitRest extends StatefulWidget {
-  @override
-  InitRest(this._restaurant);
-
-  State<StatefulWidget> createState() => _InitRestState(_restaurant);
+  
   Restaurant _restaurant;
+  List<Categories> _categories;
+  InitRest(this._restaurant,this._categories );
+
+  State<StatefulWidget> createState() => _InitRestState(_restaurant, this._categories);
 }
 
 class _InitRestState extends State<InitRest> {
-  _InitRestState(this._rest);
+  _InitRestState(this._rest, this._allCategories);
 
   Restaurant _rest;
   List<Categories> _categories;
+  List<Categories> _allCategories;
   double x = 0;
   final key = GlobalKey<FormState>();
   Alignment alignment = Alignment.bottomCenter;
@@ -159,24 +159,35 @@ class _InitRestState extends State<InitRest> {
               child: AnimatedContainer(
             height: x,
             child: tab,
-            duration: Duration(seconds: 1),
+            duration: Duration(milliseconds: 700),
+            curve: Curves.fastOutSlowIn,
             alignment: alignment,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100),
+                borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(20),
+                    topRight: const Radius.circular(20)),
+                color: Colors.grey.shade200),
             onEnd: () {
               setState(() {
-                if(isSubindo){
+                if (isSubindo) {
                   print('a');
                   _setCreate();
                   _setSerch();
                   _getTabView();
-                }
-                else{
+                } else {
                   print('b');
-                  this._search =Container(height: 0,width: 0,);
-                  this._create =Container(height: 0,width: 0,);
-                  this.tab =Container(height: 0,width: 0,);
+                  this._search = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                  this._create = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                  this.tab = Container(
+                    height: 0,
+                    width: 0,
+                  );
                 }
               });
             },
@@ -201,7 +212,7 @@ class _InitRestState extends State<InitRest> {
               child: Icon(Icons.add),
               onPressed: () {
                 setState(() {
-                  x = 290;
+                  x = 350;
                   alignment = Alignment.center;
                   isSubindo = true;
                 });
@@ -264,15 +275,14 @@ class _InitRestState extends State<InitRest> {
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.grey.shade100),
                         child: IconButton(
-                          
-                          
                           onPressed: () {
                             setState(() {
-                              x = 290;
+                              x = 350;
                               alignment = Alignment.center;
                               isSubindo = true;
                             });
-                          }, icon: Icon(Icons.add),
+                          },
+                          icon: Icon(Icons.add),
                         ),
                       ),
                       Padding(padding: EdgeInsets.only(top: 10)),
@@ -282,39 +292,34 @@ class _InitRestState extends State<InitRest> {
                     ],
                   );
                 }
-                return 
-                Column(children: <Widget>[
+                return Column(children: <Widget>[
                   Container(
-                      padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
-                      height: 139,
-                      width: 190,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                      child:
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.network(
-                              this._categories[index - 1].image,
-                              fit: BoxFit.fill,
-                            ),
-                          ),
+                    padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                    height: 139,
+                    width: 190,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(
+                        this._categories[index - 1].image,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 10),
-                          ),
-                          Text('${this._categories[index - 1].name}')
-                
-                ]
-                );
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                  ),
+                  Text('${this._categories[index - 1].name}')
+                ]);
               }));
-
-                
     }
   }
 
   _setCreate() {
     setState(() {
       this._create = Container(
+          margin: EdgeInsets.fromLTRB(0, 15, 0, 15),
           padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
           child: Form(
             key: key,
@@ -330,7 +335,7 @@ class _InitRestState extends State<InitRest> {
                   onSaved: (val) => name = val,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 3),
+                  padding: EdgeInsets.only(top: 15),
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -341,7 +346,7 @@ class _InitRestState extends State<InitRest> {
                       filled: false),
                   onSaved: (val) => img = val,
                 ),
-                Padding(padding: EdgeInsets.only(top: 10)),
+                Padding(padding: EdgeInsets.only(top: 25)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -402,8 +407,73 @@ class _InitRestState extends State<InitRest> {
   void _setSerch() {
     setState(() {
       this._search = Container(
-        width: MediaQuery.of(context).size.width - 20,
-      );
+          height: 400,
+          child: Column(children: <Widget>[
+            SizedBox(
+                width: MediaQuery.of(context).size.width - 20,
+                height: 200,
+                child: ListView.builder(
+                    itemCount: this._categories.length,
+                    itemBuilder: (BuildContext cntx, int index) {
+                      if (this._categories == null) {
+                        return Center(
+                          child: Text('Sem categorias cadastradas'),
+                        );
+                      }
+                      return RawMaterialButton(
+                          onPressed: () {
+                            addCategories(index);
+                          },
+                          child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(20)),
+                              width: 100,
+                              height: 80,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: const Radius.circular(20),
+                                        bottomLeft: const Radius.circular(20)),
+                                    child: Image.network(
+                                      '${this._categories[index].image}',
+                                      width: 120,
+                                      height: 80,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                  Padding(padding: EdgeInsets.only(left: 15)),
+                                  Text('${this._categories[index].name}')
+                                ],
+                              )));
+                    })),
+            Padding(padding: EdgeInsets.fromLTRB(10, 5, 0, 0)),
+            RaisedButton(
+                child: Text('Cancel'),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                onPressed: () {
+                  setState(() {
+                    isSubindo = false;
+                    x = 0;
+                    this._search = Container(
+                      height: 0,
+                      width: 0,
+                    );
+                    this._create = Container(
+                      height: 0,
+                      width: 0,
+                    );
+                    tab = Container(
+                      height: 0,
+                      width: 0,
+                    );
+                  });
+                }),
+          ]));
     });
   }
 
@@ -454,7 +524,7 @@ class _InitRestState extends State<InitRest> {
                   ],
                 ),
                 Container(
-                  height: 200,
+                  height: 270,
                   width: MediaQuery.of(context).size.width,
                   child: TabBarView(
                     children: <Widget>[this._create, this._search],
@@ -468,4 +538,9 @@ class _InitRestState extends State<InitRest> {
     });
   }
 
+  void addCategories(int index) {
+    Categories cat = this._categories[index];
+    DatabaseHelper db = DatabaseHelper.internal();
+    
+  }
 }

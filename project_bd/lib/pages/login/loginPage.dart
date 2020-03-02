@@ -24,7 +24,6 @@ class _LoginPageState extends State<LoginPage>{
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   String email;
   String password;
-  bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +42,6 @@ class _LoginPageState extends State<LoginPage>{
       if(form.validate()){
         setState(() {
           form.save();
-          isLoading = true;
         });
       }
       var db = DatabaseHelper();
@@ -65,23 +63,22 @@ class _LoginPageState extends State<LoginPage>{
       if(form.validate()){
         setState(() {
           form.save();
-          isLoading = true;
-          
         });
-      }
+      }else{return;}
+  
+      print('a');
     var db = DatabaseHelper();
-    db.getRestByID(email);
+    List<Categories> cat = await db.getAllCategories();
     bool utilRest = await db.existRest(email, password);
     if(utilRest){
       Restaurant restaurant = await db.getRest(email);
       print(restaurant);
-      Navigator.push(context, MaterialPageRoute(builder:(context)=> RestPage(restaurant)));
+      Navigator.push(context, MaterialPageRoute(builder:(context)=> RestPage(restaurant,cat)));
     }else{
       _showSnackBar('Restaurant dont exist');
     }
       
   }
-
 
   _showSnackBar(String text){
     final key = scaffoldKey.currentState;
