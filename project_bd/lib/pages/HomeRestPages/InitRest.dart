@@ -21,6 +21,7 @@ class _InitRestState extends State<InitRest> {
   List<Categories> _allCategories;
   double x = 0;
   final key = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   Alignment alignment = Alignment.bottomCenter;
   String name;
   String img;
@@ -45,9 +46,15 @@ class _InitRestState extends State<InitRest> {
     super.initState();
   }
 
+  _showSnackBar(String text){
+    final key = scaffoldKey.currentState;
+    key.showSnackBar(new SnackBar(content: new Text(text),));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
@@ -240,7 +247,7 @@ class _InitRestState extends State<InitRest> {
               child: Icon(Icons.add),
               onPressed: () {
                 setState(() {
-                  x = 290;
+                  x = 350;
                   alignment = Alignment.center;
                   isSubindo = true;
                 });
@@ -409,11 +416,11 @@ class _InitRestState extends State<InitRest> {
       this._search = Container(
           height: 400,
           child: Column(children: <Widget>[
-            SizedBox(
+            Container(
                 width: MediaQuery.of(context).size.width - 20,
                 height: 200,
                 child: ListView.builder(
-                    itemCount: this._categories.length,
+                    itemCount: this._allCategories.length,
                     itemBuilder: (BuildContext cntx, int index) {
                       if (this._categories == null) {
                         return Center(
@@ -429,7 +436,7 @@ class _InitRestState extends State<InitRest> {
                               decoration: BoxDecoration(
                                   color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(20)),
-                              width: 100,
+                              width: MediaQuery.of(context).size.width-20,
                               height: 80,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -439,14 +446,14 @@ class _InitRestState extends State<InitRest> {
                                         topLeft: const Radius.circular(20),
                                         bottomLeft: const Radius.circular(20)),
                                     child: Image.network(
-                                      '${this._categories[index].image}',
+                                      '${this._allCategories[index].image}',
                                       width: 120,
                                       height: 80,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
                                   Padding(padding: EdgeInsets.only(left: 15)),
-                                  Text('${this._categories[index].name}')
+                                  Text('${this._allCategories[index].name}')
                                 ],
                               )));
                     })),
@@ -485,12 +492,11 @@ class _InitRestState extends State<InitRest> {
       });
       var db = DatabaseHelper.internal();
       Categories cat = await db.saveCategoria(name, img);
-      db.relacionCatRest(this._rest.id, cat.id);
+      db.saveRelacionCatRest(this._rest.id, cat.id);
       List<Categories> list = await db.getCategorieByIdRest(this._rest.id);
       setState(() {
         this._categories = list;
         x = 0;
-        print('foi');
       });
     }
   }
@@ -538,9 +544,16 @@ class _InitRestState extends State<InitRest> {
     });
   }
 
-  void addCategories(int index) {
-    Categories cat = this._categories[index];
+  void addCategories(int index) async {
+    Categories cat = this._allCategories[index];
     DatabaseHelper db = DatabaseHelper.internal();
-    
+    await db.saveRelacionCatRest(this._rest.id, cat.id)
+      .catchError((){ _showSnackBar('Não foi possivel adicionar a categoria ao restaurante.');})
+      .then((onValue){
+        this.setState((){
+          this._categories.add(this._allCategories[index]);
+        });
+      });
+
   }
 }

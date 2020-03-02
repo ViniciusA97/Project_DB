@@ -51,7 +51,7 @@ class DatabaseHelper{
     await db.execute(
       'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
     await db.execute(
-      'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
+      'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria INTEGER, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
     await db.execute(
       'CREATE TABLE Pedidos(idPrato INTEGER,idPedido INTEGER PRIMARY KEY, data DATATIME , preco INTEGER, idUser INTEGER, FOREIGN KEY(idUser) REFERENCES User(idUser), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato) )');
     await db.execute(
@@ -107,7 +107,7 @@ class DatabaseHelper{
 
   }
 
-  Future<int> relacionCatRest(int idRest, int idCat)async{
+  Future<int> saveRelacionCatRest(int idRest, int idCat)async{
     var dbClient = await db;
     return await dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',[idRest,idCat]);
   }
@@ -154,14 +154,11 @@ class DatabaseHelper{
 
   Future<List<Categories>> getAllCategories() async{
     var dbClient = await db;
-    dynamic response = await dbClient.rawQuery('SELECT * FROM CategoriaRest');
+    dynamic response = await dbClient.rawQuery('SELECT * FROM Categoria');
     print(response);
     List<Categories> list = List<Categories>();
-    dynamic usual;
     for(dynamic i in response){
-      usual = await dbClient.rawQuery('SELECT * FROM Categoria WHERE idCategoria=?',[i['idCategoria']]);
-      print(usual);
-      list.add(Categories.map(usual[0]));
+      list.add(Categories.map(i));
     }
     print(list);
     return list;
