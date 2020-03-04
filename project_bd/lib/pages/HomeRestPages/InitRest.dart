@@ -5,12 +5,12 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
 
 class InitRest extends StatefulWidget {
-  
   Restaurant _restaurant;
   List<Categories> _categories;
-  InitRest(this._restaurant,this._categories );
+  InitRest(this._restaurant, this._categories);
 
-  State<StatefulWidget> createState() => _InitRestState(_restaurant, this._categories);
+  State<StatefulWidget> createState() =>
+      _InitRestState(_restaurant, this._categories);
 }
 
 class _InitRestState extends State<InitRest> {
@@ -46,9 +46,11 @@ class _InitRestState extends State<InitRest> {
     super.initState();
   }
 
-  _showSnackBar(String text){
+  _showSnackBar(String text) {
     final key = scaffoldKey.currentState;
-    key.showSnackBar(new SnackBar(content: new Text(text),));
+    key.showSnackBar(new SnackBar(
+      content: new Text(text),
+    ));
   }
 
   @override
@@ -436,7 +438,7 @@ class _InitRestState extends State<InitRest> {
                               decoration: BoxDecoration(
                                   color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(20)),
-                              width: MediaQuery.of(context).size.width-20,
+                              width: MediaQuery.of(context).size.width - 20,
                               height: 80,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -547,13 +549,12 @@ class _InitRestState extends State<InitRest> {
   void addCategories(int index) async {
     Categories cat = this._allCategories[index];
     DatabaseHelper db = DatabaseHelper.internal();
-    await db.saveRelacionCatRest(this._rest.id, cat.id)
-      .catchError((){ _showSnackBar('Não foi possivel adicionar a categoria ao restaurante.');})
-      .then((onValue){
-        this.setState((){
-          this._categories.add(this._allCategories[index]);
-        });
+    await db.saveRelacionCatRest(this._rest.id, cat.id).catchError(() {
+      _showSnackBar('Não foi possivel adicionar a categoria ao restaurante.');
+    }).then((onValue) {
+      this.setState(() {
+        this._categories.add(this._allCategories[index]);
       });
-
+    });
   }
 }

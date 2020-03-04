@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
 
@@ -23,6 +24,7 @@ class _SignUpState extends State<SignUp>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scafolldKey,
       body: Center(
         child:Column(
@@ -131,7 +133,7 @@ class _SignUpState extends State<SignUp>{
     );
   }
 
-  void _create(){
+  void _create() async{
     final form = formKey.currentState;
       if(form.validate()){
         setState(() {
@@ -139,11 +141,22 @@ class _SignUpState extends State<SignUp>{
          isLoading=true;
       });
       }
-
-    DatabaseHelper db = DatabaseHelper();
+    Control control = Control.internal();
     User temp =User( name, pass, email,address, number);
-    db.saveUser(temp);
-    Navigator.pop(context);
+    bool confirmate = await control.saveUser(temp);
+    if(confirmate){
+      Navigator.pop(context);
+    }
+    else{
+      _showSnackBar('Erro! Preencha os campos ou troque o email');
+    }
+    
+  }
+  _showSnackBar(String text) {
+    final key = scafolldKey.currentState;
+    key.showSnackBar(new SnackBar(
+      content: new Text(text),
+    ));
   }
 
 }

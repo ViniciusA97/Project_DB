@@ -43,9 +43,9 @@ class DatabaseHelper{
   // Create table
   void _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE User(idUser INTEGER PRIMARY KEY , name TEXT, password TEXT, email TEXT, address TEXT , number TEXT );");
+        "CREATE TABLE User(idUser INTEGER PRIMARY KEY , name TEXT, password TEXT, email TEXT UNIQUE, address TEXT , number TEXT );");
     await db.execute(
-        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT, address TEXT);");
+        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT);");
     await db.execute(
       "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco REAL ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
@@ -65,17 +65,21 @@ class DatabaseHelper{
   }
 
 //insertion
-  Future<int> saveUser(User user) async {
+  Future<bool> saveUser(User user) async {
     var dbClient = await db;
-    int res = await dbClient.rawInsert("INSERT INTO User (name, password, email, address, number) VALUES(?,?,?,?,?)",[user.name,user.password,user.email, user.address, user.celNumber]);
-    return res;
+    int res = await dbClient.rawInsert("INSERT INTO User (name, password, email, address, number) VALUES(?,?,?,?,?)",[user.name,user.password,user.email, user.address, user.celNumber])
+    ;
+    return true;
+    
   }
 
   Future<int> saveRest(Restaurant rest) async {
     var dbClient = await db;
+    //List<Map> test = 
     int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
     return res;
   }
+
   Future<int> saveRestWithCategorie(Restaurant rest, List<Categories> list) async {
     var dbClient = await db;
     int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
@@ -109,6 +113,12 @@ class DatabaseHelper{
 
   Future<int> saveRelacionCatRest(int idRest, int idCat)async{
     var dbClient = await db;
+    dbClient.rawQuery('SELECT * FROM CategoriaRest WHERE idRest=? and idCategoria = ? ', [idRest,idCat])
+    .catchError((onError){print(onError); return 0; }).then((onValue){
+      if(onValue!=null) return null;
+    })
+    ;
+    print('ta dando merda');
     return await dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',[idRest,idCat]);
   }
 
@@ -210,20 +220,10 @@ class DatabaseHelper{
 
   Future<User> getUser(String email, String pass) async{
     var dbClient = await db;
-    dynamic test = await dbClient.query("User",
-    columns: ["password", "name", 'number', 'idUser', 'address'],
-    where: "email =?",
-    whereArgs: ["$email"]
-    );
-    try{
-      if(test[0]['password'] == pass){
-        User a = User.map(test[0]);
-        return a;
-      }
-    }catch(e){
-      print(e.toString());
-    }
+    dynamic test = await dbClient.rawQuery('SELECT name, number, idUser, address FROM User WHERE email=? and password=?',[email,pass]);
+    if(test[0]!=null) return User.map(test[0]);
     return null;
+    
   }
 
   Future<User> getUserById(int id) async{
@@ -237,26 +237,18 @@ class DatabaseHelper{
     return a;
   }
 
-  Future<Restaurant> getRest(String name) async{
+  Future<Restaurant> getRestLogin(String name, String password) async{
     var dbClient = await db;
-    dynamic test = await dbClient.query("Restaurant",
-    columns: ['idRest, name, password , numPedidos , image , description , email, address, num'],
-    where: "name =?",
-    whereArgs: ["$name"]
-    );
-    print(test);
-    try{
-      Restaurant temp = Restaurant.map(test[0]);
-      List<Prato> listPratos= await getPratos(temp.id);
-      List<Categories> categorias = await getCategorieByIdRest(temp.id);
-      temp.setCardapio(listPratos);
-      temp.setCategories(categorias);
-      return temp;
-      
-    }catch(e){
-      print(e.toString());
-      return null;
+    dynamic rest = await dbClient.rawQuery('SELECT idRest, name, email,numPedidos,image, description, email, address, num FROM Restaurant WHERE name=? and password=?',[name,password]);
+    if(rest[0]!=null) {
+      Restaurant usual =Restaurant.map(rest[0]);
+      List<Prato> cardapio = await this.getPratos(rest[0]['idRest']);
+      List<Categories> categories = await this.getCategorieByIdRest(rest[0]['idRest']);
+      usual.setCardapio(cardapio);
+      usual.setCategories(categories);
+      return usual;
     }
+    return null;
   }
 
   Future<Restaurant> getRestById(int id) async{
@@ -316,14 +308,6 @@ class DatabaseHelper{
       print(e.toString());
     }
     return null;
-  }
-
-  Future<void> getRestByID(String name) async {
-    var dbClient = await db;
-    dynamic resp = await dbClient.rawQuery('SELECT * FROM Restaurant  JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest ');
-    //'SELECT * FROM Restaurant  LEFT JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest LEFT JOIN Categoria ON CategoriaRest.idCategoria WHERE name =$name'
-    print('\  n response -> $resp');
- 
   }
 
   Future<List<Pedido>> getPedidosByRest(Restaurant rest) async{
