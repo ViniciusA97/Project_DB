@@ -237,9 +237,8 @@ class _LoginPageState extends State<LoginPage> {
     var control = Control.internal();
     var user = await control.doLogin(email, password);
     if (user != null) {
-      List<Categories> cat = await control.getAllCategories();
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => HomePageUser(user, cat)));
+          MaterialPageRoute(builder: (context) => HomePageUser(user)));
     } else {
       _showSnackBar('User dont exist');
     }
@@ -259,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
     if (rest!=null) {
       List<Categories> cat = await control.getAllCategories();
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => RestPage(rest, cat)));
+          MaterialPageRoute(builder: (context) => RestPage(rest)));
     } else {
       _showSnackBar('Restaurant dont exist');
     }

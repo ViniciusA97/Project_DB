@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/restaurant.dart';
-import 'package:project_bd/data/database.dart';
 
 class SignUpRest extends StatefulWidget{
   @override

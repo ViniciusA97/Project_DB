@@ -1,4 +1,6 @@
 import 'package:project_bd/Model/categories.dart';
+import 'package:project_bd/Model/pedidos.dart';
+import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
@@ -11,27 +13,48 @@ class Control{
   factory Control() => _instance;
   Control.internal();
   
+  //faz login do usuario
   Future<User> doLogin(String email, String password) async{
-    User user = await this._db.getUser(email, password);
-    return user;
+    return await this._db.getUser(email, password);
   }
 
+  //faz o login do restaurant
   Future<Restaurant> doLoginRestaurant(String name, String password) async{
-    Restaurant rest = await this._db.getRestLogin(name, password);
-    return rest;
+    return await this._db.getRestLogin(name, password);
   }
 
+  //Salva o usuario, retorna false se houver erro no salvamento
   Future<bool> saveUser(User u) async{
       return await this._db.saveUser(u);
   }
 
+  //Salva o restaurante, se houver erro no salvamento
   Future<bool> saveRest( Restaurant rest) async{
     return await this._db.saveRest(rest);
   }
 
+  ///Pega todas as categorias
   Future<List<Categories>> getAllCategories() async{
-    List<Categories> listCategories = await this._db.getAllCategories();
-    return listCategories;
+    return await this._db.getAllCategories();
+  }
+
+  //Pega a Lista de categoria que o restaurante possui
+  Future<List<Categories>> getRestCategories(int idRest) async{
+    return await this._db.getCategorieByIdRest(idRest);
+  }
+
+  //Pega todos os restaurantes que tem determinada categoria
+  Future<List<Restaurant>> getCategoriesRest(int idCat) async{
+    return await this._db.getRestByIdCategories(idCat);
+  }
+
+  //Pega todos os pratos do restaurante
+  Future<List<Prato>> getPratosRestaurant(int idRest) async {
+    return await this._db.getPratos(idRest);
+  }
+
+  Future<List<Pedido>> getRestPedidos(int idRest) async{
+    return await this._db.getPedidosByRest(idRest);
   }
   
   

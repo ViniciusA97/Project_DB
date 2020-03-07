@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 
 import '../../Model/pedidos.dart';
 import '../../Model/restaurant.dart';
@@ -27,13 +28,18 @@ class _PedidosRestState extends State<PedidosRest>{
 
   @override
   void initState() {
-    _initVar;
+    _asyncMethod();
     super.initState();
   }
 
-  void _initVar()async{
-    DatabaseHelper bd = DatabaseHelper.internal();
-    _pedidos = await bd.getPedidosByRest(_rest);
+  void _asyncMethod()async{
+    Control control = Control.internal();
+    await control.getRestPedidos(this._rest.id)
+      .then((onValue){
+        setState(() {
+          this._pedidos=onValue;
+        });
+      });
   }
   @override
   Widget build(BuildContext context) {

@@ -1,31 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
 
 class InitRest extends StatefulWidget {
+  
   Restaurant _restaurant;
-  List<Categories> _categories;
-  InitRest(this._restaurant, this._categories);
+  
+  InitRest(this._restaurant);
 
   State<StatefulWidget> createState() =>
-      _InitRestState(_restaurant, this._categories);
+      _InitRestState(_restaurant);
 }
 
 class _InitRestState extends State<InitRest> {
-  _InitRestState(this._rest, this._allCategories);
+  _InitRestState(this._rest);
 
+  //atributos
   Restaurant _rest;
   List<Categories> _categories;
   List<Categories> _allCategories;
-  double x = 0;
+  
+  //keys
   final key = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  Alignment alignment = Alignment.bottomCenter;
+  
+  //variaveis para criar categorias
   String name;
   String img;
-  String search;
+  
+  //variaveis utilizadas no AnimedContainer
+  Alignment alignment = Alignment.bottomCenter;
+  double x = 0;
   bool isSubindo = false;
   Widget _search = Container(
     width: 0,
@@ -42,8 +50,19 @@ class _InitRestState extends State<InitRest> {
 
   @override
   void initState() {
+    _asyncMetod();
     this._categories = _rest.categories;
     super.initState();
+  }
+
+  _asyncMetod() async {
+    Control control = Control.internal();
+    control.getAllCategories()
+      .then((onValue){
+          setState(() {
+            this._allCategories= onValue;
+          });
+      });
   }
 
   _showSnackBar(String text) {

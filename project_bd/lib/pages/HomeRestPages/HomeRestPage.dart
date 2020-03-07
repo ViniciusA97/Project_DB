@@ -9,18 +9,16 @@ import 'pedidosRest.dart';
 
 class RestPage extends StatefulWidget{
   Restaurant _rest;
-  List<Categories> _cat;
-  RestPage(this._rest, this._cat);
+  RestPage(this._rest);
   @override
-  State<StatefulWidget> createState() => _RestPageState(_rest,_cat);
+  State<StatefulWidget> createState() => _RestPageState(_rest);
 
 }
 class _RestPageState extends State<RestPage>{
  
 
-  _RestPageState(this._rests, this._categories);
+  _RestPageState(this._rests);
 
-  List<Categories> _categories;
   final scaffolKey = GlobalKey<ScaffoldState>();
   Restaurant _rests;
   int current = 0;
@@ -34,7 +32,7 @@ class _RestPageState extends State<RestPage>{
   @override
   void initState() {
     _cardapioPage = CardapioPage(this._rests.cardapio,this._rests.id);
-    _homeRest = InitRest(_rests, this._categories);
+    _homeRest = InitRest(_rests);
     print(_homeRest);
     _pedidosRest = PedidosRest(this._rests);
     pages=[_homeRest, _cardapioPage, _pedidosRest];
@@ -42,7 +40,6 @@ class _RestPageState extends State<RestPage>{
     super.initState();
 
   }
-
 
   @override
   Widget build(BuildContext context) {

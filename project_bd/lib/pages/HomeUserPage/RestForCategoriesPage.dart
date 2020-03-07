@@ -1,24 +1,41 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 
 class RestForCategoriesPage extends StatefulWidget {
-  List<Restaurant> _rest;
+
   Categories _categories;
 
-  RestForCategoriesPage(this._rest, this._categories);
+  RestForCategoriesPage(this._categories);
 
   @override
   State<StatefulWidget> createState() =>
-      _RestForCategoriesPageState(this._rest, this._categories);
+      _RestForCategoriesPageState( this._categories);
 }
 
 class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
-  List<Restaurant> _restaurant;
+  List<Restaurant> _restaurant = new List<Restaurant>();
   Categories _categories;
 
-  _RestForCategoriesPageState(this._restaurant, this._categories);
+  _RestForCategoriesPageState( this._categories);
+
+  @override
+  void initState() {
+    _asyncMethod();
+    super.initState();
+  }
+
+  _asyncMethod() async{
+    Control control = Control.internal();
+    control.getCategoriesRest(this._categories.id)
+      .then((onValue){
+        setState(() {
+          this._restaurant = onValue;
+        });
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +93,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
               child: ListView.builder(
                   itemCount: this._restaurant.length,
                   itemBuilder: (BuildContext cntx, int index) {
+                    
                     return RawMaterialButton(
                         onPressed: (){goToRest(index);},
                         child: Container(

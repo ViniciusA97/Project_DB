@@ -317,13 +317,18 @@ class DatabaseHelper{
     return null;
   }
 
-  Future<List<Pedido>> getPedidosByRest(Restaurant rest) async{
-    List<Prato> pratos = await getPratos(rest.id);
+  Future<List<Pedido>> getPedidosByRest(int rest) async{
+    List<Prato> pratos = await getPratos(rest);
     List<Pedido> list = List<Pedido>();
     for(Prato a in pratos){
       list.add(await getPedido(a.idPrato));
     }
-    return list;
+    try{
+      list[0];
+      return list;
+    }catch(err){
+      return null;
+    }
   }
 
   Future<Pedido> getPedido(int idPrato) async{

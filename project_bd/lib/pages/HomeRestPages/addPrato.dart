@@ -133,9 +133,8 @@ class _AddPratoState extends State<AddPrato>{
     DatabaseHelper db = DatabaseHelper.internal();
     Prato prato = Prato(_id, name, preco, descricao, img);
     int rest = await db.savePrato(prato, _id);
-    List<Categories> cat = await db.getAllCategories();
     Restaurant res = await db.getRestById(this._id);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res,cat)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res)));
     
       
   }

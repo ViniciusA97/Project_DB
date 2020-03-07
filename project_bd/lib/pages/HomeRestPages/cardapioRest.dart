@@ -1,30 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/pages/HomeRestPages/addPrato.dart';
 
 class CardapioPage extends StatefulWidget {
-  List<Prato> _pratos;
+  
   int _id;
 
-  CardapioPage(this._pratos, this._id);
+  CardapioPage( this._id);
 
   @override
   State<StatefulWidget> createState() =>
-      _CardapioPageState(this._pratos, this._id);
+      _CardapioPageState(this._id);
 }
 
 class _CardapioPageState extends State<CardapioPage> {
-  List<Prato> _pratos;
+  List<Prato> _pratos = List<Prato>();
   int _id;
-  int rep;
 
-  _CardapioPageState(this._pratos, this._id);
+  _CardapioPageState( this._id);
 
   @override
   void initState() {
-    rep = (this._pratos.length / 2).round();
+    _asyncMethod();
     super.initState();
+  }
+
+  _asyncMethod() async{
+    Control control = Control.internal();
+    await control.getPratosRestaurant(this._id)
+      .then((onValue){
+        setState(() {
+          this._pratos = onValue; 
+        });
+      });
   }
 
   @override
