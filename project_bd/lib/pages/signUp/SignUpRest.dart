@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
 
@@ -157,7 +158,7 @@ class _SignUpRestState extends State<SignUpRest>{
     );
   }
 
-  void _create(){
+  void _create() async {
     final form = formKey.currentState;
       if(form.validate()){
         setState(() {
@@ -165,11 +166,23 @@ class _SignUpRestState extends State<SignUpRest>{
           isLoading = true;
         });
       }
-
-    DatabaseHelper db = DatabaseHelper();
+    Control control = Control.internal();
     Restaurant temp =Restaurant(name, pass, null, 0,image, description,nume,email,address);
-    db.saveRest(temp);
-    Navigator.pop(context);
+    bool condiction = await control.saveRest(temp);
+    if(condiction){
+      Navigator.pop(context);
+    }else{
+      _showSnackBar('Email ou nome ja utilizados.');
+      
+    }
   }
+
+  _showSnackBar(String text) {
+    final key = scafolldKey.currentState;
+    key.showSnackBar(new SnackBar(
+      content: new Text(text),
+    ));
+  }
+
 
 }

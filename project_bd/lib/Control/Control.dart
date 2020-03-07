@@ -22,13 +22,11 @@ class Control{
   }
 
   Future<bool> saveUser(User u) async{
-    try{
-      bool response = await this._db.saveUser(u);
-      return true;
-    }catch(err){
-      return false;
-    }
+      return await this._db.saveUser(u);
+  }
 
+  Future<bool> saveRest( Restaurant rest) async{
+    return await this._db.saveRest(rest);
   }
 
   Future<List<Categories>> getAllCategories() async{

@@ -65,19 +65,26 @@ class DatabaseHelper{
   }
 
 //insertion
-  Future<bool> saveUser(User user) async {
+  Future<bool> saveUser(User user) async{
     var dbClient = await db;
-    int res = await dbClient.rawInsert("INSERT INTO User (name, password, email, address, number) VALUES(?,?,?,?,?)",[user.name,user.password,user.email, user.address, user.celNumber])
-    ;
-    return true;
+    try{
+      await dbClient.rawInsert("INSERT INTO User (name, password, email, address, number) VALUES(?,?,?,?,?)",[user.name,user.password,user.email, user.address, user.celNumber]);
+      return true;
+    }catch(err){
+      return false;
+    }
+  
     
   }
 
-  Future<int> saveRest(Restaurant rest) async {
+  Future<bool> saveRest(Restaurant rest) async {
     var dbClient = await db;
-    //List<Map> test = 
-    int res = await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
-    return res;
+    try{
+      await dbClient.rawInsert("INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",[rest.name,rest.password,rest.numPedidos, rest.url, rest.descriprion,rest.nume,rest.email,rest.address]);
+      return true;
+    }catch(err){
+      return false;
+    }
   }
 
   Future<int> saveRestWithCategorie(Restaurant rest, List<Categories> list) async {
