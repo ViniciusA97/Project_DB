@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
-import 'package:project_bd/pages/HomeRestPages/CardapioRest.dart';
+import 'package:project_bd/pages/HomeRestPages/cardapioRest.dart';
 import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
 
 import 'pedidosRest.dart';
@@ -31,7 +31,7 @@ class _RestPageState extends State<RestPage>{
 
   @override
   void initState() {
-    _cardapioPage = CardapioPage(this._rests.cardapio,this._rests.id);
+    _cardapioPage = CardapioPage(this._rests.id);
     _homeRest = InitRest(_rests);
     print(_homeRest);
     _pedidosRest = PedidosRest(this._rests);

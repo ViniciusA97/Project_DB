@@ -11,12 +11,9 @@ import 'package:project_bd/Model/user.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../Model/pedidos.dart';
-import '../Model/pedidos.dart';
-import '../Model/pedidos.dart';
-import '../Model/pratos.dart';
 import '../Model/pratos.dart';
 import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
+
 class DatabaseHelper{
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
   factory DatabaseHelper() => _instance;

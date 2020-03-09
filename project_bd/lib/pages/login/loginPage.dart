@@ -6,7 +6,9 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeRestPages/HomeRestPage.dart';
 import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
 import 'package:project_bd/pages/signUp/SignUpRest.dart';
+import 'package:project_bd/components/userForm.dart';
 import 'package:project_bd/pages/signUp/signUp.dart';
+import 'package:project_bd/constants.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -49,12 +51,13 @@ class _LoginPageState extends State<LoginPage> {
                       TabBar(
                         isScrollable: true,
                         labelColor: Colors.black,
+                        indicatorColor: Color(0xff38ad53),
                         tabs: <Widget>[
                           Tab(
                             text: 'User',
                           ),
                           Tab(
-                            text: 'Restaurante',
+                            text: 'Restaurant',
                           )
                         ],
                       ),
@@ -86,145 +89,31 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget getUserLogin() {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(5),
-        ),
-        Form(
-          key: formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'email',
-                    fillColor: Color.fromRGBO(144, 238, 144, .1),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                onSaved: (value) => email = value,
-              ),
-              Padding(
-                padding: EdgeInsets.all(5),
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'password',
-                    fillColor: Color.fromRGBO(144, 238, 144, .1),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                onSaved: (value) => password = value,
-              ),
-              Padding(
-                padding: EdgeInsets.all(5),
-              ),
-              RaisedButton(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0)),
-                onPressed: _submitUser,
-                child: Text('submit'),
-              ),
-              FlatButton(
-                child: Text(
-                  'Dont have a User accont?',
-                  style: TextStyle(color: Colors.black),
-                ),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUp()));
-                },
-              ),
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(5),
           ),
-        ),
-      ],
-    ));
+          UserForm(email: email, password: password, submitUser: _submitUser, isRest: true),
+        ],
+      ),
+    );
   }
 
   Widget getRestauranteLogin() {
     return Center(
-        child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.all(5),
-        ),
-        Form(
-          key: formKey,
-          child: Column(
-            children: <Widget>[
-              TextFormField(
-                scrollPadding: const EdgeInsets.all(200.0),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'email',
-                    fillColor: Color.fromRGBO(144, 238, 144, .1),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                onSaved: (value) => email = value,
-              ),
-              Padding(
-                padding: EdgeInsets.all(5),
-              ),
-              TextFormField(
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                    hintText: 'password',
-                    fillColor: Color.fromRGBO(144, 238, 144, .1),
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20))),
-                onSaved: (value) => password = value,
-              ),
-              Padding(
-                padding: EdgeInsets.all(5),
-              ),
-              RaisedButton(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25.0)),
-                onPressed: _submitRest,
-                child: Text('submit'),
-              ),
-              FlatButton(
-                child: Text('Dont have a Restaurant acconte?',
-                    style: TextStyle(color: Colors.black)),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpRest()));
-                },
-              )
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(5),
           ),
-        )
-      ],
-    ));
+          // Classe em components
+          UserForm(email: email, password: password, submitRest: _submitRest, isRest: false),
+        ],
+      ),
+    );
   }
 
   void _submitUser() async {
@@ -237,8 +126,8 @@ class _LoginPageState extends State<LoginPage> {
     var control = Control.internal();
     var user = await control.doLogin(email, password);
     if (user != null) {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => HomePageUser(user)));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePageUser(user)));
     } else {
       _showSnackBar('User dont exist');
     }
@@ -255,10 +144,10 @@ class _LoginPageState extends State<LoginPage> {
     }
     var control = Control.internal();
     Restaurant rest = await control.doLoginRestaurant(email, password);
-    if (rest!=null) {
+    if (rest != null) {
       List<Categories> cat = await control.getAllCategories();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => RestPage(rest)));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => RestPage(rest)));
     } else {
       _showSnackBar('Restaurant dont exist');
     }
@@ -270,7 +159,5 @@ class _LoginPageState extends State<LoginPage> {
       content: new Text(text),
     ));
   }
-
-
-
 }
+
