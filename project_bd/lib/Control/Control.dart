@@ -33,6 +33,15 @@ class Control{
     return await this._db.saveRest(rest);
   }
 
+  //salva um prato
+  Future<bool> savePrato(Prato prato) async{
+    return await this._db.savePrato(prato);
+  }
+
+  Future<Restaurant> getRestByIdRest(int id)async{
+    return await this._db.getRestById(id);
+  }
+
   ///Pega todas as categorias
   Future<List<Categories>> getAllCategories() async{
     return await this._db.getAllCategories();

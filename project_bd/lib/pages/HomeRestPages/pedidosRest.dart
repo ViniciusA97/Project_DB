@@ -1,12 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
-
+import '../../Model/preco.dart';
 import '../../Model/pedidos.dart';
 import '../../Model/restaurant.dart';
-import '../../Model/restaurant.dart';
-import '../../data/database.dart';
-import '../../data/database.dart';
 
 class PedidosRest extends StatefulWidget{
 
@@ -100,7 +97,7 @@ class _PedidosRestState extends State<PedidosRest>{
                   Row(
                     children: <Widget>[
                       Text('Numero do Pedido: ${this._pedidos[index].idPedido}'),
-                      Text('Preço: ${this._pedidos[index].prato.preco}'),
+                    Text('Preço: ${this._pedidos[index].preco}'),
                     ],
                   ),
                   Text('Cliente: ${this._pedidos[index].user.name}'),

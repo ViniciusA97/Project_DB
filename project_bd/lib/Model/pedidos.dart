@@ -8,8 +8,9 @@ class Pedido{
   int _idPedido;
   User _user;
   Restaurant _rest;
-  Prato _prato;
+  List<Prato> _prato;
   DateTime _data;
+  double _precoTotal;
 
 
   Pedido(this._prato,this._rest,this._user, this._data,this._idPedido);
@@ -34,7 +35,8 @@ class Pedido{
   int get idPedido => this._idPedido;
   User get user => this._user;
   Restaurant get rest => this._rest;
-  Prato get prato => this._prato;
-  DateTime get data=> this.data;
+  List<Prato> get prato => this._prato;
+  DateTime get data=> this._data;
+  double get preco => this._precoTotal;
 
 }

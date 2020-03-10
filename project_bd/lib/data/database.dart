@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
+import 'package:project_bd/Model/Preco.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/pedidos.dart';
 import 'package:project_bd/Model/pratos.dart';
@@ -42,18 +43,20 @@ class DatabaseHelper{
     await db.execute(
         "CREATE TABLE User(idUser INTEGER PRIMARY KEY , name TEXT, password TEXT, email TEXT UNIQUE, address TEXT , number TEXT );");
     await db.execute(
-        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT);");
+        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT, nota REAL, hora_abre INTEGER, hora_fecha INTEGER, entregaGratis INTEGER);");
     await db.execute(
-      "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, preco REAL ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
+      "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, idPreco INTEGER ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPreco) REFERENCES Preco(idPreco));");
     await db.execute(
       'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
     await db.execute(
       'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria INTEGER, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
     await db.execute(
-      'CREATE TABLE Pedidos(idPrato INTEGER,idPedido INTEGER PRIMARY KEY, data DATATIME , preco INTEGER, idUser INTEGER, FOREIGN KEY(idUser) REFERENCES User(idUser), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato) )');
+      'CREATE TABLE Pedidos( idPedido INTEGER PRIMARY KEY, data DATATIME, preco REAL )');
     await db.execute(
-      'CREATE TABLE PedidoPratoUser(idPrato INTEGER,  idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Prato(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato))');
-   
+      'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER,  idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Prato(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
+    await db.execute(
+      'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL)');
+    
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
@@ -93,17 +96,29 @@ class DatabaseHelper{
     return res;
   }
 
-  Future<int> savePrato(Prato prato, int idRest) async {
+  Future<bool> savePrato(Prato prato) async {
     var dbClient = await db;
-    int res = await dbClient.rawInsert("INSERT INTO Prato (name,descricao, preco, idRest,img) VALUES(?,?,?,?,?)",[prato.name,prato.descricao,prato.preco,idRest,prato.img]);
-    return res;
+    print(DateTime.now().toIso8601String());
+    try{
+      dbClient.rawInsert('INSERT INTO Preco( preco, date) VALUES(?,?)',[prato.preco.preco, DateTime.now().toIso8601String()]);
+      dynamic response = await dbClient.rawQuery('SELECT idPreco FROM Preco ORDER BY idPreco DESC LIMIT 1');
+      print(response[0]['idPedido']);
+      int res = await dbClient.rawInsert("INSERT INTO Prato (name,descricao, idPreco, idRest,img) VALUES(?,?,?,?,?)",[prato.name, prato.descricao, response[0]['idPreco'], prato.idRest, prato.img]);
+      return true;
+    }catch(err){
+      return false;
+    }
   }
 
-  Future<int> savePedido(Pedido p) async{
+  Future<void> savePedido(Pedido p, double preco) async{
     var dbClient = await db;
-    dbClient.rawInsert('INSERT INTO Pedidos(data) VALUES(?)',[p.data]);
-    return dbClient.rawInsert('INSERT INTO PedidoPratoUser (idPrato, idUser) VALUES(?,?)',[p.prato.idPrato, p.user.id]);
-
+    dbClient.rawInsert('INSERT INTO Pedidos(data, preco) VALUES(?,?)',[p.data, preco]);
+    dynamic pedido = dbClient.rawQuery('SELECT idPedido From Pedidos ORDER BY idPedido DESC LIMIT 1;');
+    int idPedido = pedido[0]['idPedido'];
+    List<Prato> pratos;
+    for(Prato i in pratos){
+      dbClient.rawInsert('INSERT INTO PedidoPratoUser (idPrato, idUser, idPedido) VALUES(?,?,?)',[i.idPrato, p.user.id ,idPedido]);
+    }
   }
 
   Future<Categories> saveCategoria(String name, String img) async{
@@ -115,15 +130,21 @@ class DatabaseHelper{
 
   }
 
-  Future<int> saveRelacionCatRest(int idRest, int idCat)async{
+  Future<void> saveRelacionCatRest(int idRest, int idCat)async{
     var dbClient = await db;
+    bool exist=false;
     dbClient.rawQuery('SELECT * FROM CategoriaRest WHERE idRest=? and idCategoria = ? ', [idRest,idCat])
     .catchError((onError){print(onError); return 0; }).then((onValue){
-      if(onValue!=null) return null;
-    })
-    ;
-    print('ta dando merda');
-    return await dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',[idRest,idCat]);
+      if(onValue!=null) exist=true;
+
+    });
+    if(exist){ 
+      print('deu ruim');  
+      return;
+    }
+    await dbClient.rawInsert('INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',[idRest,idCat]);
+
+    
   }
 
   //confere se existe user
@@ -277,24 +298,30 @@ class DatabaseHelper{
 
   Future<List<Prato>> getPratos(int idRest) async{
     var dbClient = await db;
-    dynamic test = await dbClient.query("Prato",
-    columns: ["preco", 'descricao','name','img'],
-    where: "idRest =?",
-    whereArgs: ["$idRest"]
-    );
+    dynamic test = await dbClient.rawQuery('SELECT * FROM Prato WHERE idRest=?',[idRest]);
     print(test);
     try{
-        List<Prato> cardapio = new List<Prato>();
-        for(var a in test){
-          Prato usual = new Prato(idRest,a['name'], a['preco'], a['descricao'],a['img']) ;
-          cardapio.add(usual);
-        }
-        return cardapio;
-      
-    }catch(e){
-      print(e.toString());
+      test[0];
+      List<Prato> cardapio = new List<Prato>();
+      for(var a in test){
+        dynamic response = await dbClient.rawQuery('SELECT * FROM Preco WHERE idPreco=?',[a['idPreco']]);
+        print(response);
+        Preco preco = Preco.map(response[0]);
+        Prato prato = Prato.map(a);
+        prato.setPreco(preco);
+        cardapio.add(prato);
+      }
+      return cardapio;
+    }catch(err){
+      print(err);
+      return null;
     }
-    return null;
+  }
+
+  Future<Preco> getPreco(int idPreco) async{
+    var dbClient = await db;
+    dynamic response = dbClient.rawQuery('SELECT * FROM Preco WHERE idPreco=$idPreco');
+    return Preco.map(response);
   }
 
   Future<Prato> getPratoById(int idPrato) async{
@@ -316,16 +343,17 @@ class DatabaseHelper{
 
   Future<List<Pedido>> getPedidosByRest(int rest) async{
     List<Prato> pratos = await getPratos(rest);
-    List<Pedido> list = List<Pedido>();
-    for(Prato a in pratos){
-      list.add(await getPedido(a.idPrato));
-    }
     try{
-      list[0];
+      pratos[0];
+      List<Pedido> list = List<Pedido>();
+      for(Prato a in pratos){
+        list.add(await getPedido(a.idPrato));
+      }
       return list;
     }catch(err){
       return null;
     }
+    
   }
 
   Future<Pedido> getPedido(int idPrato) async{

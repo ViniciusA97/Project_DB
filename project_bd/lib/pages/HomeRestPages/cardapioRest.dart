@@ -32,6 +32,7 @@ class _CardapioPageState extends State<CardapioPage> {
     await control.getPratosRestaurant(this._id)
       .then((onValue){
         setState(() {
+          print('on value : $onValue');
           this._pratos = onValue; 
         });
       });
@@ -123,7 +124,7 @@ class _CardapioPageState extends State<CardapioPage> {
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 15),
                               ),
-                              Text('\$${this._pratos[index].preco}',
+                              Text('\$${this._pratos[index].preco.preco}',
                                   style: TextStyle(
                                       color: Colors.black, fontSize: 15))
                             ],

@@ -13,8 +13,13 @@ class Restaurant implements Client{
   String _num;
   String _adress;
   String _email;
+  int _horaAbre;
+  int _hotaFecha;
+  double _nota;
+  bool _entregaGratis;
   List<Prato> _cardapio;
   List<Categories> _categories;
+
 
   Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage,
               this._description,this._num, this._email,this._adress);
@@ -29,8 +34,6 @@ class Restaurant implements Client{
     _num = obj['num'];
     _adress= obj['address'];
     _email = obj['email'];
-    _cardapio = obj['pratos'];
-    _categories = obj['categoria'];
   }
 
   Map<String, dynamic> map(){

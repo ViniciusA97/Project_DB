@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:project_bd/Model/categories.dart';
+import 'package:project_bd/Control/Control.dart';
+import 'package:project_bd/Model/Preco.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/data/database.dart';
@@ -21,7 +22,7 @@ class _AddPratoState extends State<AddPrato>{
   int _id;
   String name;
   String img;
-  double preco;
+  double precoValue;
   String descricao;
   final formKey = new GlobalKey<FormState>();
   bool loading =false;
@@ -65,7 +66,7 @@ class _AddPratoState extends State<AddPrato>{
                     fillColor: Colors.white,
                     filled: true
                   ),
-                  onSaved:(val)=> preco=double.parse(val) ,
+                  onSaved:(val)=> precoValue =double.parse(val) ,
                 ),
                 TextFormField(
                   decoration: InputDecoration(
@@ -130,13 +131,16 @@ class _AddPratoState extends State<AddPrato>{
           loading=true;
         });
       }
-    DatabaseHelper db = DatabaseHelper.internal();
+    Preco preco = Preco(precoValue, DateTime.now());
     Prato prato = Prato(_id, name, preco, descricao, img);
-    int rest = await db.savePrato(prato, _id);
-    Restaurant res = await db.getRestById(this._id);
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res)));
-    
-      
+    Control control = Control.internal();
+    bool response = await control.savePrato(prato);
+    if(response){
+      Restaurant res = await control.getRestByIdRest(prato.idRest);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>RestPage(res)));
+    }else{
+      print('algo de errado nao está certo');
+    }
   }
 
 }

@@ -1,15 +1,18 @@
+import 'Preco.dart';
+
 class Prato{
 
   int _idPrato;
   int _idRest;
   String _name;
-  double _preco;
+  Preco _preco;
   String _descricao;
   String _img;
 
   Prato(this._idRest,this._name, this._preco, this._descricao, this._img);
 
   Prato.map(dynamic obj){
+    this._idPrato = obj['idPrato'];
     this._idRest = obj['idRest'];
     this._name = obj['name'];
     this._preco = obj['preco'];
@@ -26,10 +29,15 @@ class Prato{
     temp['img'] = _img;
     return temp;
   }
+
   int get idPrato => _idPrato;
   int get idRest => _idRest;
   String get name =>_name;
-  double get preco => _preco;
+  Preco get preco => _preco;
   String get descricao => _descricao;
   String get img => _img; 
+
+  void setPreco(Preco preco){
+    this._preco = preco;
+  }
 }
