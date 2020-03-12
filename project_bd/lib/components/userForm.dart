@@ -76,7 +76,7 @@ class _UserFormState extends State<UserForm> {
           ),
           FlatButton(
             child: Text(
-                'Don\'t have a ${isRest ? 'user' : 'restaurant'} account?',
+                'Don\'t have a ${isRest ? 'restaurant' : 'user'} account?',
                 style: TextStyle(color: Colors.black54)),
             onPressed: () {
               Navigator.push(

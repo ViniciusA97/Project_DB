@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[Image.asset('./assets/comida2.jpg')],
+                        children: <Widget>[Image.asset('./assets/comida4.jpg')],
                       )
                     ],
                   ),

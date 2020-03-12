@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
-import '../../Model/preco.dart';
+import '../../Model/Preco.dart';
 import '../../Model/pedidos.dart';
 import '../../Model/restaurant.dart';
 
