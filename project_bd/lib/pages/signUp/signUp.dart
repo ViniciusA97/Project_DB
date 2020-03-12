@@ -39,19 +39,19 @@ class _SignUpState extends State<SignUp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(top: 30),
+                          padding: EdgeInsets.only(top: 40),
                         ),
                         Text(
                           'Create your user account',
                           style: TextStyle(
                             fontSize: 21.0,
-                            fontFamily: 'Source Sans Pro',
+                            // fontFamily: 'Source Sans Pro',
                             letterSpacing: 2.5,
                             color: Colors.black54,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Padding(padding: EdgeInsets.only(top: 20)),
+                        Padding(padding: EdgeInsets.only(top: 30)),
                         TextFormField(
                           decoration:
                               kTextFieldDecoraction.copyWith(hintText: 'name'),

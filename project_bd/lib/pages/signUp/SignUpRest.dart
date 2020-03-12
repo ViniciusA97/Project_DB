@@ -40,7 +40,7 @@ class _SignUpRestState extends State<SignUpRest> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: 50),
+                      padding: EdgeInsets.only(top: 60),
                     ),
                     Text(
                       'Create your restaurant account',
@@ -53,7 +53,7 @@ class _SignUpRestState extends State<SignUpRest> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 30),
                     ),
                     TextFormField(
                       decoration:
