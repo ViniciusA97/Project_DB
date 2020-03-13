@@ -29,13 +29,15 @@ class _SignUpRestState extends State<SignUpRest> {
       backgroundColor: Colors.white,
       key: scafolldKey,
       body: Center(
-        child: Column(
-          children: <Widget>[
-            new Form(
+        child: 
+            ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    new Form(
               key: formKey,
               child: Container(
                 margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                height: MediaQuery.of(context).size.height / 4 * 3,
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: <Widget>[
@@ -113,9 +115,7 @@ class _SignUpRestState extends State<SignUpRest> {
                 ),
               ),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height / 4,
-              child: Stack(
+            Stack(
                 children: <Widget>[
                   Positioned(
                     child: new Align(
@@ -125,7 +125,12 @@ class _SignUpRestState extends State<SignUpRest> {
                   )
                 ],
               ),
+            
+
+          ]
+              
             ),
+            
           ],
         ),
       ),
