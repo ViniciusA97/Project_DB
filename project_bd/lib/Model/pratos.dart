@@ -12,12 +12,21 @@ class Prato{
   Prato(this._idRest,this._name, this._preco, this._descricao, this._img);
 
   Prato.map(dynamic obj){
+    this._preco= Preco.map(obj);
     this._idPrato = obj['idPrato'];
     this._idRest = obj['idRest'];
     this._name = obj['name'];
-    this._preco = obj['preco'];
     this._descricao = obj['descricao'];
     this._img = obj['img'];
+  }
+
+  Prato.mapJOIN(dynamic obj){
+    this._preco= Preco.map(obj);
+    this._idPrato = obj['idPrato'];
+    this._idRest = obj['idRest'];
+    this._name = obj['namePrato'];
+    this._descricao = obj['descricaoPrato'];
+    this._img = obj['imgPrato'];
   }
 
   Map<String, dynamic> getMap(){

@@ -34,6 +34,7 @@ class Restaurant implements Client{
     _num = obj['num'];
     _adress= obj['address'];
     _email = obj['email'];
+    _cardapio = new List<Prato>();
   }
 
   Map<String, dynamic> map(){
@@ -67,5 +68,6 @@ class Restaurant implements Client{
 
   void setCategories(List<Categories> cat) =>this._categories=cat;
   void setCardapio(List<Prato> list) => this._cardapio = list;
+  void addPrato(Prato prato) => this._cardapio.add(prato);
 
 }

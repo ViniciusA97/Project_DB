@@ -123,10 +123,9 @@ class DatabaseHelper {
 
   Future<bool> savePrato(Prato prato) async {
     var dbClient = await db;
-    print(DateTime.now().toIso8601String());
     try {
-      dbClient.rawInsert('INSERT INTO Preco( preco, date) VALUES(?,?)',
-          [prato.preco.preco, DateTime.now().toIso8601String()]);
+      dbClient.rawInsert('''INSERT INTO Preco( preco, date) VALUES(?,datetime('now','localtime'))''',
+          [prato.preco.preco]);
       dynamic response = await dbClient
           .rawQuery('SELECT idPreco FROM Preco ORDER BY idPreco DESC LIMIT 1');
       print(response[0]['idPedido']);
@@ -220,25 +219,30 @@ class DatabaseHelper {
     dynamic resp = await dbClient.rawQuery(
       '''
       SELECT 
-              CategoriaRest.idRest,
-              Restaurant.name,
-              Restaurant.email,
-              Restaurant.numPedidos, 
-              Restaurant.image, 
-              Restaurant.description, 
-              Restaurant.num, 
-              Restaurant.address, 
-              Restaurant.hora_abre, 
-              Restaurant.hora_fecha, 
-              Restaurant.entregaGratis 
+              Restaurant.*,
+              Prato.name AS namePrato,
+              Prato.img AS imgPrato,
+              Prato.idPrato,
+              Prato.descricao AS descricaoPrato,
+              Preco.idPreco,
+              Preco.date,
+              Preco.preco
         FROM 
               CategoriaRest INNER JOIN Restaurant ON Restaurant.idRest = CategoriaRest.idRest
+              LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
+              LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
         WHERE 
-              idCategoria = $idCat''');
+              CategoriaRest.idCategoria = $idCat''');
     print('Restaurant test --> $resp');
-    List<Restaurant> rests = List<Restaurant>();
+    List<Restaurant> rests = new List<Restaurant>();
+    List<Prato> usual= new List<Prato>();
+    int savedIdRest;
     for (dynamic i in resp) {
-      rests.add(await this.getRestById(i['idRest']));
+      rests.add(Restaurant.map(i));
+      if(i['idRest'] == savedIdRest ){
+        rests.last.addPrato(Prato.mapJOIN(i));
+      }
+      savedIdRest= i['idRest'];
     }
     return rests;
   }
@@ -265,11 +269,13 @@ class DatabaseHelper {
   Future<User> getUser(String email, String pass) async {
     var dbClient = await db;
     dynamic test = await dbClient.rawQuery(
-        'SELECT name, number, idUser, address FROM User WHERE email=? and password=?',
+        'SELECT * FROM User WHERE email=? and password=?',
         [email, pass]);
+    print(test);
     try {
-      User.map(test[0]);
+      return User.map(test[0]);
     } catch (err) {
+      print(err);
       return null;
     }
   }
