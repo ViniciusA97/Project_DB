@@ -66,6 +66,13 @@ class Control{
     return await this._db.getPedidosByRest(idRest);
   }
   
+  Future<List<Restaurant>> getAllRestaurants() async{
+    return await this._db.getAllRest();
+  }
+
+  Future<List<Restaurant>> getRestaurantsByName() async{
+    return await this._db.getAllRest();
+  }
   
 
 

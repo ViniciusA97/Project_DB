@@ -3,7 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
+import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
+import 'package:project_bd/pages/HomeUserPage/RestForRestaurantsPage.dart';
+import 'package:project_bd/pages/HomeUserPage/RestaurantsList.dart';
 
 class HomePageUser extends StatefulWidget {
   User _user;
@@ -17,8 +20,14 @@ class _HomePageStateUser extends State<HomePageUser> {
   final scaffolKey = GlobalKey<ScaffoldState>();
   User _user;
   int currentIndex;
+  int currentIndexRest;
+  final myController = TextEditingController();
   _HomePageStateUser(this._user);
   List<Categories> _categories;
+  List<Restaurant> _restaurants;
+  String appBarTitle = "Busque por um prato ou restaurante.";
+  Icon actionIcon = new Icon(Icons.search);
+  bool habilitarBusca = false;
 
   @override
   void initState() {
@@ -34,7 +43,9 @@ class _HomePageStateUser extends State<HomePageUser> {
         print(value);
       });
     });
+    this._restaurants = await control.getAllRestaurants();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +86,7 @@ class _HomePageStateUser extends State<HomePageUser> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'Entrega',
+                              'Bem-vindo ${this._user.email}.',
                               style:
                                   TextStyle(fontSize: 20, color: Colors.black),
                               textAlign: TextAlign.start,
@@ -93,14 +104,50 @@ class _HomePageStateUser extends State<HomePageUser> {
               ),
             ],
           ),
+          // child: allWidgetRest(),
           Container(
             height: 10,
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
             color: Colors.grey.shade100,
           ),
-
-          // child: allWidgetRest(),
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            width: MediaQuery.of(context).size.width,
+            height: 60,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(left: 22)),
+                Container(
+                  height: 45,
+                  width: 500,
+                  child:
+                  TextField(
+                    controller: myController,
+                    autofocus: false,
+                    decoration:
+                    InputDecoration(border: 
+                    InputBorder.none,
+                    //icon: Icon(Icons.person),
+                    hintText: appBarTitle),
+                  ),
+                ),
+                IconButton(icon: actionIcon, onPressed: (){
+                  this.actionIcon = new Icon(Icons.search);
+                  //this.appBarTitle = "";
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>RestaurantsList(_restaurants)));
+                }),
+                Padding(padding: EdgeInsets.only(top: 10)),
+              ],
+            ),
+          ),
+          Container(
+            height: 10,
+            width: MediaQuery.of(context).size.width,
+            padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
+            color: Colors.grey.shade100,
+          ),
           Container(
             margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
             width: MediaQuery.of(context).size.width,
@@ -127,6 +174,7 @@ class _HomePageStateUser extends State<HomePageUser> {
             padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
             color: Colors.grey.shade100,
           ),
+
         ]);
   }
 
