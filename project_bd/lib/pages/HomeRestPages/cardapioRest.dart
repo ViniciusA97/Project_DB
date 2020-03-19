@@ -54,6 +54,7 @@ class _CardapioPageState extends State<CardapioPage> {
       body: Container(
         // margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
         alignment: Alignment.center,
+
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -70,12 +71,12 @@ class _CardapioPageState extends State<CardapioPage> {
           ),
           Stack(children: <Widget>[
 
-
           Container(
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.all(Radius.circular(20))),
             width: MediaQuery.of(context).size.width,
+
             height: MediaQuery.of(context).size.height*0.8,
             child: cardapio(),
           )
@@ -119,6 +120,7 @@ class _CardapioPageState extends State<CardapioPage> {
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(20),
                               bottomLeft: Radius.circular(20))),
+
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,6 +143,7 @@ class _CardapioPageState extends State<CardapioPage> {
                               ),
                               Padding(padding: EdgeInsets.only(top:5)),
                               Text('${this._pratos[index].descricao}', style: TextStyle(color: Colors.white),)
+
                             ],
                             
                           ),

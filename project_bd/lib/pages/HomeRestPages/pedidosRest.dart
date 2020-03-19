@@ -63,6 +63,7 @@ class _PedidosRestState extends State<PedidosRest>{
               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
               width: MediaQuery.of(context).size.width-20,
               height: MediaQuery.of(context).size.height*0.8,
+
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.grey.shade200

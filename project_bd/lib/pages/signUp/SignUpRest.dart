@@ -39,6 +39,7 @@ class _SignUpRestState extends State<SignUpRest> {
                     child: Container(
                       margin: EdgeInsets.only(left: 20.0, right: 20.0),
                       width: MediaQuery.of(context).size.width,
+
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
