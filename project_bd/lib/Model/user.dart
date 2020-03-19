@@ -13,7 +13,7 @@ class User implements Client{
   
   User.map(dynamic obj) {
     this._id = obj['id'];
-    this._name = obj['username'];
+    this._name = obj['name'];
     this._password = obj['password'];
     this._email = obj['email'];
     this._address = obj['address'];

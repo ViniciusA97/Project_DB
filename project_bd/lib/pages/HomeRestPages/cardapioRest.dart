@@ -54,28 +54,33 @@ class _CardapioPageState extends State<CardapioPage> {
       body: Container(
         // margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
         alignment: Alignment.center,
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Column(children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 80),
+            padding: EdgeInsets.only(top: 30),
           ),
           Text(
             'Pratos',
             style: kTextTitle.copyWith(fontSize: 20.0),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 20),
           ),
+          Stack(children: <Widget>[
+
           Container(
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.all(Radius.circular(20))),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 202,
+
+            height: MediaQuery.of(context).size.height*0.8,
             child: cardapio(),
           )
+          ],),
         ])));
   }
 
@@ -89,7 +94,7 @@ class _CardapioPageState extends State<CardapioPage> {
           itemCount: this._pratos.length,
           itemBuilder: (BuildContext cntx, int index) {
             return Container(
-                // padding: EdgeInsets.only(left: 10),
+                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 width: MediaQuery.of(context).size.width - 30,
                 height: 300,
                 child: Stack(
@@ -107,25 +112,40 @@ class _CardapioPageState extends State<CardapioPage> {
                     Positioned(
                         top: 200,
                         child: Container(
-                          height: 50,
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          height: 80,
                           width: MediaQuery.of(context).size.width - 40,
                           decoration: BoxDecoration(
                             color: Color(0xff38ad53),
                             borderRadius: BorderRadius.only(
                               bottomRight: Radius.circular(20),
                               bottomLeft: Radius.circular(20))),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(
-                                '${this._pratos[index].name}',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 15),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    
+                                    '${this._pratos[index].name}',
+                                    style: TextStyle(
+                                        fontStyle: FontStyle.italic,
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  Text('\$${this._pratos[index].preco.preco}',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 15))
+
+                                ],
                               ),
-                              Text('\$${this._pratos[index].preco.preco}',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 15))
+                              Padding(padding: EdgeInsets.only(top:5)),
+                              Text('${this._pratos[index].descricao}', style: TextStyle(color: Colors.white),)
+
                             ],
+                            
                           ),
                         ))
                   ],

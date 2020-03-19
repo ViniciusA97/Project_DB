@@ -3,22 +3,34 @@ import 'package:flutter/cupertino.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
+import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/components/Search.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
+import 'package:project_bd/pages/HomeUserPage/RestForRestaurantsPage.dart';
+import 'package:project_bd/pages/HomeUserPage/RestaurantsList.dart';
 
 class HomePageUser extends StatefulWidget {
   User _user;
 
   HomePageUser(this._user);
   @override
-  State<StatefulWidget> createState() => _HomePageStateUser(this._user);
+  State<StatefulWidget> createState() => HomePageStateUser(this._user);
 }
 
-class _HomePageStateUser extends State<HomePageUser> {
+class HomePageStateUser extends State<HomePageUser> {
+
+  bool _isSearch = false;
   final scaffolKey = GlobalKey<ScaffoldState>();
   User _user;
   int currentIndex;
-  _HomePageStateUser(this._user);
+  int currentIndexRest;
+  final myController = TextEditingController();
+  HomePageStateUser(this._user);
   List<Categories> _categories;
+  List<Restaurant> _restaurants;
+  String appBarTitle = "Busque por um prato ou restaurante.";
+  Icon actionIcon = new Icon(Icons.search);
+  bool habilitarBusca = false;
 
   @override
   void initState() {
@@ -34,18 +46,32 @@ class _HomePageStateUser extends State<HomePageUser> {
         print(value);
       });
     });
+    this._restaurants = await control.getAllRestaurants();
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffolKey,
       backgroundColor: Colors.white,
-      body: test(),
+      body: _isSearch? setSearch(): test(),
+    );
+  }
+
+
+  Widget setSearch(){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Search(this),
     );
   }
 
   Widget test() {
+ 
+
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -75,9 +101,9 @@ class _HomePageStateUser extends State<HomePageUser> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'Entrega',
+                              'Bem-vindo ${this._user.name}',
                               style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
+                                  TextStyle(fontSize: 20, color: Colors.grey.shade700),
                               textAlign: TextAlign.start,
                             ),
                             Padding(padding: EdgeInsets.only(top: 5)),
@@ -93,14 +119,37 @@ class _HomePageStateUser extends State<HomePageUser> {
               ),
             ],
           ),
+        
+          
           Container(
-            height: 10,
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
-            color: Colors.grey.shade100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey.shade100
+            ),
+            margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.02, 0, MediaQuery.of(context).size.width*0.02, 0),
+            padding: EdgeInsets.fromLTRB(10, 0, 0,0),
+            width: MediaQuery.of(context).size.width*0.95,
+            height: 40,
+            alignment: Alignment.center,
+            child: MaterialButton(
+              onPressed: (){
+                setState(() {
+                  this._isSearch=true;
+                });
+                },
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Buscar '),
+                    Icon(Icons.search),
+                  ],
+                ),
+              ),
+              ),
+          
           ),
-
-          // child: allWidgetRest(),
+          Padding(padding: EdgeInsets.only(top:10)),
           Container(
             margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
             width: MediaQuery.of(context).size.width,
@@ -127,6 +176,7 @@ class _HomePageStateUser extends State<HomePageUser> {
             padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
             color: Colors.grey.shade100,
           ),
+
         ]);
   }
 
@@ -173,5 +223,11 @@ class _HomePageStateUser extends State<HomePageUser> {
   void call(Categories c) async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => RestForCategoriesPage(c)));
+  }
+
+  void setSearchFalse(){
+    setState(() {
+      _isSearch = false;
+    });
   }
 }

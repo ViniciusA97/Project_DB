@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       key: scaffoldKey,
       body: home(),
@@ -67,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                           Padding(
                             padding: EdgeInsets.only(top: 5),
                           ),
+
                           Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[Image.asset('./assets/comida4.jpg')],
@@ -118,4 +118,3 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 }
-

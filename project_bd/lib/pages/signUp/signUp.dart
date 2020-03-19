@@ -38,7 +38,7 @@ class _SignUpState extends State<SignUp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(top: 40),
+                          padding: EdgeInsets.only(top: 30),
                         ),
                         Text(
                           'Create your user account',
@@ -123,6 +123,7 @@ class _SignUpState extends State<SignUp> {
     }
     Control control = Control.internal();
     User temp = User(name, pass, email, address, number);
+    print('$name');
     bool confirmate = await control.saveUser(temp);
     if (confirmate) {
       Navigator.pop(context);

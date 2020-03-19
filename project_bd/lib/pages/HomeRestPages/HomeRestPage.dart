@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeRestPages/cardapioRest.dart';
 import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
@@ -41,7 +40,7 @@ class _RestPageState extends State<RestPage> {
   Widget build(BuildContext context) {
     print(this._rests);
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
         key: scaffolKey,
         backgroundColor: Colors.white,
         body: currentPage,

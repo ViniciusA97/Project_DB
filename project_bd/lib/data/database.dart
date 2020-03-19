@@ -13,6 +13,10 @@ import 'package:sqflite/sqflite.dart';
 import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
 import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -271,7 +275,6 @@ class DatabaseHelper {
     dynamic test = await dbClient.rawQuery(
         'SELECT * FROM User WHERE email=? and password=?',
         [email, pass]);
-    print(test);
     try {
       return User.map(test[0]);
     } catch (err) {
@@ -497,6 +500,46 @@ class DatabaseHelper {
         whereArgs: [idPrato]);
     Prato prato = Prato.map(map[0]);
     return prato;
+  }
+
+  Future<List<Restaurant>> search(String text) async {
+    var dbClient = await db;
+    List<Map> response = await dbClient.rawQuery(
+      '''SELECT 
+            Restaurant.*,
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.idPreco,
+            Prato.img AS imgPrato,
+            Preco.idPreco,
+            Preco.date,
+            Preco.preco
+      FROM 
+            Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
+            LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+      WHERE 
+            Restaurant.name LIKE '%$text%' OR Prato.name LIKE '%$text%' 
+            ''' 
+    );
+    try{
+      response[0];
+      Map<int,Restaurant> map = new Map<int, Restaurant>();
+      for(var i in response){
+        if(!map.containsKey(i['idRest'])){
+          map[i['idRest']] = Restaurant.map(i);
+        }else{
+          map[i['idRest']].addPrato(Prato.mapJOIN(i));
+        }
+      }
+      List<Restaurant> rest = new List<Restaurant>();
+      map.forEach((k,v)=>rest.add(v));
+      return rest;
+    }catch(err){
+      print(err);
+      print('deu ruim otaro');
+      return new List<Restaurant>();
+    }
   }
 
   //deletion

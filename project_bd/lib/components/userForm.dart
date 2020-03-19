@@ -50,6 +50,9 @@ class _UserFormState extends State<UserForm> {
             padding: EdgeInsets.all(5),
           ),
           TextFormField(
+            onTap: (){
+              print('vai dar certo');
+            },
             validator: (value) {
               if (value.isEmpty) {
                 return 'Please enter some text';
