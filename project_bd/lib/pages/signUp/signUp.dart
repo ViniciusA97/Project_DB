@@ -5,7 +5,6 @@ import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/constants.dart';
 
 import '../../constants.dart';
-import '../../constants.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -43,13 +42,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         Text(
                           'Create your user account',
-                          style: TextStyle(
-                            fontSize: 21.0,
-                            // fontFamily: 'Source Sans Pro',
-                            letterSpacing: 2.5,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: kTextTitle.copyWith(fontSize: 21.0),
                         ),
                         Padding(padding: EdgeInsets.only(top: 30)),
                         TextFormField(

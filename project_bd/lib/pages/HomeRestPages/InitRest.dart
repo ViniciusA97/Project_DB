@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/constants.dart';
 import 'package:project_bd/data/database.dart';
 
 class InitRest extends StatefulWidget {
-  
   Restaurant _restaurant;
-  
+
   InitRest(this._restaurant);
 
-  State<StatefulWidget> createState() =>
-      _InitRestState(_restaurant);
+  State<StatefulWidget> createState() => _InitRestState(_restaurant);
 }
 
 class _InitRestState extends State<InitRest> {
@@ -22,15 +21,15 @@ class _InitRestState extends State<InitRest> {
   Restaurant _rest;
   List<Categories> _categories;
   List<Categories> _allCategories;
-  
+
   //keys
   final key = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   //variaveis para criar categorias
   String name;
   String img;
-  
+
   //variaveis utilizadas no AnimedContainer
   Alignment alignment = Alignment.bottomCenter;
   double x = 0;
@@ -57,12 +56,11 @@ class _InitRestState extends State<InitRest> {
 
   _asyncMetod() async {
     Control control = Control.internal();
-    control.getAllCategories()
-      .then((onValue){
-          setState(() {
-            this._allCategories= onValue;
-          });
+    control.getAllCategories().then((onValue) {
+      setState(() {
+        this._allCategories = onValue;
       });
+    });
   }
 
   _showSnackBar(String text) {
@@ -85,144 +83,171 @@ class _InitRestState extends State<InitRest> {
   }
 
   Widget body() {
-    return Stack(children: <Widget>[
-      Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(children: <Widget>[
-          Stack(children: <Widget>[
-            Positioned(
-                child: ClipRRect(
-                    child: Image.network(
-              '${this._rest.url}',
-              fit: BoxFit.fill,
-              height: 250,
-              width: MediaQuery.of(context).size.width,
-            ))),
-            Positioned(
-                top: 150,
-                child: Container(
-                    decoration: new BoxDecoration(
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Positioned(
+                    child: ClipRRect(
+                      child: Image.network(
+                        '${this._rest.url}',
+                        fit: BoxFit.fill,
+                        height: 250,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 150,
+                    child: Container(
+                      decoration: new BoxDecoration(
                         color: Colors.white,
                         borderRadius: new BorderRadius.only(
-                            bottomLeft: const Radius.circular(20),
-                            bottomRight: const Radius.circular(20),
-                            topLeft: const Radius.circular(20),
-                            topRight: const Radius.circular(20))),
-                    height: MediaQuery.of(context).size.height - 400,
-                    width: MediaQuery.of(context).size.width,
-                    child: Container(
+                          bottomLeft: const Radius.circular(20),
+                          bottomRight: const Radius.circular(20),
+                          topLeft: const Radius.circular(20),
+                          topRight: const Radius.circular(20),
+                        ),
+                      ),
+                      height: MediaQuery.of(context).size.height - 400,
+                      width: MediaQuery.of(context).size.width,
+                      child: Container(
                         margin: EdgeInsets.only(top: 10, left: 10),
                         child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                '${this._rest.address}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              '${this._rest.address}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey),
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            Text(
+                              '${this._rest.name}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 25),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 10, right: 20),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    '${this._rest.email}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey),
+                                  ),
+                                  Text(
+                                    '${this._rest.nume}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey),
+                                  )
+                                ],
                               ),
-                              Padding(padding: EdgeInsets.only(top: 5)),
-                              Text(
-                                '${this._rest.name}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 25),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(top: 10, right: 20),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('${this._rest.email}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey)),
-                                    Text('${this._rest.nume}',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey))
-                                  ],
-                                ),
-                              ),
-                            ])))),
-          ]),
-          Container(
-            height: 10,
-            color: Colors.grey.shade100,
-          ),
-          Container(
-            height: 210,
-            width: MediaQuery.of(context).size.width,
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            decoration: BoxDecoration(color: Colors.white),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Categorias',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.grey.shade800,
-                      fontWeight: FontWeight.w500),
-                  textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: 10,
+                color: Colors.grey.shade100,
+              ),
+              Container(
+                height: 210,
+                width: MediaQuery.of(context).size.width,
+                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                decoration: BoxDecoration(color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Categorias',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.grey.shade800,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                    Padding(padding: EdgeInsets.only(top: 10)),
+                    getListView(),
+                  ],
                 ),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                getListView(),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+              ),
+              Container(
+                height: 10,
+                color: Colors.grey.shade100,
+              ),
+            ],
+          ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Positioned(
+                  child: AnimatedContainer(
+                    height: x,
+                    child: tab,
+                    duration: Duration(milliseconds: 700),
+                    curve: Curves.fastOutSlowIn,
+                    alignment: alignment,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(20),
+                        topRight: const Radius.circular(20),
+                      ),
+                      color: Colors.grey.shade100,
+                    ),
+                    onEnd: () {
+                      setState(() {
+                        if (isSubindo) {
+                          print('a');
+                          _setCreate();
+                          _setSerch();
+                          _getTabView();
+                        } else {
+                          print('b');
+                          this._search = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                          this._create = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                          this.tab = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                        }
+                      });
+                    },
+                  ),
+                )
               ],
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-          ),
-          Container(
-            height: 10,
-            color: Colors.grey.shade100,
-          ),
-        ]),
-      ),
-      Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-        Stack(children: <Widget>[
-          Positioned(
-              child: AnimatedContainer(
-            height: x,
-            child: tab,
-            duration: Duration(milliseconds: 700),
-            curve: Curves.fastOutSlowIn,
-            alignment: alignment,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(20),
-                    topRight: const Radius.circular(20)),
-                color: Colors.grey.shade200),
-            onEnd: () {
-              setState(() {
-                if (isSubindo) {
-                  print('a');
-                  _setCreate();
-                  _setSerch();
-                  _getTabView();
-                } else {
-                  print('b');
-                  this._search = Container(
-                    height: 0,
-                    width: 0,
-                  );
-                  this._create = Container(
-                    height: 0,
-                    width: 0,
-                  );
-                  this.tab = Container(
-                    height: 0,
-                    width: 0,
-                  );
-                }
-              });
-            },
-          ))
-        ]),
-      ])
-    ]);
+          ],
+        )
+      ],
+    );
   }
 
   Widget getListView() {
@@ -231,11 +256,12 @@ class _InitRestState extends State<InitRest> {
         children: <Widget>[
           Container(
             padding: EdgeInsets.only(top: 15),
-            height: 125,
+            height: 126,
             width: 190,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100),
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey.shade100,
+            ),
             child: FlatButton(
               child: Icon(Icons.add),
               onPressed: () {
@@ -250,7 +276,7 @@ class _InitRestState extends State<InitRest> {
           Padding(padding: EdgeInsets.only(top: 10)),
           Text(
             'Adicione uma categoria',
-            style: TextStyle(fontSize: 12),
+            style: kTextCategorie,
           )
         ],
       );
@@ -262,8 +288,9 @@ class _InitRestState extends State<InitRest> {
             height: 125,
             width: 190,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100),
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey.shade100,
+            ),
             child: FlatButton(
               child: Icon(Icons.add),
               onPressed: () {
@@ -278,69 +305,75 @@ class _InitRestState extends State<InitRest> {
           Padding(padding: EdgeInsets.only(top: 10)),
           Text(
             'Adicione uma categoria',
-            style: TextStyle(fontSize: 12),
+            style: kTextCategorie,
           )
         ],
       );
     } else {
       return SizedBox(
-          height: 165,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: this._categories.length + 1,
-              itemBuilder: (BuildContext cntx, int index) {
-                print(index);
-                if (index == 0) {
-                  return Column(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
-                        padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                        height: 129,
-                        width: 190,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey.shade100),
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              x = 350;
-                              alignment = Alignment.center;
-                              isSubindo = true;
-                            });
-                          },
-                          icon: Icon(Icons.add),
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Text(
-                        'Adicione uma categoria',
-                      )
-                    ],
-                  );
-                }
-                return Column(children: <Widget>[
+        height: 164,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: this._categories.length + 1,
+          itemBuilder: (BuildContext cntx, int index) {
+            print(index);
+            if (index == 0) {
+              return Column(
+                children: <Widget>[
                   Container(
-                    padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
-                    height: 139,
+                    margin: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    height: 126,
                     width: 190,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                    child: ClipRRect(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      child: Image.network(
-                        this._categories[index - 1].image,
-                        fit: BoxFit.fill,
-                      ),
+                      color: Colors.grey.shade100,
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          x = 350;
+                          alignment = Alignment.center;
+                          isSubindo = true;
+                        });
+                      },
+                      icon: Icon(Icons.add),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                  Text(
+                    'Adicione uma categoria',
+                    style: kTextCategorie,
+                  )
+                ],
+              );
+            }
+            return Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
+                  height: 136,
+                  width: 190,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      this._categories[index - 1].image,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  Text('${this._categories[index - 1].name}')
-                ]);
-              }));
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                ),
+                Text('${this._categories[index - 1].name}', style: kTextCategorie),
+              ],
+            );
+          },
+        ),
+      );
     }
   }
 
@@ -354,24 +387,14 @@ class _InitRestState extends State<InitRest> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      hintText: 'Nome da categoria',
-                      fillColor: Colors.white,
-                      filled: false),
+                  decoration: kTextFieldDecoraction.copyWith(hintText: "Nome da categoria"),
                   onSaved: (val) => name = val,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 15),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      hintText: 'Imagem da categoria',
-                      fillColor: Colors.white,
-                      filled: false),
+                  decoration: kTextFieldDecoraction.copyWith(hintText: "Imagem da categoria"),
                   onSaved: (val) => img = val,
                 ),
                 Padding(padding: EdgeInsets.only(top: 25)),
@@ -379,51 +402,62 @@ class _InitRestState extends State<InitRest> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     RaisedButton(
-                        child: Text('Create'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        onPressed: () {
-                          _save();
-                          setState(() {
-                            isSubindo = false;
-                            x = 0;
-                            this._search = Container(
-                              height: 0,
-                              width: 0,
-                            );
-                            this._create = Container(
-                              height: 0,
-                              width: 0,
-                            );
-                            tab = Container(
-                              height: 0,
-                              width: 0,
-                            );
-                          });
-                        }),
+                      color: Color(0xff38ad53),
+                      child: Text(
+                        'Create',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      onPressed: () {
+                        _save();
+                        setState(() {
+                          isSubindo = false;
+                          x = 0;
+                          this._search = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                          this._create = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                          tab = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                        });
+                      },
+                    ),
                     Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0)),
                     RaisedButton(
-                        child: Text('Cancel'),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        onPressed: () {
-                          setState(() {
-                            isSubindo = false;
-                            x = 0;
-                            this._search = Container(
-                              height: 0,
-                              width: 0,
-                            );
-                            this._create = Container(
-                              height: 0,
-                              width: 0,
-                            );
-                            tab = Container(
-                              height: 0,
-                              width: 0,
-                            );
-                          });
-                        }),
+                      color: Color(0xff38ad53),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      onPressed: () {
+                        setState(() {
+                          isSubindo = false;
+                          x = 0;
+                          this._search = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                          this._create = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                          tab = Container(
+                            height: 0,
+                            width: 0,
+                          );
+                        });
+                      },
+                    ),
                   ],
                 )
               ],
@@ -435,73 +469,87 @@ class _InitRestState extends State<InitRest> {
   void _setSerch() {
     setState(() {
       this._search = Container(
-          height: 400,
-          child: Column(children: <Widget>[
+        height: 400,
+        child: Column(
+          children: <Widget>[
             Container(
-                width: MediaQuery.of(context).size.width - 20,
-                height: 200,
-                child: ListView.builder(
-                    itemCount: this._allCategories.length,
-                    itemBuilder: (BuildContext cntx, int index) {
-                      if (this._categories == null) {
-                        return Center(
-                          child: Text('Sem categorias cadastradas'),
-                        );
-                      }
-                      return RawMaterialButton(
-                          onPressed: () {
-                            addCategories(index);
-                          },
-                          child: Container(
-                              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(20)),
-                              width: MediaQuery.of(context).size.width - 20,
+              width: MediaQuery.of(context).size.width - 20,
+              height: 200,
+              child: ListView.builder(
+                itemCount: this._allCategories.length,
+                itemBuilder: (BuildContext cntx, int index) {
+                  if (this._categories == null) {
+                    return Center(
+                      child: Text('Sem categorias cadastradas'),
+                    );
+                  }
+                  return RawMaterialButton(
+                    onPressed: () {
+                      addCategories(index);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 80,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: const Radius.circular(20),
+                              bottomLeft: const Radius.circular(20),
+                            ),
+                            child: Image.network(
+                              '${this._allCategories[index].image}',
+                              width: 120,
                               height: 80,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: const Radius.circular(20),
-                                        bottomLeft: const Radius.circular(20)),
-                                    child: Image.network(
-                                      '${this._allCategories[index].image}',
-                                      width: 120,
-                                      height: 80,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  Padding(padding: EdgeInsets.only(left: 15)),
-                                  Text('${this._allCategories[index].name}')
-                                ],
-                              )));
-                    })),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                          Padding(padding: EdgeInsets.only(left: 15)),
+                          Text('${this._allCategories[index].name}')
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
             Padding(padding: EdgeInsets.fromLTRB(10, 5, 0, 0)),
             RaisedButton(
-                child: Text('Cancel'),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                onPressed: () {
-                  setState(() {
-                    isSubindo = false;
-                    x = 0;
-                    this._search = Container(
-                      height: 0,
-                      width: 0,
-                    );
-                    this._create = Container(
-                      height: 0,
-                      width: 0,
-                    );
-                    tab = Container(
-                      height: 0,
-                      width: 0,
-                    );
-                  });
-                }),
-          ]));
+              color: Color(0xff38ad53),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white),
+              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              onPressed: () {
+                setState(() {
+                  isSubindo = false;
+                  x = 0;
+                  this._search = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                  this._create = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                  tab = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                });
+              },
+            ),
+          ],
+        ),
+      );
     });
   }
 
@@ -529,7 +577,10 @@ class _InitRestState extends State<InitRest> {
           Padding(
             padding: EdgeInsets.only(top: 10),
           ),
-          Text('Categorias'),
+          Text(
+            'Categorias',
+            style: kTextCategorie,
+          ),
           DefaultTabController(
             length: 2,
             initialIndex: 0,
@@ -537,17 +588,15 @@ class _InitRestState extends State<InitRest> {
               children: <Widget>[
                 TabBar(
                   isScrollable: true,
-                  labelColor: Colors.white,
+                  labelColor: Colors.black,
+                  indicatorColor: Color(0xff38ad53),
                   tabs: <Widget>[
                     Tab(
-                      child: Text(
-                        'Create',
-                        style: TextStyle(color: Colors.black),
-                      ),
+                      child: Text('Create'),
                     ),
                     Tab(
-                        child: Text('Search',
-                            style: TextStyle(color: Colors.black)))
+                      child: Text('Search'),
+                    )
                   ],
                 ),
                 Container(
