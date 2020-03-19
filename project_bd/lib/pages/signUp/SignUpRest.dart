@@ -25,114 +25,110 @@ class _SignUpRestState extends State<SignUpRest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       key: scafolldKey,
       body: Center(
         child: 
-            ListView(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    new Form(
-              key: formKey,
-              child: Container(
-                margin: EdgeInsets.only(left: 20.0, right: 20.0),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 60),
-                    ),
-                    Text(
-                      'Create your restaurant account',
-                      style: TextStyle(
-                        fontSize: 19.0,
-                        fontFamily: 'Source Sans Pro',
-                        letterSpacing: 2.5,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30),
-                    ),
-                    TextFormField(
-                      decoration:
-                          kTextFieldDecoraction.copyWith(hintText: 'name'),
-                      onSaved: (val) => name = val,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5)),
-                    TextFormField(
-                      decoration:
-                          kTextFieldDecoraction.copyWith(hintText: 'password'),
-                      onSaved: (val) => pass = val,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5)),
-                    TextFormField(
-                      decoration:
-                          kTextFieldDecoraction.copyWith(hintText: 'image'),
-                      onSaved: (val) => image = val,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5)),
-                    TextFormField(
-                      decoration: kTextFieldDecoraction.copyWith(
-                          hintText: 'description'),
-                      onSaved: (val) => description = val,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5)),
-                    TextFormField(
-                      decoration:
-                          kTextFieldDecoraction.copyWith(hintText: 'email'),
-                      onSaved: (val) => email = val,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5)),
-                    TextFormField(
-                      decoration:
-                          kTextFieldDecoraction.copyWith(hintText: 'number'),
-                      onSaved: (val) => nume = val,
-                    ),
-                    Padding(padding: EdgeInsets.only(top: 5)),
-                    TextFormField(
-                      decoration:
-                          kTextFieldDecoraction.copyWith(hintText: 'address'),
-                      onSaved: (val) => address = val,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                    ),
-                    RaisedButton(
-                      color: Color(0xff38ad53),
-                      onPressed: _create,
-                      child: Text(
-                        'Create',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Stack(
+          ListView(
+            children: <Widget>[
+              Column(
                 children: <Widget>[
-                  Positioned(
-                    child: new Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Image.asset('./assets/comida3.jpg'),
+                  new Form(
+                    key: formKey,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20.0, right: 20.0),
+                      width: MediaQuery.of(context).size.width,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 60),
+                            ),
+                            Text(
+                              'Create your restaurant account',
+                              style: kTextTitle.copyWith(fontSize: 19.0),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 30),
+                            ),
+                            TextFormField(
+                              decoration:
+                                  kTextFieldDecoraction.copyWith(hintText: 'name'),
+                              onSaved: (val) => name = val,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            TextFormField(
+                              decoration:
+                                  kTextFieldDecoraction.copyWith(hintText: 'password'),
+                              onSaved: (val) => pass = val,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            TextFormField(
+                              decoration:
+                                  kTextFieldDecoraction.copyWith(hintText: 'image'),
+                              onSaved: (val) => image = val,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            TextFormField(
+                              decoration: kTextFieldDecoraction.copyWith(
+                                  hintText: 'description'),
+                              onSaved: (val) => description = val,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            TextFormField(
+                              decoration:
+                                  kTextFieldDecoraction.copyWith(hintText: 'email'),
+                              onSaved: (val) => email = val,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            TextFormField(
+                              decoration:
+                                  kTextFieldDecoraction.copyWith(hintText: 'number'),
+                              onSaved: (val) => nume = val,
+                            ),
+                            Padding(padding: EdgeInsets.only(top: 5)),
+                            TextFormField(
+                              decoration:
+                                  kTextFieldDecoraction.copyWith(hintText: 'address'),
+                              onSaved: (val) => address = val,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 20),
+                            ),
+                            RaisedButton(
+                              color: Color(0xff38ad53),
+                              onPressed: _create,
+                              child: Text(
+                                'Create',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  )
-                ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20),
+                  ),
+                  Stack(
+                      children: <Widget>[
+                        Positioned(
+                          child: new Align(
+                            alignment: FractionalOffset.bottomCenter,
+                            child: Image.asset('./assets/comida3.jpg'),
+                          ),
+                        )
+                      ],
+                    ),
+                ]
               ),
-            
-
-          ]
-              
-            ),
-            
-          ],
-        ),
+            ],
+          ),
       ),
     );
   }

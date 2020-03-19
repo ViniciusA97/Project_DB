@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
+import 'package:project_bd/constants.dart';
 import '../../Model/Preco.dart';
 import '../../Model/pedidos.dart';
 import '../../Model/restaurant.dart';
@@ -47,31 +48,29 @@ class _PedidosRestState extends State<PedidosRest>{
     );
   }
   
-
   Widget body(){
-    return 
-    Container(
+    return Container(
       alignment: Alignment.center,
       child: 
-    Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(padding: EdgeInsets.only(top:30)),
-        Text('Pedidos', style: TextStyle(fontSize: 20,color: Colors.black),),
-        Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width-40,
-          height: MediaQuery.of(context).size.height-150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.grey.shade200
-          ),
-          child: pedidos(),
-          
-        )
-      ],
-    ));
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(padding: EdgeInsets.only(top:80)),
+            Text('Pedidos', style: kTextTitle.copyWith(fontSize: 20.0),),
+            Padding(padding: EdgeInsets.only(top:30)),
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+              width: MediaQuery.of(context).size.width-40,
+              height: MediaQuery.of(context).size.height - 206,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade200
+              ),
+              child: pedidos(),
+            )
+          ],
+        ));
   }
 
   Widget pedidos(){
@@ -82,33 +81,29 @@ class _PedidosRestState extends State<PedidosRest>{
         )
         );
     }else{
-      return 
-      ListView.builder(
+      return ListView.builder(
         itemCount: _pedidos.length,
         itemBuilder:(BuildContext cntx , int index){
-          return
-          Container(
+          return Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: Colors.white
-              ),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text('Numero do Pedido: ${this._pedidos[index].idPedido}'),
+            ),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text('Numero do Pedido: ${this._pedidos[index].idPedido}'),
                     Text('Preço: ${this._pedidos[index].preco}'),
-                    ],
-                  ),
-                  Text('Cliente: ${this._pedidos[index].user.name}'),
-                  Text('Data: ${this._pedidos[index].data}')
-                ],
-              ),
-
+                  ],
+                ),
+                Text('Cliente: ${this._pedidos[index].user.name}'),
+                Text('Data: ${this._pedidos[index].data}')
+              ],
+            ),
           );
         } 
       );
     }
   }
-
 }

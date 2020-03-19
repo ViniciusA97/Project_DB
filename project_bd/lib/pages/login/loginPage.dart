@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       key: scaffoldKey,
       body: home(),
@@ -23,58 +22,61 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget home() {
-    return Column(
-      children: <Widget>[
-        Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: ListView(
-              children: <Widget>[
-                DefaultTabController(
-                  length: 2,
-                  initialIndex: 0,
-                  child: Column(
-                    children: <Widget>[
-                      Container(child: Image.asset('./assets/comida.jpg')),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20),
-                      ),
-                      TabBar(
-                        isScrollable: true,
-                        labelColor: Colors.black,
-                        indicatorColor: Color(0xff38ad53),
-                        tabs: <Widget>[
-                          Tab(
-                            text: 'User',
+    return SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: ListView(
+                  children: <Widget>[
+                    DefaultTabController(
+                      length: 2,
+                      initialIndex: 0,
+                      child: Column(
+                        children: <Widget>[
+                          Container(child: Image.asset('./assets/comida.jpg')),
+                          Padding(
+                            padding: EdgeInsets.only(top: 20),
                           ),
-                          Tab(
-                            text: 'Restaurant',
+                          TabBar(
+                            isScrollable: true,
+                            labelColor: Colors.black,
+                            indicatorColor: Color(0xff38ad53),
+                            tabs: <Widget>[
+                              Tab(
+                                text: 'User',
+                              ),
+                              Tab(
+                                text: 'Restaurant',
+                              )
+                            ],
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height / 2,
+                            width: MediaQuery.of(context).size.width - 50,
+                            child: TabBarView(
+                              children: <Widget>[
+                                getUserLogin(),
+                                getRestauranteLogin(),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 5),
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[Image.asset('./assets/comida4.jpg')],
                           )
                         ],
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height / 2,
-                        width: MediaQuery.of(context).size.width - 50,
-                        child: TabBarView(
-                          children: <Widget>[
-                            getUserLogin(),
-                            getRestauranteLogin(),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[Image.asset('./assets/comida4.jpg')],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ))
-      ],
+                    )
+                  ],
+                ))
+          ],
+        ),
     );
   }
 
@@ -115,4 +117,3 @@ class _LoginPageState extends State<LoginPage> {
     ));
   }
 }
-

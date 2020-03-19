@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/pratos.dart';
+import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeRestPages/addPrato.dart';
 
 class CardapioPage extends StatefulWidget {
@@ -41,44 +42,41 @@ class _CardapioPageState extends State<CardapioPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: false,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>AddPrato(_id)));
-            
-          },
-          child: Icon(Icons.add),
-          backgroundColor: Colors.green.shade100,
-        ),
-        body: Container(
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AddPrato(_id)));  
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Color(0xff38ad53),
+      ),
+      body: Container(
+        // margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+        alignment: Alignment.center,
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: 80),
+          ),
+          Text(
+            'Pratos',
+            style: kTextTitle.copyWith(fontSize: 20.0),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 30),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.all(Radius.circular(20))),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 100,
-            child: Column(children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 30),
-              ),
-              Text(
-                'Pratos',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
-                width: MediaQuery.of(context).size.width - 20,
-                height: MediaQuery.of(context).size.height - 160,
-                child: cardapio(),
-              )
-            ])));
+            height: MediaQuery.of(context).size.height - 202,
+            child: cardapio(),
+          )
+        ])));
   }
 
   Widget cardapio() {
@@ -98,7 +96,7 @@ class _CardapioPageState extends State<CardapioPage> {
                   children: <Widget>[
                     Positioned(
                         height: 250,
-                        width: MediaQuery.of(context).size.width - 40,
+                        width: MediaQuery.of(context).size.width - 60,
                         child: ClipRRect(
                           child: Image.network(
                             '${this._pratos[index].img}',
@@ -110,23 +108,23 @@ class _CardapioPageState extends State<CardapioPage> {
                         top: 200,
                         child: Container(
                           height: 50,
-                          width: MediaQuery.of(context).size.width - 40,
+                          width: MediaQuery.of(context).size.width - 60,
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(20),
-                                  bottomLeft: Radius.circular(20))),
+                            color: Color(0xff38ad53),
+                            borderRadius: BorderRadius.only(
+                              bottomRight: Radius.circular(20),
+                              bottomLeft: Radius.circular(20))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Text(
                                 '${this._pratos[index].name}',
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 15),
+                                    color: Colors.white, fontSize: 15),
                               ),
                               Text('\$${this._pratos[index].preco.preco}',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 15))
+                                      color: Colors.white, fontSize: 15))
                             ],
                           ),
                         ))

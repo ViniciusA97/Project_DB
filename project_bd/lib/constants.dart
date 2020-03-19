@@ -16,3 +16,15 @@ const kTextFieldDecoraction = InputDecoration(
     borderRadius: BorderRadius.all(Radius.circular(20.0)),
   ),
 );
+
+const kTextTitle = TextStyle(
+  letterSpacing: 2.5,
+  color: Colors.black54,
+  fontWeight: FontWeight.bold,
+);
+
+const kTextCategorie = TextStyle(
+  fontSize: 12, 
+  letterSpacing: 0.5, 
+  color: Colors.black54,
+);
