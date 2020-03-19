@@ -4,6 +4,7 @@ import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/components/Search.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForRestaurantsPage.dart';
 import 'package:project_bd/pages/HomeUserPage/RestaurantsList.dart';
@@ -13,16 +14,18 @@ class HomePageUser extends StatefulWidget {
 
   HomePageUser(this._user);
   @override
-  State<StatefulWidget> createState() => _HomePageStateUser(this._user);
+  State<StatefulWidget> createState() => HomePageStateUser(this._user);
 }
 
-class _HomePageStateUser extends State<HomePageUser> {
+class HomePageStateUser extends State<HomePageUser> {
+
+  bool _isSearch = false;
   final scaffolKey = GlobalKey<ScaffoldState>();
   User _user;
   int currentIndex;
   int currentIndexRest;
   final myController = TextEditingController();
-  _HomePageStateUser(this._user);
+  HomePageStateUser(this._user);
   List<Categories> _categories;
   List<Restaurant> _restaurants;
   String appBarTitle = "Busque por um prato ou restaurante.";
@@ -50,13 +53,25 @@ class _HomePageStateUser extends State<HomePageUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffolKey,
       backgroundColor: Colors.white,
-      body: test(),
+      body: _isSearch? setSearch(): test(),
+    );
+  }
+
+
+  Widget setSearch(){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Search(this),
     );
   }
 
   Widget test() {
+ 
+
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -86,9 +101,9 @@ class _HomePageStateUser extends State<HomePageUser> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              'Bem-vindo ${this._user.email}.',
+                              'Bem-vindo ${this._user.name}',
                               style:
-                                  TextStyle(fontSize: 20, color: Colors.black),
+                                  TextStyle(fontSize: 20, color: Colors.grey.shade700),
                               textAlign: TextAlign.start,
                             ),
                             Padding(padding: EdgeInsets.only(top: 5)),
@@ -104,50 +119,37 @@ class _HomePageStateUser extends State<HomePageUser> {
               ),
             ],
           ),
-          // child: allWidgetRest(),
+        
+          
           Container(
-            height: 10,
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
-            color: Colors.grey.shade100,
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            width: MediaQuery.of(context).size.width,
-            height: 60,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(padding: EdgeInsets.only(left: 22)),
-                Container(
-                  height: 45,
-                  width: 500,
-                  child:
-                  TextField(
-                    controller: myController,
-                    autofocus: false,
-                    decoration:
-                    InputDecoration(border: 
-                    InputBorder.none,
-                    //icon: Icon(Icons.person),
-                    hintText: appBarTitle),
-                  ),
-                ),
-                IconButton(icon: actionIcon, onPressed: (){
-                  this.actionIcon = new Icon(Icons.search);
-                  //this.appBarTitle = "";
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>RestaurantsList(_restaurants)));
-                }),
-                Padding(padding: EdgeInsets.only(top: 10)),
-              ],
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Colors.grey.shade100
             ),
+            margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.02, 0, MediaQuery.of(context).size.width*0.02, 0),
+            padding: EdgeInsets.fromLTRB(10, 0, 0,0),
+            width: MediaQuery.of(context).size.width*0.95,
+            height: 40,
+            alignment: Alignment.center,
+            child: MaterialButton(
+              onPressed: (){
+                setState(() {
+                  this._isSearch=true;
+                });
+                },
+              child: Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('Buscar '),
+                    Icon(Icons.search),
+                  ],
+                ),
+              ),
+              ),
+          
           ),
-          Container(
-            height: 10,
-            width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
-            color: Colors.grey.shade100,
-          ),
+          Padding(padding: EdgeInsets.only(top:10)),
           Container(
             margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
             width: MediaQuery.of(context).size.width,
@@ -221,5 +223,11 @@ class _HomePageStateUser extends State<HomePageUser> {
   void call(Categories c) async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => RestForCategoriesPage(c)));
+  }
+
+  void setSearchFalse(){
+    setState(() {
+      _isSearch = false;
+    });
   }
 }

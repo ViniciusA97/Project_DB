@@ -56,13 +56,13 @@ class _PedidosRestState extends State<PedidosRest>{
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Padding(padding: EdgeInsets.only(top:80)),
-            Text('Pedidos', style: kTextTitle.copyWith(fontSize: 20.0),),
             Padding(padding: EdgeInsets.only(top:30)),
+            Text('Pedidos', style: kTextTitle.copyWith(fontSize: 20.0),),
+            Padding(padding: EdgeInsets.only(top:20)),
             Container(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-              width: MediaQuery.of(context).size.width-40,
-              height: MediaQuery.of(context).size.height - 206,
+              width: MediaQuery.of(context).size.width-20,
+              height: MediaQuery.of(context).size.height*0.8,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.grey.shade200

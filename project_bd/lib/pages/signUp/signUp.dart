@@ -5,7 +5,6 @@ import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/constants.dart';
 
 import '../../constants.dart';
-import '../../constants.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -130,6 +129,7 @@ class _SignUpState extends State<SignUp> {
     }
     Control control = Control.internal();
     User temp = User(name, pass, email, address, number);
+    print('$name');
     bool confirmate = await control.saveUser(temp);
     if (confirmate) {
       Navigator.pop(context);

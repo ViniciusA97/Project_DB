@@ -62,6 +62,10 @@ class Control{
     return await this._db.getPratos(idRest);
   }
 
+  Future<List<Restaurant>> getListForSearch(String text) async {
+    return await this._db.search(text);
+  }
+
   Future<List<Pedido>> getRestPedidos(int idRest) async{
     return await this._db.getPedidosByRest(idRest);
   }
