@@ -6,21 +6,19 @@ import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeRestPages/addPrato.dart';
 
 class CardapioPage extends StatefulWidget {
-  
   int _id;
 
-  CardapioPage( this._id);
+  CardapioPage(this._id);
 
   @override
-  State<StatefulWidget> createState() =>
-      _CardapioPageState(this._id);
+  State<StatefulWidget> createState() => _CardapioPageState(this._id);
 }
 
 class _CardapioPageState extends State<CardapioPage> {
   List<Prato> _pratos = List<Prato>();
   int _id;
 
-  _CardapioPageState( this._id);
+  _CardapioPageState(this._id);
 
   @override
   void initState() {
@@ -28,15 +26,14 @@ class _CardapioPageState extends State<CardapioPage> {
     super.initState();
   }
 
-  _asyncMethod() async{
+  _asyncMethod() async {
     Control control = Control.internal();
-    await control.getPratosRestaurant(this._id)
-      .then((onValue){
-        setState(() {
-          print('on value : $onValue');
-          this._pratos = onValue; 
-        });
+    await control.getPratosRestaurant(this._id).then((onValue) {
+      setState(() {
+        print('on value : $onValue');
+        this._pratos = onValue;
       });
+    });
   }
 
   @override
@@ -46,7 +43,8 @@ class _CardapioPageState extends State<CardapioPage> {
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>AddPrato(_id)));  
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddPrato(_id)));
         },
         child: Icon(Icons.add),
         backgroundColor: Color(0xff38ad53),
@@ -58,30 +56,34 @@ class _CardapioPageState extends State<CardapioPage> {
         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        child: Column(children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 30),
-          ),
-          Text(
-            'Pratos',
-            style: kTextTitle.copyWith(fontSize: 20.0),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-          ),
-          Stack(children: <Widget>[
-
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-            width: MediaQuery.of(context).size.width,
-
-            height: MediaQuery.of(context).size.height*0.8,
-            child: cardapio(),
-          )
-          ],),
-        ])));
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 30),
+            ),
+            Text(
+              'Pratos',
+              style: kTextTitle.copyWith(fontSize: 20.0),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 20),
+            ),
+            Stack(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: cardapio(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget cardapio() {
@@ -91,66 +93,71 @@ class _CardapioPageState extends State<CardapioPage> {
       );
     } else {
       return ListView.builder(
-          itemCount: this._pratos.length,
-          itemBuilder: (BuildContext cntx, int index) {
-            return Container(
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                width: MediaQuery.of(context).size.width - 30,
-                height: 300,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                        height: 250,
-                        width: MediaQuery.of(context).size.width - 40,
-                        child: ClipRRect(
-                          child: Image.network(
-                            '${this._pratos[index].img}',
-                            fit: BoxFit.fill,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                        )),
-                    Positioned(
-                        top: 200,
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                          height: 80,
-                          width: MediaQuery.of(context).size.width - 40,
-                          decoration: BoxDecoration(
-                            color: Color(0xff38ad53),
-                            borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(20))),
-
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(
-                                    
-                                    '${this._pratos[index].name}',
-                                    style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                  Text('\$${this._pratos[index].preco.preco}',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 15))
-
-                                ],
-                              ),
-                              Padding(padding: EdgeInsets.only(top:5)),
-                              Text('${this._pratos[index].descricao}', style: TextStyle(color: Colors.white),)
-
-                            ],
-                            
-                          ),
-                        ))
-                  ],
-                ));
-          });
+        itemCount: this._pratos.length,
+        itemBuilder: (BuildContext cntx, int index) {
+          return Container(
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            width: MediaQuery.of(context).size.width - 30,
+            height: 300,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                  height: 250,
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: ClipRRect(
+                    child: Image.network(
+                      '${this._pratos[index].img}',
+                      fit: BoxFit.fill,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                Positioned(
+                  top: 200,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    height: 80,
+                    width: MediaQuery.of(context).size.width - 40,
+                    decoration: BoxDecoration(
+                      color: Color(0xff38ad53),
+                      borderRadius: BorderRadius.only(
+                        bottomRight: Radius.circular(20),
+                        bottomLeft: Radius.circular(20),
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              '${this._pratos[index].name}',
+                              style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white,
+                                  fontSize: 20),
+                            ),
+                            Text('\$${this._pratos[index].preco.preco}',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15))
+                          ],
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 5)),
+                        Text(
+                          '${this._pratos[index].descricao}',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      );
     }
   }
 

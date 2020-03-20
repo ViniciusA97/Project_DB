@@ -5,6 +5,7 @@ import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/components/Search.dart';
+import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForRestaurantsPage.dart';
 import 'package:project_bd/pages/HomeUserPage/RestaurantsList.dart';
@@ -18,7 +19,6 @@ class HomePageUser extends StatefulWidget {
 }
 
 class HomePageStateUser extends State<HomePageUser> {
-
   bool _isSearch = false;
   final scaffolKey = GlobalKey<ScaffoldState>();
   User _user;
@@ -29,7 +29,10 @@ class HomePageStateUser extends State<HomePageUser> {
   List<Categories> _categories;
   List<Restaurant> _restaurants;
   String appBarTitle = "Busque por um prato ou restaurante.";
-  Icon actionIcon = new Icon(Icons.search);
+  Icon actionIcon = new Icon(
+    Icons.search,
+    color: Color(0xff38ad53),
+  );
   bool habilitarBusca = false;
 
   @override
@@ -49,19 +52,17 @@ class HomePageStateUser extends State<HomePageUser> {
     this._restaurants = await control.getAllRestaurants();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: scaffolKey,
       backgroundColor: Colors.white,
-      body: _isSearch? setSearch(): test(),
+      body: _isSearch ? setSearch() : test(),
     );
   }
 
-
-  Widget setSearch(){
+  Widget setSearch() {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -70,73 +71,76 @@ class HomePageStateUser extends State<HomePageUser> {
   }
 
   Widget test() {
- 
-
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Stack(
             children: <Widget>[
               Positioned(
-                  child: Container(
-                child: Image.asset(
-                  './assets/pizza.jpg',
-                  fit: BoxFit.fill,
+                child: Container(
+                  child: Image.asset(
+                    './assets/pizza.jpg',
+                    fit: BoxFit.fill,
+                  ),
+                  height: 170,
+                  width: MediaQuery.of(context).size.width,
                 ),
-                height: 170,
-                width: MediaQuery.of(context).size.width,
-              )),
+              ),
               Positioned(
                 top: 100,
                 child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Container(
-                        height: 150,
-                        margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Bem-vindo ${this._user.name}',
-                              style:
-                                  TextStyle(fontSize: 20, color: Colors.grey.shade700),
-                              textAlign: TextAlign.start,
-                            ),
-                            Padding(padding: EdgeInsets.only(top: 5)),
-                            Text(
-                              '${this._user.address}',
-                              style: TextStyle(color: Colors.grey.shade500),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 10),
-                            ),
-                          ],
-                        ))),
+                  width: MediaQuery.of(context).size.width,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Container(
+                    height: 150,
+                    margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'Bem-vindo ${this._user.name}',
+                          style: TextStyle(
+                              fontSize: 20, color: Colors.grey.shade700),
+                          textAlign: TextAlign.start,
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 5)),
+                        Text(
+                          '${this._user.address}',
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
-        
-          
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.grey.shade100
-            ),
-            margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.02, 0, MediaQuery.of(context).size.width*0.02, 0),
-            padding: EdgeInsets.fromLTRB(10, 0, 0,0),
-            width: MediaQuery.of(context).size.width*0.95,
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.grey.shade100),
+            margin: EdgeInsets.fromLTRB(
+                MediaQuery.of(context).size.width * 0.02,
+                0,
+                MediaQuery.of(context).size.width * 0.02,
+                0),
+            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+            width: MediaQuery.of(context).size.width * 0.95,
             height: 40,
             alignment: Alignment.center,
             child: MaterialButton(
-              onPressed: (){
+              onPressed: () {
                 setState(() {
-                  this._isSearch=true;
+                  this._isSearch = true;
                 });
-                },
+              },
               child: Container(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,23 +150,24 @@ class HomePageStateUser extends State<HomePageUser> {
                   ],
                 ),
               ),
-              ),
-          
+            ),
           ),
-          Padding(padding: EdgeInsets.only(top:10)),
+          Padding(padding: EdgeInsets.only(top: 10)),
           Container(
-            margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
             width: MediaQuery.of(context).size.width,
-            height: 200,
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            height: 210,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   'Categorias',
                   style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400),
+                    fontSize: 20,
+                    color: Colors.grey.shade800,
+                    fontWeight: FontWeight.w500,
+                  ),
                   textAlign: TextAlign.start,
                 ),
                 Padding(padding: EdgeInsets.only(top: 10)),
@@ -176,7 +181,6 @@ class HomePageStateUser extends State<HomePageUser> {
             padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
             color: Colors.grey.shade100,
           ),
-
         ]);
   }
 
@@ -190,32 +194,34 @@ class HomePageStateUser extends State<HomePageUser> {
         width: MediaQuery.of(context).size.width,
         height: 150,
         child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: this._categories.length,
-            itemBuilder: (BuildContext context, int index) {
-              return FlatButton(
-                  onPressed: () {
-                    call(this._categories[index]);
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          '${this._categories[index].image}',
-                          fit: BoxFit.fill,
-                          width: 200,
-                          height: 126,
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 5)),
-                      Text(
-                        '${this._categories[index].name}',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ],
-                  ));
-            }),
+          scrollDirection: Axis.horizontal,
+          itemCount: this._categories.length,
+          itemBuilder: (BuildContext context, int index) {
+            return FlatButton(
+              onPressed: () {
+                call(this._categories[index]);
+              },
+              child: Column(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      '${this._categories[index].image}',
+                      fit: BoxFit.fill,
+                      width: 200,
+                      height: 130,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 5)),
+                  Text(
+                    '${this._categories[index].name}',
+                    style: kTextCategorie,
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       );
     }
   }
@@ -225,7 +231,7 @@ class HomePageStateUser extends State<HomePageUser> {
         MaterialPageRoute(builder: (context) => RestForCategoriesPage(c)));
   }
 
-  void setSearchFalse(){
+  void setSearchFalse() {
     setState(() {
       _isSearch = false;
     });

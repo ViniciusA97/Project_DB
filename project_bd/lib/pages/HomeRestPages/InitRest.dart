@@ -123,14 +123,17 @@ class _InitRestState extends State<InitRest> {
                             Text(
                               '${this._rest.address}',
                               style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey,
+                              ),
                             ),
                             Padding(padding: EdgeInsets.only(top: 5)),
                             Text(
                               '${this._rest.name}',
                               style: TextStyle(
-                                  fontWeight: FontWeight.w500, fontSize: 25),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 25,
+                              ),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 10, right: 20),
@@ -368,7 +371,8 @@ class _InitRestState extends State<InitRest> {
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                 ),
-                Text('${this._categories[index - 1].name}', style: kTextCategorie),
+                Text('${this._categories[index - 1].name}',
+                    style: kTextCategorie),
               ],
             );
           },
@@ -387,14 +391,16 @@ class _InitRestState extends State<InitRest> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  decoration: kTextFieldDecoraction.copyWith(hintText: "Nome da categoria"),
+                  decoration: kTextFieldDecoraction.copyWith(
+                      hintText: "Nome da categoria"),
                   onSaved: (val) => name = val,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 15),
                 ),
                 TextFormField(
-                  decoration: kTextFieldDecoraction.copyWith(hintText: "Imagem da categoria"),
+                  decoration: kTextFieldDecoraction.copyWith(
+                      hintText: "Imagem da categoria"),
                   onSaved: (val) => img = val,
                 ),
                 Padding(padding: EdgeInsets.only(top: 25)),
