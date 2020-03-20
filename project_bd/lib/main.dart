@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget{
   MaterialColor colorCustom = MaterialColor(0x000000, color);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Projeto BD",
+      title: "comidex",
       theme: ThemeData(
         primarySwatch: colorCustom,
         primaryColor: Colors.black,
