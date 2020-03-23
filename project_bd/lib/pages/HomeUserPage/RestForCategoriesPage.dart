@@ -39,13 +39,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text('${this._categories.name}', style: TextStyle(color: Colors.black),),
-      //   backgroundColor: Colors.white,
-      //   actionsIconTheme: IconThemeData(color: Color(0xff38ad53)),
-      //   iconTheme: IconThemeData(color: Color(0xff38ad53)),
-      // ),
+      
       body: body(),
     );
   }
