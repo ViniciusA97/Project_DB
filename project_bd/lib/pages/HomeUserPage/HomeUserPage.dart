@@ -4,11 +4,10 @@ import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/components/DinamicsRestaurants.dart';
 import 'package:project_bd/components/Search.dart';
 import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
-import 'package:project_bd/pages/HomeUserPage/RestForRestaurantsPage.dart';
-import 'package:project_bd/pages/HomeUserPage/RestaurantsList.dart';
 
 class HomePageUser extends StatefulWidget {
   User _user;
@@ -104,7 +103,7 @@ class HomePageStateUser extends State<HomePageUser> {
                         Text(
                           'Bem-vindo ${this._user.name}',
                           style: TextStyle(
-                              fontSize: 20, color: Colors.grey.shade700),
+                              fontSize: 20, color: Colors.grey.shade500),
                           textAlign: TextAlign.start,
                         ),
                         Padding(padding: EdgeInsets.only(top: 5)),
@@ -125,7 +124,7 @@ class HomePageStateUser extends State<HomePageUser> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: Colors.grey.shade100),
+                color: Color(0xff38ad53)),
             margin: EdgeInsets.fromLTRB(
                 MediaQuery.of(context).size.width * 0.02,
                 0,
@@ -145,8 +144,14 @@ class HomePageStateUser extends State<HomePageUser> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text('Buscar '),
-                    Icon(Icons.search),
+                    Text(
+                      'Buscar ',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Icon(
+                      Icons.search,
+                      color: Colors.white,
+                    ),
                   ],
                 ),
               ),
@@ -165,26 +170,42 @@ class HomePageStateUser extends State<HomePageUser> {
                   'Categorias',
                   style: TextStyle(
                     fontSize: 20,
-                    color: Colors.grey.shade800,
-                    fontWeight: FontWeight.w500,
+                    color: Color(0xff38ad53),
+                    fontWeight: FontWeight.w400,
                   ),
                   textAlign: TextAlign.start,
                 ),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                getListView()
+                Padding(padding: EdgeInsets.only(top: 15)),
+                getListViewCategorie()
               ],
             ),
           ),
           Container(
-            height: 10,
             width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.fromLTRB(15, 20, 10, 0),
-            color: Colors.grey.shade100,
-          ),
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            height: 210,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Dinamicos',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color(0xff38ad53),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+                Padding(padding: EdgeInsets.only(top: 15)),
+                getListViewDinamic()
+              ],
+            ),
+          )
         ]);
   }
 
-  Widget getListView() {
+  Widget getListViewCategorie() {
     if (this._categories == null) {
       return Center(
         child: Text('Sem categorias cadastradas'),
@@ -204,7 +225,7 @@ class HomePageStateUser extends State<HomePageUser> {
               child: Column(
                 children: <Widget>[
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(10),
                     child: Image.network(
                       '${this._categories[index].image}',
                       fit: BoxFit.fill,
@@ -224,6 +245,39 @@ class HomePageStateUser extends State<HomePageUser> {
         ),
       );
     }
+  }
+
+  Widget getListViewDinamic() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 150,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          MaterialButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>DinamicRestaurants("Restaurante popular")));
+          } , 
+          child:
+          Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  './assets/popular.jpg',
+                  width: 250,
+                  height: 130,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top:5),
+              ),
+              Text('Restaurante popular',style:kTextCategorie ,)
+            ],
+          )
+          )],
+      ),
+    );
   }
 
   void call(Categories c) async {

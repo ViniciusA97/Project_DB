@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:core';
+
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/pedidos.dart';
 import 'package:project_bd/Model/pratos.dart';
@@ -12,6 +15,7 @@ class Control{
   static final Control _instance = new Control.internal();
   factory Control() => _instance;
   Control.internal();
+
   
   //faz login do usuario
   Future<User> doLogin(String email, String password) async{
@@ -78,6 +82,12 @@ class Control{
     return await this._db.getAllRest();
   }
   
-
+  Future<List<Restaurant>> getRestPopular() async{
+    return await this._db.getRestPopular();
+  }
+  Future<List<Restaurant>> getRestPromocao() async{}
+  Future<List<Restaurant>> getRestEntregaGratis() async{}
+  Future<List<Restaurant>> getRestEntregaRapida() async{}
+  Future<List<Restaurant>> getRestMaisPedido() async{}
 
 }

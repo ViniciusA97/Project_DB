@@ -1,65 +1,64 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
-import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeUserPage/restaurantPage.dart';
 
-import '../../constants.dart';
+import '../constants.dart';
 
-class RestForCategoriesPage extends StatefulWidget {
-  Categories _categories;
+class DinamicRestaurants extends StatefulWidget {
+  String _name;
 
-  RestForCategoriesPage(this._categories);
+  DinamicRestaurants(this._name);
 
   @override
-  State<StatefulWidget> createState() =>
-      _RestForCategoriesPageState(this._categories);
+  State<StatefulWidget> createState() => _DinamicRestaurantsState(this._name);
 }
 
-class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
-  List<Restaurant> _restaurant = new List<Restaurant>();
-  Categories _categories;
+class _DinamicRestaurantsState extends State<DinamicRestaurants> {
+  String _name;
 
-  _RestForCategoriesPageState(this._categories);
+  List<Restaurant> _rest = new List<Restaurant>();
+  _DinamicRestaurantsState(this._name);
 
   @override
   void initState() {
-    _asyncMethod();
-    super.initState();
-  }
-
-  _asyncMethod() async {
-    Control control = Control.internal();
-    control.getCategoriesRest(this._categories.id).then((onValue) {
-      setState(() {
-        this._restaurant = onValue;
+    setState(() {
+      Control _control = Control.internal();
+      Map<String, Future<List<Restaurant>>> map = {
+        "Restaurante popular": _control.getRestPopular(),
+        "Promoção": _control.getRestPromocao(),
+        "Entrega gratis": _control.getRestEntregaGratis(),
+        "Entrega rápida": _control.getRestEntregaRapida(),
+        "Mais pedidos": _control.getRestMaisPedido()
+      };
+      map[_name].then((onValue) {
+        setState(() {
+          _rest = onValue;
+        });
       });
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: body(),
+      body: getContainer(),
     );
   }
 
-  Widget body() {
+  Widget getContainer() {
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: 50),
-          ),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Column(children: <Widget>[
           Container(
+            
+            margin: EdgeInsets.only(top:40),
             height: 20,
             child: Row(
-              // mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 FlatButton(
                   child: Icon(
@@ -72,11 +71,10 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    right: MediaQuery.of(context).size.width / 4.5,
-                  ),
+                      right: MediaQuery.of(context).size.width / 15),
                 ),
                 Text(
-                  '${this._categories.name}'.toUpperCase(),
+                  '${this._name}'.toUpperCase(),
                   style: TextStyle(fontSize: 16, letterSpacing: 1.0),
                   textAlign: TextAlign.center,
                 ),
@@ -91,17 +89,20 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
             width: MediaQuery.of(context).size.width,
             color: Colors.grey.shade200,
           ),
+          Padding(padding: EdgeInsets.only(top:15)),
           Container(
-            height: MediaQuery.of(context).size.height - 100,
+            height: MediaQuery.of(context).size.height*0.75,
+            width: MediaQuery.of(context).size.width-20,
             margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            width: MediaQuery.of(context).size.width - 20,
             child: ListView.builder(
-              itemCount: this._restaurant.length,
-              itemBuilder: (BuildContext cntx, int index) {
-                return RawMaterialButton(
-                  onPressed: () => goToRest(this._restaurant[index]),
-                  child: Container(
-                    margin: EdgeInsets.only(top:10),
+              itemCount: this._rest.length,
+              itemBuilder: (BuildContext context , int index){
+                if(this._rest.isEmpty){
+                  return Center(child: Text("Ainda não foi cadastrado nenhum restaurante popular"),);
+                }else{
+                  return MaterialButton(
+                    onPressed: (){_call(this._rest[index]);},
+                    child: Container(
                     width: MediaQuery.of(context).size.width - 20,
                     height: 80,
                     decoration: BoxDecoration(
@@ -129,7 +130,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                                 topLeft: const Radius.circular(10),
                                 bottomLeft: const Radius.circular(10)),
                             child: Image.network(
-                              '${this._restaurant[index].url}',
+                              '${this._rest[index].url}',
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -139,27 +140,25 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                           margin: EdgeInsets.fromLTRB(15, 0, 10, 0),
                           child: Center(
                             child: Text(
-                              '${this._restaurant[index].name}',
-                              style: kTextRest
-                            
-                              
+                              '${this._rest[index].name}',
+                              style:  kTextRest
                             ),
                           ),
                         )
                       ],
                     ),
                   ),
-                );
-              },
+                  );
+                }
+
+              }
+              
             ),
-          )
-        ],
-      ),
-    );
+          )           
+        ]));
   }
 
-  void goToRest(Restaurant r) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RestaurantPage(r)));
+  void _call(Restaurant t){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> RestaurantPage(t)));
   }
 }
