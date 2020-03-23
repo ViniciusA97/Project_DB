@@ -32,7 +32,7 @@ class _PlatePageState extends State<PlatePage> {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(top: 40),
+            padding: EdgeInsets.only(top: 50),
           ),
           Container(
             height: 20,
@@ -50,7 +50,7 @@ class _PlatePageState extends State<PlatePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width / 7,),
+                      right: MediaQuery.of(context).size.width / 9,),
                 ),
                 Text(
                   'Detalhes do item',

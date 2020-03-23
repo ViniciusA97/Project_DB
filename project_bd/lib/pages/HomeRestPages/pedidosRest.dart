@@ -52,7 +52,7 @@ class _PedidosRestState extends State<PedidosRest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(top: 30)),
+          Padding(padding: EdgeInsets.only(top: 50)),
           Text(
             'Pedidos',
             style: kTextTitle.copyWith(fontSize: 20.0),
@@ -77,26 +77,26 @@ class _PedidosRestState extends State<PedidosRest> {
       return (Center(child: Text('Nenhum pedido cadastrado')));
     } else {
       return ListView.builder(
-          itemCount: _pedidos.length,
-          itemBuilder: (BuildContext cntx, int index) {
-            return Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20), color: Colors.white),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(
-                          'Numero do Pedido: ${this._pedidos[index].idPedido}'),
-                      Text('Preço: ${this._pedidos[index].preco}'),
-                    ],
-                  ),
-                  Text('Cliente: ${this._pedidos[index].user.name}'),
-                  Text('Data: ${this._pedidos[index].data}')
-                ],
-              ),
-            );
-          });
+        itemCount: _pedidos.length,
+        itemBuilder: (BuildContext cntx, int index) {
+          return Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20), color: Colors.white),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Text('Numero do Pedido: ${this._pedidos[index].idPedido}'),
+                    Text('Preço: ${this._pedidos[index].preco}'),
+                  ],
+                ),
+                Text('Cliente: ${this._pedidos[index].user.name}'),
+                Text('Data: ${this._pedidos[index].data}')
+              ],
+            ),
+          );
+        },
+      );
     }
   }
 }

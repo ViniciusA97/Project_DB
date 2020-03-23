@@ -59,7 +59,7 @@ class _CardapioPageState extends State<CardapioPage> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 30),
+              padding: EdgeInsets.only(top: 50),
             ),
             Text(
               'Pratos',

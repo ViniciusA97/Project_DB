@@ -33,6 +33,8 @@ class HomePageStateUser extends State<HomePageUser> {
     color: Color(0xff38ad53),
   );
   bool habilitarBusca = false;
+  List<Widget> pages;
+  Widget currentPage;
 
   @override
   void initState() {
@@ -277,6 +279,13 @@ class HomePageStateUser extends State<HomePageUser> {
           )
           )],
       ),
+    );
+  }
+
+  Widget bottomNavigator()
+  {
+    return Scaffold(
+
     );
   }
 

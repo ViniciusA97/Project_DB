@@ -1,44 +1,38 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_bd/Model/restaurant.dart';
-import 'package:project_bd/pages/HomeRestPages/cardapioRest.dart';
-import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
+import 'package:project_bd/Model/user.dart';
+import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
 
-import 'pedidosRest.dart';
+class InitUser extends StatefulWidget {
+  User _user;
 
-class RestPage extends StatefulWidget {
-  Restaurant _rest;
-  RestPage(this._rest);
+  InitUser(this._user);
+
   @override
-  State<StatefulWidget> createState() => _RestPageState(_rest);
+  _InitUserState createState() => _InitUserState(this._user);
 }
 
-class _RestPageState extends State<RestPage> {
-  _RestPageState(this._rests);
+class _InitUserState extends State<InitUser> {
+  _InitUserState(this._user);
+
+  //TODO: Adicionar as páginas da sacola e dos pedidos
 
   final scaffolKey = GlobalKey<ScaffoldState>();
-  Restaurant _rests;
+  User _user;
   int current = 0;
-  InitRest _homeRest;
-  CardapioPage _cardapioPage;
-  PedidosRest _pedidosRest;
+  HomePageUser _homeUser;
   List<Widget> pages;
   Widget currentPage;
 
   @override
   void initState() {
-    _cardapioPage = CardapioPage(this._rests.id);
-    _homeRest = InitRest(_rests);
-    print(_homeRest);
-    _pedidosRest = PedidosRest(this._rests);
-    pages = [_homeRest, _cardapioPage, _pedidosRest];
-    currentPage = _homeRest;
+    _homeUser = HomePageUser(this._user);
+    pages = [_homeUser];
+    currentPage = _homeUser;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(this._rests);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: scaffolKey,
@@ -48,9 +42,10 @@ class _RestPageState extends State<RestPage> {
         currentIndex: current,
         onTap: (int index) {
           setState(() {
-            current = index;
-            currentPage = pages[index];
-          });
+              current = index;
+              currentPage = pages[index];
+            },
+          );
         },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -65,11 +60,11 @@ class _RestPageState extends State<RestPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.list,
+              Icons.shopping_basket,
               color: Color(0xff38ad53),
             ),
             title: Text(
-              'Cardapio',
+              'Sacola',
               style: TextStyle(color: Colors.black54),
             ),
           ),
