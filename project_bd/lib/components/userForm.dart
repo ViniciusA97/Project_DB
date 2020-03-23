@@ -103,8 +103,6 @@ class _UserFormState extends State<UserForm> {
     }
     var control = Control.internal();
     var user = await control.doLogin(_email, _password);
-    String n = user.name;
-    print(n);
     if (user != null) {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => HomePageUser(user)));
