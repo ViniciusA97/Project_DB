@@ -8,6 +8,7 @@ import 'package:project_bd/components/DinamicsRestaurants.dart';
 import 'package:project_bd/components/Search.dart';
 import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePageUser extends StatefulWidget {
   User _user;
@@ -59,6 +60,11 @@ class HomePageStateUser extends State<HomePageUser> {
       resizeToAvoidBottomInset: false,
       key: scaffolKey,
       backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        child: Icon(Icons.shopping_cart),
+        backgroundColor: Color(0xff38ad53),
+      ),
       body: _isSearch ? setSearch() : test(),
     );
   }
@@ -279,13 +285,6 @@ class HomePageStateUser extends State<HomePageUser> {
           )
           )],
       ),
-    );
-  }
-
-  Widget bottomNavigator()
-  {
-    return Scaffold(
-
     );
   }
 

@@ -60,16 +60,6 @@ class _InitUserState extends State<InitUser> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.shopping_basket,
-              color: Color(0xff38ad53),
-            ),
-            title: Text(
-              'Sacola',
-              style: TextStyle(color: Colors.black54),
-            ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
               Icons.room_service,
               color: Color(0xff38ad53),
             ),
