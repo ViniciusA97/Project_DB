@@ -623,16 +623,18 @@ class DatabaseHelper {
     var test = await dbClient.rawQuery(
       '''
       SELECT 
-            Pratos.*,
+            Prato.*,
             Preco.*,
             Pedidos.*,
-            User.*
+            PedidoPratoUser.*
+            
       FROM 
-            User INNER JOIN PedidoPratoUser ON PedidoPratoUser.idUser = User.idUser
-            INNER JOIN Pedidos ON Pedidos.idUser = User.idUser
-            INNER JOIN Pratos ON Pratos.idPrato = Pedidos.idPrato
+            PedidoPratoUser 
+            INNER JOIN Pedidos ON Pedidos.idPedido =PedidoPratoUser.idPedido 
+            INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco on Preco.idPreco = Prato.idPreco
       WHERE 
-            User.idUser = $idUser
+            PedidoPratoUser.idUser = $idUser
       '''
     );
     try{
@@ -642,6 +644,7 @@ class DatabaseHelper {
         return null;
     }
   }
+
 
   //deletion
   
