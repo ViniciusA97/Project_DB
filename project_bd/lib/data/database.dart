@@ -618,7 +618,39 @@ class DatabaseHelper {
     }
   }
 
+  Future<List<Pedido>> getPedidosByUser(int idUser) async {
+    var dbClient = await this.db;
+    var test = await dbClient.rawQuery(
+      '''
+      SELECT 
+            Pratos.*,
+            Preco.*,
+            Pedidos.*,
+            User.*
+      FROM 
+            User INNER JOIN PedidoPratoUser ON PedidoPratoUser.idUser = User.idUser
+            INNER JOIN Pedidos ON Pedidos.idUser = User.idUser
+            INNER JOIN Pratos ON Pratos.idPrato = Pedidos.idPrato
+      WHERE 
+            User.idUser = $idUser
+      '''
+    );
+    try{
+      List<Pedido> p = List<Pedido>();
+      return p;
+    } catch(err) {
+        return null;
+    }
+  }
+
+  //deletion
+  
+
 }
+
+  //update
+
+
 
 // Categoria : Padaria, Doces & Bolos, Salgados,  Saudavel , Brasileira, cozinha rapida, lanches
 //  pizza, japonesa , poke , espetinhos , Hot Dog, Carnes, Açaí

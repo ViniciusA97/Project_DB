@@ -73,6 +73,10 @@ class Control{
   Future<List<Pedido>> getRestPedidos(int idRest) async{
     return await this._db.getPedidosByRest(idRest);
   }
+
+  Future<List<Pedido>> getUserPedidos(int idUser) async {
+    return await this._db.getPedidosByUser(idUser);
+  } 
   
   Future<List<Restaurant>> getAllRestaurants() async{
     return await this._db.getAllRest();

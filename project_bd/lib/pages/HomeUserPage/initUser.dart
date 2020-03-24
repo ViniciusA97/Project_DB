@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
+import 'package:project_bd/pages/HomeUserPage/userRequest.dart';
 
 class InitUser extends StatefulWidget {
   User _user;
@@ -20,13 +21,15 @@ class _InitUserState extends State<InitUser> {
   User _user;
   int current = 0;
   HomePageUser _homeUser;
+  Requests _userReqs;
   List<Widget> pages;
   Widget currentPage;
 
   @override
   void initState() {
     _homeUser = HomePageUser(this._user);
-    pages = [_homeUser];
+    _userReqs = Requests(this._user);
+    pages = [_homeUser, _userReqs];
     currentPage = _homeUser;
     super.initState();
   }
@@ -60,7 +63,7 @@ class _InitUserState extends State<InitUser> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.room_service,
+              Icons.receipt,
               color: Color(0xff38ad53),
             ),
             title: Text(
