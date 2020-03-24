@@ -89,15 +89,16 @@ class _DinamicRestaurantsState extends State<DinamicRestaurants> {
             width: MediaQuery.of(context).size.width,
             color: Colors.grey.shade200,
           ),
-          Padding(padding: EdgeInsets.only(top: 15)),
+          Padding(padding: EdgeInsets.only(top: 20)),
+          Text('RESTAURANTES', style: TextStyle(color:Colors.grey.shade500),),
           Container(
             height: MediaQuery.of(context).size.height * 0.75,
-            width: MediaQuery.of(context).size.width - 20,
-            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            width: MediaQuery.of(context).size.width ,
             child: ListView.builder(
               itemCount: this._rest.length,
               itemBuilder: (BuildContext context, int index) {
-                if (this._rest.isEmpty) {
+                if (this._rest==null) {
+                  
                   return Center(
                     child: Text(
                         "Ainda não foi cadastrado nenhum restaurante popular"),

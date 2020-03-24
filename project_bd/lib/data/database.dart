@@ -9,12 +9,8 @@ import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
-import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
 import '../Model/restaurant.dart';
 import '../Model/restaurant.dart';
 
@@ -522,24 +518,7 @@ class DatabaseHelper {
             Restaurant.name LIKE '%$text%' OR Prato.name LIKE '%$text%' 
             ''' 
     );
-    try{
-      response[0];
-      Map<int,Restaurant> map = new Map<int, Restaurant>();
-      for(var i in response){
-        if(!map.containsKey(i['idRest'])){
-          map[i['idRest']] = Restaurant.map(i);
-        }else{
-          map[i['idRest']].addPrato(Prato.mapJOIN(i));
-        }
-      }
-      List<Restaurant> rest = new List<Restaurant>();
-      map.forEach((k,v)=>rest.add(v));
-      return rest;
-    }catch(err){
-      print(err);
-      print('deu ruim otaro');
-      return new List<Restaurant>();
-    }
+    return transforming(response);
   }
 
   Future<List<Restaurant>> getRestPopular() async{
@@ -562,7 +541,62 @@ class DatabaseHelper {
           Restaurant.idRest
       HAVING MAX(Preco.preco) < 10.0  
     ''');
-    
+    return transforming(response);
+  }
+
+  Future<List<Restaurant>> getRestEntregaGratis() async {
+    var dbClient = await this.db;
+    List<Map> response = await dbClient.rawQuery('''
+      SELECT
+            Restaurant.*,
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.idPreco,
+            Prato.img AS imgPrato,
+            Preco.idPreco,
+            Preco.date,
+            Preco.preco
+      FROM 
+          Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
+          LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+      WHERE Restaurant.entregaGratis = 1 
+    ''');
+    return transforming(response);
+  }
+
+  Future<List<Restaurant>> getRestEntregaRapida() async {
+    var dbClient = await this.db;
+    List<Map> response = await dbClient.rawQuery('''
+      SELECT
+            Restaurant.*,
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.idPreco,
+            Prato.img AS imgPrato,
+            Preco.idPreco,
+            Preco.date,
+            Preco.preco
+      FROM 
+          Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
+          LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+      WHERE Restaurant.entregaGratis = 0 
+    ''');
+    return transforming(response);
+  }
+
+  //deletion
+  Future<int> deleteUser(User user) async {
+    var dbClient = await db;
+    int res = await dbClient.delete("User");
+    return res;
+  }
+
+  
+
+
+  List<Restaurant> transforming( List<Map> response){
     try{
       response[0];
       print(response);
@@ -583,15 +617,6 @@ class DatabaseHelper {
       return new List<Restaurant>();
     }
   }
-
-  //deletion
-  Future<int> deleteUser(User user) async {
-    var dbClient = await db;
-    int res = await dbClient.delete("User");
-    return res;
-  }
-
-  //update
 
 }
 

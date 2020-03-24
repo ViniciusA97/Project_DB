@@ -28,14 +28,6 @@ class HomePageStateUser extends State<HomePageUser> {
   HomePageStateUser(this._user);
   List<Categories> _categories;
   List<Restaurant> _restaurants;
-  String appBarTitle = "Busque por um prato ou restaurante.";
-  Icon actionIcon = new Icon(
-    Icons.search,
-    color: Color(0xff38ad53),
-  );
-  bool habilitarBusca = false;
-  List<Widget> pages;
-  Widget currentPage;
 
   @override
   void initState() {
@@ -111,7 +103,7 @@ class HomePageStateUser extends State<HomePageUser> {
                         Text(
                           'Bem-vindo ${this._user.name}',
                           style: TextStyle(
-                              fontSize: 20, color: Colors.grey.shade500),
+                              fontSize: 20, color: Colors.grey.shade800),
                           textAlign: TextAlign.start,
                         ),
                         Padding(padding: EdgeInsets.only(top: 5)),
@@ -170,20 +162,20 @@ class HomePageStateUser extends State<HomePageUser> {
             width: MediaQuery.of(context).size.width,
             margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-            height: 210,
+            height: 170,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   'Categorias',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 16,
                     color: Color(0xff38ad53),
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w300,
                   ),
                   textAlign: TextAlign.start,
                 ),
-                Padding(padding: EdgeInsets.only(top: 15)),
+                Padding(padding: EdgeInsets.only(top: 10)),
                 getListViewCategorie()
               ],
             ),
@@ -199,13 +191,13 @@ class HomePageStateUser extends State<HomePageUser> {
                 Text(
                   'Dinamicos',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Color(0xff38ad53),
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w300,
                   ),
                   textAlign: TextAlign.start,
                 ),
-                Padding(padding: EdgeInsets.only(top: 15)),
+                Padding(padding: EdgeInsets.only(top: 10)),
                 getListViewDinamic()
               ],
             ),
@@ -219,9 +211,10 @@ class HomePageStateUser extends State<HomePageUser> {
         child: Text('Sem categorias cadastradas'),
       );
     } else {
-      return SizedBox(
+      return Container(
+        padding: EdgeInsets.only(top:5),
         width: MediaQuery.of(context).size.width,
-        height: 150,
+        height: 125,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemCount: this._categories.length,
@@ -237,8 +230,8 @@ class HomePageStateUser extends State<HomePageUser> {
                     child: Image.network(
                       '${this._categories[index].image}',
                       fit: BoxFit.fill,
-                      width: 200,
-                      height: 130,
+                      width: 150,
+                      height: 100,
                     ),
                   ),
                   Padding(padding: EdgeInsets.only(top: 5)),
@@ -256,9 +249,10 @@ class HomePageStateUser extends State<HomePageUser> {
   }
 
   Widget getListViewDinamic() {
-    return SizedBox(
+    return Container(
+      padding: EdgeInsets.only(top:5),
       width: MediaQuery.of(context).size.width,
-      height: 150,
+      height: 160,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
@@ -272,7 +266,7 @@ class HomePageStateUser extends State<HomePageUser> {
                 borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
                   './assets/popular.jpg',
-                  width: 250,
+                  width: 230,
                   height: 130,
                   fit: BoxFit.fill,
                 ),
@@ -280,10 +274,58 @@ class HomePageStateUser extends State<HomePageUser> {
               Padding(
                 padding: EdgeInsets.only(top:5),
               ),
-              Text('Restaurante popular',style:kTextCategorie ,)
+              Text('RESTAURANTE POPULAR',style:kTextCategorie ,)
             ],
           )
-          )],
+          ),
+          MaterialButton(
+            onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>DinamicRestaurants("Entrega rápida")));
+          } , 
+          child:
+          Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  './assets/entrega_rapida.jpg',
+                  width: 230,
+                  height: 130,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top:5),
+              ),
+              Text('ENTREGA RAPIDA',style:kTextCategorie ,)
+            ],
+          )
+          ),
+          MaterialButton(
+            onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>DinamicRestaurants("Entrega gratis")));
+          } , 
+          child:
+          Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  './assets/entrega_gratis.jpg',
+                  width: 230,
+                  height: 130,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top:5),
+              ),
+              Text('ENTREGA GRATIS',style:kTextCategorie ,)
+            ],
+          )
+          )
+          ],
+          
       ),
     );
   }
