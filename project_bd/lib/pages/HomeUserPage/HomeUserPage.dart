@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:project_bd/Model/user.dart';
+import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
+import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/components/DinamicsRestaurants.dart';
 import 'package:project_bd/components/Search.dart';
 import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePageUser extends StatefulWidget {
   User _user;
@@ -64,6 +63,7 @@ class HomePageStateUser extends State<HomePageUser> {
         onPressed: null,
         child: Icon(Icons.shopping_cart),
         backgroundColor: Color(0xff38ad53),
+        elevation: 6.0,
       ),
       body: _isSearch ? setSearch() : test(),
     );
