@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:project_bd/pages/HomeUserPage/restaurantPage.dart';
 import '../Control/Control.dart';
 import '../Model/restaurant.dart';
 import '../Model/restaurant.dart';
@@ -23,13 +24,20 @@ class _SearchState extends State<Search> {
   String text = '';
   List<Restaurant> _list = new List<Restaurant>();
 
+  Future<bool> _willpop() async {
+    this._home.setSearchFalse();
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
-      body: getBody(),
+    return WillPopScope(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomPadding: false,
+        body: getBody(),
+
+      ), onWillPop: ()=> _willpop() ,
     );
   }
 
@@ -110,14 +118,20 @@ class _SearchState extends State<Search> {
                   child: text=='' ?Text(''): Text('Não foi encontrado nenhum restaurante.') ,
                 );
               }else{
-                return Container(
+                return 
+                MaterialButton(
+                  height: 120,
+                  minWidth:MediaQuery.of(context).size.width*0.95 ,
+                  onPressed: (){goToRest(this._list[index]);},
+                  child: 
+                  
+                Container(
                   padding: EdgeInsets.only(left:10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color.fromRGBO(0, 196,0, 1),
+                    color: Color(0xff38ad53),
                   ),
                   width: MediaQuery.of(context).size.width*0.95,
-                  margin: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width*0.02, 0,MediaQuery.of(context).size.width*0.02,0),
                   
                   height: 120,
                   child: Row(
@@ -140,6 +154,7 @@ class _SearchState extends State<Search> {
                       )
                     ],
                   ),
+                )
                 );
               }
             },
@@ -173,5 +188,9 @@ class _SearchState extends State<Search> {
           this._list = onValue;
         });
       });
+  }
+
+  void goToRest(Restaurant r){
+    Navigator.push(context, MaterialPageRoute(builder: (context)=> RestaurantPage(r)));
   }
 }

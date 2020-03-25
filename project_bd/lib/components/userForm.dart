@@ -4,6 +4,7 @@ import 'package:project_bd/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/pages/HomeRestPages/HomeRestPage.dart';
 import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
+import 'package:project_bd/pages/HomeUserPage/initUser.dart';
 import 'package:project_bd/pages/signUp/SignUpRest.dart';
 import 'package:project_bd/pages/signUp/signUp.dart';
 
@@ -103,11 +104,9 @@ class _UserFormState extends State<UserForm> {
     }
     var control = Control.internal();
     var user = await control.doLogin(_email, _password);
-    String n = user.name;
-    print(n);
     if (user != null) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePageUser(user)));
+          context, MaterialPageRoute(builder: (context) => InitUser(user)));
     } else {
       //_showSnackBar('User dont exist');
     }

@@ -28,3 +28,9 @@ const kTextCategorie = TextStyle(
   letterSpacing: 0.5, 
   color: Colors.black54,
 );
+
+const kTextRest = TextStyle(
+  fontSize: 18, 
+  letterSpacing: 0.5, 
+  color: Colors.black54,
+);

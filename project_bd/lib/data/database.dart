@@ -542,6 +542,48 @@ class DatabaseHelper {
     }
   }
 
+  Future<List<Restaurant>> getRestPopular() async{
+    var dbClient = await  this.db;
+    List<Map> response = await dbClient.rawQuery('''
+      SELECT
+            Restaurant.*,
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.idPreco,
+            Prato.img AS imgPrato,
+            Preco.idPreco,
+            Preco.date,
+            Preco.preco
+      FROM 
+          Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
+          LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+      GROUP BY
+          Restaurant.idRest
+      HAVING MAX(Preco.preco) < 10.0  
+    ''');
+    
+    try{
+      response[0];
+      print(response);
+      Map<int,Restaurant> map = new Map<int, Restaurant>();
+      for(var i in response){
+        if(!map.containsKey(i['idRest'])){
+          map[i['idRest']] = Restaurant.map(i);
+        }else{
+          map[i['idRest']].addPrato(Prato.mapJOIN(i));
+        }
+      }
+      List<Restaurant> rest = new List<Restaurant>();
+      map.forEach((k,v)=>rest.add(v));
+      return rest;
+    }catch(err){
+      print(err);
+      print('deu ruim otaro');
+      return new List<Restaurant>();
+    }
+  }
+
   //deletion
   Future<int> deleteUser(User user) async {
     var dbClient = await db;
