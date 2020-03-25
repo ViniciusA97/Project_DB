@@ -9,6 +9,7 @@ import 'package:project_bd/data/database.dart';
 class InitRest extends StatefulWidget {
   Restaurant _restaurant;
 
+
   InitRest(this._restaurant);
 
   State<StatefulWidget> createState() => _InitRestState(_restaurant);
@@ -21,6 +22,7 @@ class _InitRestState extends State<InitRest> {
   Restaurant _rest;
   List<Categories> _categories;
   List<Categories> _allCategories;
+  String type;
 
   //keys
   final key = GlobalKey<FormState>();
@@ -128,11 +130,26 @@ class _InitRestState extends State<InitRest> {
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(top: 5)),
-                            Text(
-                              '${this._rest.name}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 25,
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    '${this._rest.name}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 25,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${this._rest.tipoEntrega}',
+                                    style: TextStyle(
+                                      color: Colors.black54,
+                                      fontWeight: FontWeight.bold
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
@@ -248,7 +265,7 @@ class _InitRestState extends State<InitRest> {
               ],
             ),
           ],
-        )
+        ),
       ],
     );
   }

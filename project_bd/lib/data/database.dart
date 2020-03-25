@@ -12,7 +12,6 @@ import 'package:sqflite/sqflite.dart';
 import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
 import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -80,7 +79,7 @@ class DatabaseHelper {
     var dbClient = await db;
     try {
       await dbClient.rawInsert(
-          "INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",
+          "INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email,address) VALUES(?,?,?,?,?,?,?,?)",
           [
             rest.name,
             rest.password,
@@ -89,7 +88,7 @@ class DatabaseHelper {
             rest.descriprion,
             rest.nume,
             rest.email,
-            rest.address
+            rest.address,
           ]);
       return true;
     } catch (err) {
@@ -98,8 +97,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> saveRestWithCategorie(
-      Restaurant rest, List<Categories> list) async {
+  Future<int> saveRestWithCategorie(Restaurant rest, List<Categories> list) async {
     var dbClient = await db;
     int res = await dbClient.rawInsert(
         "INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",
@@ -157,6 +155,20 @@ class DatabaseHelper {
           'INSERT INTO PedidoPratoUser (idPrato, idUser, idPedido) VALUES(?,?,?)',
           [i.idPrato, p.user.id, idPedido]);
     }
+  }
+
+  Future<void> saveEntrega(Restaurant res, int a) async {
+    var dbClient = await db;
+    // Usei update pq já inicializo com 0 no cadastro
+    // entrega é inteiro 1 - gratis 2 - rapida  0 - não definida
+    await dbClient.rawUpdate(
+      '''
+      UPDATE Restaurant
+      SET entregaGratis=?
+      WHERE Restaurant.idRest=?
+      ''', [a,res.id]
+    );
+    res.setEntrega(a);
   }
 
   Future<Categories> saveCategoria(String name, String img) async {
@@ -581,7 +593,7 @@ class DatabaseHelper {
       FROM 
           Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
           LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
-      WHERE Restaurant.entregaGratis = 0 
+      WHERE Restaurant.entregaGratis = 2 
     ''');
     return transforming(response);
   }
@@ -592,9 +604,6 @@ class DatabaseHelper {
     int res = await dbClient.delete("User");
     return res;
   }
-
-  
-
 
   List<Restaurant> transforming( List<Map> response){
     try{

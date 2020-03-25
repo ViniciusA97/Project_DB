@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:project_bd/pages/HomeUserPage/restaurantPage.dart';
 import '../Control/Control.dart';
 import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
 import '../pages/HomeUserPage/HomeUserPage.dart';
 
 class Search extends StatefulWidget {

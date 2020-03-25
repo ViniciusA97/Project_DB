@@ -3,7 +3,6 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/pages/HomeRestPages/HomeRestPage.dart';
-import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
 import 'package:project_bd/pages/HomeUserPage/initUser.dart';
 import 'package:project_bd/pages/signUp/SignUpRest.dart';
 import 'package:project_bd/pages/signUp/signUp.dart';

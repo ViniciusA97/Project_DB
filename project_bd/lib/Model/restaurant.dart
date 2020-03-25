@@ -16,13 +16,13 @@ class Restaurant implements Client{
   int _horaAbre;
   int _hotaFecha;
   double _nota;
-  bool _entregaGratis;
+  int _entrega;
   List<Prato> _cardapio;
   List<Categories> _categories;
 
 
   Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage,
-              this._description,this._num, this._email,this._adress);
+              this._description,this._num, this._email,this._adress, this._entrega);
 
   Restaurant.map(dynamic obj){
     _name = obj['name'];
@@ -34,6 +34,7 @@ class Restaurant implements Client{
     _num = obj['num'];
     _adress= obj['address'];
     _email = obj['email'];
+    _entrega = obj['entregaGratis'];
     _cardapio = new List<Prato>();
   }
 
@@ -50,6 +51,7 @@ class Restaurant implements Client{
     map['address']= _adress;
     map['pratos'] = _cardapio;
     map['categorias'] = _categories;
+    map['entregaGratis'] = _entrega;
     return map;
   }
   
@@ -64,10 +66,21 @@ class Restaurant implements Client{
   String get nume =>_num;
   String get email =>_email;
   String get address =>_adress;
+  int get entregaGratis => _entrega;
+  String get tipoEntrega{
+    if(_entrega == 1)
+      return 'Entrega Grátis';
+    else if(_entrega == 2)
+      return 'Entrega Rápida';
+    else 
+      return 'escolha';
+  }
+  // String get entrega => _entregaGratis == 1 ? 'Entrega Grátis' : 'Entrega Rápida';
   List<Categories> get categories => _categories;
 
   void setCategories(List<Categories> cat) =>this._categories=cat;
   void setCardapio(List<Prato> list) => this._cardapio = list;
+  void setEntrega(int entrega) => this._entrega = entrega;
   void addPrato(Prato prato) => this._cardapio.add(prato);
 
 }
