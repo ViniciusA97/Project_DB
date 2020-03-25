@@ -157,7 +157,7 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> saveEntrega(Restaurant res, int a) async {
+  Future<void> updateEntrega(Restaurant res, int a) async {
     var dbClient = await db;
     // Usei update pq já inicializo com 0 no cadastro
     // entrega é inteiro 1 - gratis 2 - rapida  0 - não definida
@@ -186,6 +186,28 @@ class DatabaseHelper {
         'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
         [idRest, idCat]);
   }
+
+  // Atualiza o preco do prato
+  Future<bool> updatePrecoPrato(Prato prato) async{
+    var dbClient = await db;
+    try {
+
+      await dbClient.rawUpdate(
+      '''
+        UPDATE Preco
+        SET preco=?, date=datetime('now','localtime')
+        WHERE Preco.idPreco = ${prato.idPrato}
+        ''', [prato.preco.preco]
+      );
+
+      return true;
+
+    } catch (err) {
+      print(err);
+      return false;
+    }
+  }
+
 
   //ok
   //Busca todas as categorias

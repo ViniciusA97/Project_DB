@@ -42,6 +42,10 @@ class Control{
     return await this._db.savePrato(prato);
   }
 
+  Future<bool> updatePreco(Prato prato) async{
+    return await this._db.updatePrecoPrato(prato);
+  }
+
   Future<Restaurant> getRestByIdRest(int id)async{
     return await this._db.getRestById(id);
   }

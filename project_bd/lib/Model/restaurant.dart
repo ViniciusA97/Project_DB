@@ -16,13 +16,13 @@ class Restaurant implements Client{
   int _horaAbre;
   int _hotaFecha;
   double _nota;
-  int _entrega;
+  int _entrega = 0;
   List<Prato> _cardapio;
   List<Categories> _categories;
 
 
   Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage,
-              this._description,this._num, this._email,this._adress, this._entrega);
+              this._description,this._num, this._email,this._adress);
 
   Restaurant.map(dynamic obj){
     _name = obj['name'];

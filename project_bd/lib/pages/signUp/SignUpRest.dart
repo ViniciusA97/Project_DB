@@ -144,7 +144,7 @@ class _SignUpRestState extends State<SignUpRest> {
     }
     Control control = Control.internal();
     Restaurant temp = Restaurant(
-        name, pass, null, 0, image, description, nume, email, address, 0);
+        name, pass, null, 0, image, description, nume, email, address);
     bool condiction = await control.saveRest(temp);
     if (condiction) {
       Navigator.pop(context);

@@ -180,7 +180,7 @@ class _RestPageState extends State<RestPage> {
   void saveDeliveryType(int a) async
   {
       var db = DatabaseHelper.internal();
-      db.saveEntrega(this._rests, a);
+      db.updateEntrega(this._rests, a);
   }
 
 }
