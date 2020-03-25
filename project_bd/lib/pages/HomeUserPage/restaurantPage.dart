@@ -3,6 +3,7 @@ import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeUserPage/platePage.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RestaurantPage extends StatefulWidget {
   Restaurant _restaurant;
@@ -103,14 +104,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
                             Row(
                               children: <Widget>[
                                 Icon(
-                                  Icons.motorcycle,
+                                  FontAwesomeIcons.motorcycle,
                                   color: Color(0xff38ad53),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(right: 10.0),
                                 ),
                                 // TODO: pegar o tipo de entrega do restaurante
-                                Text("Entrega"),
+                                Text(" Entrega"),
                               ],
                             ),
                           ],

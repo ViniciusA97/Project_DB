@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/pratos.dart';
+import 'package:project_bd/pages/HomeUserPage/BagPage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PlatePage extends StatefulWidget {
@@ -30,7 +31,6 @@ class _PlatePageState extends State<PlatePage> {
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(top: 50),
@@ -51,7 +51,7 @@ class _PlatePageState extends State<PlatePage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width / 7,),
+                      right: MediaQuery.of(context).size.width / 9,),
                 ),
                 Text(
                   'Detalhes do item',
@@ -70,9 +70,10 @@ class _PlatePageState extends State<PlatePage> {
             color: Colors.grey.shade200,
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
             width: MediaQuery.of(context).size.width,
-            height: 660,
+            height: MediaQuery.of(context).size.height*0.75,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: const Radius.circular(20),
@@ -80,15 +81,18 @@ class _PlatePageState extends State<PlatePage> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height*0.1
+                )),
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(20),
-                    bottomLeft: const Radius.circular(20),),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20)),
                   child: Image.network(
                     '${this._prato.img}',
                     fit: BoxFit.fill,
+                    height: MediaQuery.of(context).size.height*0.35,
+                    width: MediaQuery.of(context).size.width,
                   ),
                 ),
                 Padding(
@@ -105,12 +109,14 @@ class _PlatePageState extends State<PlatePage> {
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                 ),
+                
                 Text(
                   '${this._prato.descricao}',
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.0,
                   )
+                
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10),
@@ -151,7 +157,8 @@ class _PlatePageState extends State<PlatePage> {
                   fillColor: Color(0xff38ad53),
                   onPressed: () {
                     setState(() {
-                      --quant;
+                      quant<=1?
+                       quant = quant: --quant;
                     });
                   },
                 ),
@@ -179,7 +186,14 @@ class _PlatePageState extends State<PlatePage> {
                   child: MaterialButton(
                     minWidth: 100.0,
                     // TODO: Adicionar ao carrinho
-                    onPressed: null,
+                    onPressed: (){
+                      print('AAAA');
+                      List<Prato> tmp = new List();
+                      tmp.add(this._prato);                      
+                      List<int> qts = new List();
+                      qts.add(this.quant);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BagPage(tmp, qts)));
+                    },
                     child: Text('Adicionar     \$${(this._prato.preco.preco) * quant}', style: TextStyle(color: Colors.white),),
                   ),
                 )
@@ -190,4 +204,6 @@ class _PlatePageState extends State<PlatePage> {
       ),
     );
   }
+
+
 }

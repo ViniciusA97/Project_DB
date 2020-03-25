@@ -5,6 +5,8 @@ import 'package:project_bd/Model/categories.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeUserPage/restaurantPage.dart';
 
+import '../../constants.dart';
+
 class RestForCategoriesPage extends StatefulWidget {
   Categories _categories;
 
@@ -39,13 +41,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: Text('${this._categories.name}', style: TextStyle(color: Colors.black),),
-      //   backgroundColor: Colors.white,
-      //   actionsIconTheme: IconThemeData(color: Color(0xff38ad53)),
-      //   iconTheme: IconThemeData(color: Color(0xff38ad53)),
-      // ),
+      
       body: body(),
     );
   }
@@ -105,6 +101,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                 return RawMaterialButton(
                   onPressed: () => goToRest(this._restaurant[index]),
                   child: Container(
+                    margin: EdgeInsets.only(top:10),
                     width: MediaQuery.of(context).size.width - 20,
                     height: 80,
                     decoration: BoxDecoration(
@@ -114,7 +111,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                           spreadRadius: 1.0, //ext
                         )
                       ],
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(10),
                       color: Colors.white,
                     ),
                     child: Row(
@@ -129,8 +126,8 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                           ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.only(
-                                topLeft: const Radius.circular(20),
-                                bottomLeft: const Radius.circular(20)),
+                                topLeft: const Radius.circular(10),
+                                bottomLeft: const Radius.circular(10)),
                             child: Image.network(
                               '${this._restaurant[index].url}',
                               fit: BoxFit.fill,
@@ -143,11 +140,9 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
                           child: Center(
                             child: Text(
                               '${this._restaurant[index].name}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black,
-                              ),
+                              style: kTextRest
+                            
+                              
                             ),
                           ),
                         )
