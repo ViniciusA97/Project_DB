@@ -53,6 +53,8 @@ flutter:
     - ./assets/popular.jpg
     - ./assets/entrega_rapida.jpg
     - ./assets/entrega_gratis.jpg
+    - ./assets/promocao.jpg
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

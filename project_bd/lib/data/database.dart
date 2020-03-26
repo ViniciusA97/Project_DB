@@ -12,6 +12,7 @@ import 'package:sqflite/sqflite.dart';
 import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
 import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -51,10 +52,11 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE Pedidos( idPedido INTEGER PRIMARY KEY, data DATATIME, preco REAL )');
     await db.execute(
-        'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Prato(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
+        'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Pedidos(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
     await db.execute(
         'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL)');
-
+    await db.execute(
+        'CREATE TABLE HistoricoPreco(idPreco INTEGER, idPrato INTEGER, FOREIGN KEY (idPreco) REFERENCES Preco(idPreco), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
@@ -124,9 +126,12 @@ class DatabaseHelper {
     try {
       dbClient.rawInsert('''INSERT INTO Preco( preco, date) VALUES(?,datetime('now','localtime'))''',
           [prato.preco.preco]);
+      
       dynamic response = await dbClient
           .rawQuery('SELECT idPreco FROM Preco ORDER BY idPreco DESC LIMIT 1');
+      
       print(response[0]['idPedido']);
+
       int res = await dbClient.rawInsert(
           "INSERT INTO Prato (name,descricao, idPreco, idRest,img) VALUES(?,?,?,?,?)",
           [
@@ -136,6 +141,9 @@ class DatabaseHelper {
             prato.idRest,
             prato.img
           ]);
+      dynamic newPrato =  await dbClient.rawQuery('SELECT idPrato FROM Prato ORDER BY idPreco DESC LIMIT 1');
+      print(newPrato);
+      dbClient.rawInsert('INSERT INTO HistoricoPreco(idPreco,idPrato) VALUES(?,?)', [response[0]['idPreco'],newPrato[0]['idPrato']]);
       return true;
     } catch (err) {
       return false;
@@ -188,18 +196,26 @@ class DatabaseHelper {
   }
 
   // Atualiza o preco do prato
-  Future<bool> updatePrecoPrato(Prato prato) async{
+  Future<bool> updatePrecoPrato(double preco, int id) async{
     var dbClient = await db;
     try {
-
-      await dbClient.rawUpdate(
+      await dbClient.rawInsert(
       '''
-        UPDATE Preco
-        SET preco=?, date=datetime('now','localtime')
-        WHERE Preco.idPreco = ${prato.idPrato}
-        ''', [prato.preco.preco]
+        INSERT INTO Preco(preco, date) VALUES( $preco ,  datetime('now','localtime'))
+        '''
       );
 
+      dynamic newPreco = await dbClient.rawQuery('SELECT * FROM Preco ORDER BY idPreco DESC LIMIT 1');
+
+      await dbClient.rawUpdate(
+        '''
+        UPDATE Prato 
+            SET idPreco = ${newPreco[0]['idPreco']} WHERE Prato.idPrato = $id
+        '''
+        );
+      await dbClient.rawInsert('INSERT INTO HistoricoPreco (idPrato, idPreco) VALUES($id,${newPreco[0]['idPreco']})');
+      print(DateTime.now().toString().substring(0,19));
+      print('$newPreco');
       return true;
 
     } catch (err) {
@@ -427,6 +443,31 @@ class DatabaseHelper {
       print(err);
       return null;
     }
+  }
+
+  Future<List<Restaurant>> getRestPromocao() async {
+    var dbClient = await db;
+    String preDate = DateTime.now().subtract(Duration(days:7)).toString().substring(0,19);
+    String atualDate = DateTime.now().toString().substring(0,19);
+    dynamic response = dbClient.rawQuery(
+      '''
+        SELECT 
+              Restaurant.*,
+              Prato.idPrato,
+              Prato.name AS namePrato,
+              Prato.descricao AS descricaoPrato,
+              Prato.idPreco,
+              Prato.img AS imgPrato,
+              Preco.*,
+              HistoricoPreco.*
+          FROM 
+              Restaurant 
+              LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
+              LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+              LEFT JOIN HistoricoPreco on Prato.idPrato = HistoricoPreco.idPrato
+          WHERE
+              Preco.date BETWEEN $preDate AND $atualDate 
+      ''');
   }
 
   //ok 
@@ -674,6 +715,9 @@ class DatabaseHelper {
     } catch(err) {
         return null;
     }
+
+
+
   }
 
 

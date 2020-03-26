@@ -242,6 +242,6 @@ class _RestPlateState extends State<RestPlate> {
     Preco p = Preco(precoV, DateTime.now());
     _prato.setPreco(p);
     Control control = Control.internal();
-    await control.updatePreco(_prato);
+    await control.updatePreco(precoV, this._prato.idPrato);
   }
 }
