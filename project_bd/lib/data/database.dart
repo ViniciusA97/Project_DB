@@ -143,7 +143,7 @@ class DatabaseHelper {
           ]);
       dynamic newPrato =  await dbClient.rawQuery('SELECT idPrato FROM Prato ORDER BY idPreco DESC LIMIT 1');
       print(newPrato);
-      dbClient.rawInsert('INSERT INTO HistoricoPreco(idPreco,idPrato) VALUES(?,?)', [response[0]['idPreco'],newPrato[0]['idPrato']]);
+      await dbClient.rawInsert('INSERT INTO HistoricoPreco(idPreco,idPrato) VALUES(?,?)', [response[0]['idPreco'],newPrato[0]['idPrato']]);
       return true;
     } catch (err) {
       return false;
@@ -449,7 +449,7 @@ class DatabaseHelper {
     var dbClient = await db;
     String preDate = DateTime.now().subtract(Duration(days:7)).toString().substring(0,19);
     String atualDate = DateTime.now().toString().substring(0,19);
-    dynamic response = dbClient.rawQuery(
+    dynamic response = await dbClient.rawQuery(
       '''
         SELECT 
               Restaurant.*,
@@ -458,16 +458,24 @@ class DatabaseHelper {
               Prato.descricao AS descricaoPrato,
               Prato.idPreco,
               Prato.img AS imgPrato,
-              Preco.*,
+              Preco.idPreco,
+              Preco.preco,
+              AVG(Preco.preco) AS mediaPreco,
               HistoricoPreco.*
           FROM 
               Restaurant 
               LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-              LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
               LEFT JOIN HistoricoPreco on Prato.idPrato = HistoricoPreco.idPrato
-          WHERE
-              Preco.date BETWEEN $preDate AND $atualDate 
+              LEFT JOIN Preco ON HistoricoPreco.idPreco = Preco.idPreco
+          WHERE 
+              Preco.date > '$preDate' AND Preco.date< '$atualDate'
+          GROUP BY Restaurant.idRest
+          HAVING 
+                Preco.preco <= mediaPreco/2
       ''');
+      print(' -->$response');
+      List<Restaurant> rest = transforming(response);
+      return rest;
   }
 
   //ok 

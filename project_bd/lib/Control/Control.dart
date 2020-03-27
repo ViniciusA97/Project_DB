@@ -94,7 +94,9 @@ class Control{
     return await this._db.getRestPopular();
   }
 
-  Future<List<Restaurant>> getRestPromocao() async{}
+  Future<List<Restaurant>> getRestPromocao() async{
+    return await this._db.getRestPromocao();
+  }
   
   Future<List<Restaurant>> getRestEntregaGratis() async{
     return await this._db.getRestEntregaGratis();
