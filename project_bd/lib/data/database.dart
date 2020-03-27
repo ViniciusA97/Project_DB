@@ -463,13 +463,15 @@ class DatabaseHelper {
               AVG(Preco.preco) AS mediaPreco,
               HistoricoPreco.*
           FROM 
-              Restaurant 
-              LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-              LEFT JOIN HistoricoPreco on Prato.idPrato = HistoricoPreco.idPrato
-              LEFT JOIN Preco ON HistoricoPreco.idPreco = Preco.idPreco
+              Preco
+              LEFT JOIN HistoricoPreco on Preco.idPreco = HistoricoPreco.idPreco
+              LEFT JOIN Prato on HistoricoPreco.idPrato = Prato.idPrato
+              LEFT JOIN Restaurant on Prato.idRest = Restaurant.idRest
+              
           WHERE 
               Preco.date > '$preDate' AND Preco.date< '$atualDate'
-          GROUP BY Restaurant.idRest
+          GROUP BY 
+              Prato.idPrato
           HAVING 
                 Preco.preco <= mediaPreco/2
       ''');
