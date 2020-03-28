@@ -22,7 +22,7 @@ class _InitRestState extends State<InitRest> {
   Restaurant _rest;
   List<Categories> _categories;
   List<Categories> _allCategories;
-  String type;
+  TimeOfDay _open;
 
   //keys
   final key = GlobalKey<FormState>();
@@ -63,6 +63,12 @@ class _InitRestState extends State<InitRest> {
         this._allCategories = onValue;
       });
     });
+    // control.getOpenTimeByRestId(this._rest).then((onValue) {
+    //   setState(() {
+    //     this._open = onValue;
+    //   });
+    // });
+
   }
 
   _showSnackBar(String text) {
@@ -74,6 +80,7 @@ class _InitRestState extends State<InitRest> {
 
   @override
   Widget build(BuildContext context) {
+    // print('oi' + this._rest.horaAbre.format(context));
     return Scaffold(
       key: scaffoldKey,
       resizeToAvoidBottomInset: false,
@@ -122,11 +129,26 @@ class _InitRestState extends State<InitRest> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              '${this._rest.address}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    '${this._rest.address}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Text(
+                                    this._rest.gethorario(context),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(top: 5)),
@@ -647,5 +669,14 @@ class _InitRestState extends State<InitRest> {
         this._categories.add(this._allCategories[index]);
       });
     });
+  }
+
+  String hourFunc(){
+    if(this._rest.horaAbre == null || this._rest.horaFecha == null){
+      return 'não definido';
+    }
+    else{
+      return 'olá';
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'dart:async';
 import 'package:path_provider/path_provider.dart';
@@ -11,7 +12,6 @@ import 'package:project_bd/Model/user.dart';
 import 'package:sqflite/sqflite.dart';
 import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
-import '../Model/restaurant.dart';
 import '../Model/restaurant.dart';
 
 class DatabaseHelper {
@@ -42,7 +42,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE User(idUser INTEGER PRIMARY KEY , name TEXT, password TEXT, email TEXT UNIQUE, address TEXT , number TEXT );");
     await db.execute(
-        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT, hora_abre INTEGER, hora_fecha INTEGER, entregaGratis INTEGER);");
+        "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT, hora_abre SMALLDATETIME, hora_fecha SMALLDATETIME, entregaGratis INTEGER);");
     await db.execute(
         "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, idPreco INTEGER ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPreco) REFERENCES Preco(idPreco));");
     await db.execute(
@@ -176,7 +176,7 @@ class DatabaseHelper {
       WHERE Restaurant.idRest=?
       ''', [a,res.id]
     );
-    res.setEntrega(a);
+    // res.setEntrega(a);
   }
 
   Future<Categories> saveCategoria(String name, String img) async {
@@ -193,6 +193,47 @@ class DatabaseHelper {
     dbClient.rawInsert(
         'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
         [idRest, idCat]);
+  }
+
+  Future<void> saveOpenTime(int idRest, DateTime time) async {
+    var dbClient = await db;
+    try {
+      dbClient.rawUpdate(
+        '''
+        UPDATE Restaurant
+        SET hora_abre=datetime('$time')
+        WHERE Restaurant.idRest=$idRest
+        '''
+      );
+    } catch (e) {
+      print(e);
+    }
+    
+    List<Map> open = await dbClient.rawQuery(
+      'SELECT * FROM Restaurant WHERE Restaurant.idRest=$idRest'
+    );
+
+    print(open[0]['hora_abre']);
+  }
+
+  Future<void> saveCloseTime(int idRest, DateTime time) async {
+    var dbClient = await db;
+    try {
+      dbClient.rawUpdate(
+        '''
+        UPDATE Restaurant
+        SET hora_fecha=datetime('$time')
+        WHERE Restaurant.idRest=$idRest
+        '''
+      );
+    } catch (e) {
+      print(e);
+    }
+
+    List<Map> close = await dbClient.rawQuery(
+      'SELECT hora_fecha FROM Restaurant WHERE Restaurant.idRest=$idRest'
+    );
+    print(close[0]['hora_fecha']);
   }
 
   // Atualiza o preco do prato
@@ -223,7 +264,6 @@ class DatabaseHelper {
       return false;
     }
   }
-
 
   //ok
   //Busca todas as categorias
@@ -306,6 +346,7 @@ class DatabaseHelper {
     print('resp ---> $resp');
     for (int i = 0; i < resp.length; i++) {
       prato = await getPratos(resp[i]['idRest']);
+      print(resp[i]['hora_abre']);
       rest = Restaurant.map(resp[i]);
       rest.setCardapio(prato);
       list.add(rest);
@@ -341,9 +382,9 @@ class DatabaseHelper {
 
   //ok
   //Confere se existe restaurante, caso exista retorna o mesmo
-  Future<Restaurant> getRestLogin(String name, String password) async {
+  Future<Restaurant> getRestLogin(String email, String password) async {
     var dbClient = await db;
-    dynamic rest = await dbClient.rawQuery('''
+    List<Map> rest = await dbClient.rawQuery('''
       SELECT 
             Restaurant.*,
             CategoriaRest.idCategoria AS idCategoria,
@@ -363,7 +404,7 @@ class DatabaseHelper {
             LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
             LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
       WHERE 
-            Restaurant.name=? and Restaurant.password=?''', [name, password]
+            Restaurant.email=? and Restaurant.password=?''', [email, password]
     );
     try {
       print('login Rest --> $rest');
@@ -375,6 +416,7 @@ class DatabaseHelper {
       usual.setCategories(categories);
       return usual;
     } catch (err) {
+      print(err);
       return null;
     }
   }
@@ -469,7 +511,7 @@ class DatabaseHelper {
               LEFT JOIN Restaurant on Prato.idRest = Restaurant.idRest
               
           WHERE 
-              Preco.date > '$preDate' AND Preco.date< '$atualDate'
+              Preco.date > '$preDate' AND Preco.date < '$atualDate'
           GROUP BY 
               Prato.idPrato
           HAVING 

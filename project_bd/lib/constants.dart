@@ -34,3 +34,15 @@ const kTextRest = TextStyle(
   letterSpacing: 0.5, 
   color: Colors.black54,
 );
+
+const kTextMenu = TextStyle(
+  fontSize: 18,
+  color: Colors.black,
+  fontWeight: FontWeight.w400,
+  letterSpacing: 0.6,
+);
+
+const kSubTextMenu = TextStyle(
+  fontSize: 12,
+  color: Colors.black38,
+);

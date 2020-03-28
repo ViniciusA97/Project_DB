@@ -4,6 +4,7 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeRestPages/cardapioRest.dart';
 import 'package:project_bd/pages/HomeRestPages/InitRest.dart';
 import 'package:project_bd/data/database.dart';
+import 'package:project_bd/pages/HomeRestPages/menu.dart';
 
 import 'pedidosRest.dart';
 
@@ -23,17 +24,17 @@ class _RestPageState extends State<RestPage> {
   InitRest _homeRest;
   CardapioPage _cardapioPage;
   PedidosRest _pedidosRest;
+  Menu _menu;
   List<Widget> pages;
   Widget currentPage;
-  int previous = 0;
 
   @override
   void initState() {
     _cardapioPage = CardapioPage(this._rests.id);
     _homeRest = InitRest(_rests);
-    print(_homeRest);
     _pedidosRest = PedidosRest(this._rests);
-    pages = [_homeRest, _cardapioPage, _pedidosRest];
+    _menu = Menu(this._rests);
+    pages = [_homeRest, _cardapioPage, _pedidosRest, _menu];
     currentPage = _homeRest;
     super.initState();
   }
@@ -53,13 +54,7 @@ class _RestPageState extends State<RestPage> {
         onTap: (index) {
           setState(() {
             current = index;
-            if(index == 3)
-              delivery(context);
-            else
-            {
-              previous = index;
-              currentPage = pages[index];
-            }
+            currentPage = pages[index];
           });
         },
         items: <BottomNavigationBarItem>[
@@ -95,92 +90,17 @@ class _RestPageState extends State<RestPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.motorcycle,
+              Icons.person_outline,
               color: current == 3 ? Color(0xff38ad53) : Colors.grey,
             ),
             title: Text(
-              'Entrega',
+              'Perfil',
               style: TextStyle(color: Colors.black54),
             ),
           ),
         ],
       ),
     );
-  }
-
-  void delivery(context)
-  {
-    showModalBottomSheet(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      context: context,
-      builder: (context) => Container(
-        width: MediaQuery.of(context).size.width,
-        height: 190,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              onPressed: (){
-                setState(() {
-                  this._rests.setEntrega(1);
-                  saveDeliveryType(1);
-                });
-                current = previous;
-                Navigator.pop(context);
-              },
-              color: Color(0xff38ad53),
-              child: Text(
-                'Entrega Grátis',
-                style: TextStyle(color: Colors.white),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            RaisedButton(
-              color: Color(0xff38ad53),
-              onPressed: (){
-                setState(() {
-                  this._rests.setEntrega(2);
-                  saveDeliveryType(2);
-                });
-                current = previous;
-                Navigator.pop(context);
-              },
-              child: Text(
-                'Entrega rápida',
-                style: TextStyle(color: Colors.white),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            RaisedButton(
-              color: Color(0xff38ad53),
-              onPressed: (){
-                current = 0;
-                Navigator.pop(context);
-              },
-              child: Text(
-                'cancel',
-                style: TextStyle(color: Colors.white),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void saveDeliveryType(int a) async
-  {
-      var db = DatabaseHelper.internal();
-      db.updateEntrega(this._rests, a);
   }
 
 }
