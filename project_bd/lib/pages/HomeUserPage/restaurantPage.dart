@@ -162,7 +162,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   Widget showCardapio() {
-    if(checkIfOpen()) 
+    if(!checkIfOpen()) 
     {
       return Center(
         child: Text('Restaurante fechado'),
@@ -217,13 +217,22 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   bool checkIfOpen()
   {
-    TimeOfDay h = TimeOfDay.fromDateTime(this._restaurant.horaFecha);
-    TimeOfDay o = TimeOfDay.fromDateTime(this._restaurant.horaAbre);
-    if((h.hour <= TimeOfDay.now().hour && h.minute <= TimeOfDay.now().minute) && 
-        (o.hour < TimeOfDay.now().hour && o.minute < TimeOfDay.now().minute))
+    TimeOfDay close = TimeOfDay.fromDateTime(this._restaurant.horaFecha);
+    TimeOfDay open = TimeOfDay.fromDateTime(this._restaurant.horaAbre);
+
+    double oTime = open.hour.toDouble() + (open.minute.toDouble()/60);
+    print(oTime);
+    double cTime = close.hour.toDouble() + (close.minute.toDouble()/60);
+    print(cTime);
+    double nTime = TimeOfDay.now().hour.toDouble() + (TimeOfDay.now().minute.toDouble()/60);
+    print(nTime);
+
+    if((cTime > oTime && nTime >= oTime && nTime <= cTime || cTime < oTime && 
+        (nTime >= oTime|| nTime <= cTime)))
     {
-        return true;
+      return true;
     }
+
     return false;
   }
 }
