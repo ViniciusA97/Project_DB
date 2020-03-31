@@ -78,9 +78,6 @@ class _CartPageState extends State<CartPage> {
                   ),
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
                   },
                 ),
                 Padding(
@@ -180,7 +177,6 @@ class _CartPageState extends State<CartPage> {
           FlatButton(
             onPressed: (){
               Navigator.pop(context);
-              Navigator.pop(context);
             },
             child: Text('Adicionar mais itens', style: TextStyle(fontSize: 13, color: Color(0xff38ad53)),),
           ),
@@ -190,7 +186,7 @@ class _CartPageState extends State<CartPage> {
             color: Colors.grey.shade200,
           ),
           Container(
-            padding: EdgeInsets.only(top: 25),
+            padding: EdgeInsets.only(top: 20),
             child: Row(
              mainAxisAlignment: MainAxisAlignment.center,
              children: <Widget> [
@@ -237,7 +233,6 @@ class _CartPageState extends State<CartPage> {
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
-                  Navigator.pop(context);
                 },
                 child: Text('Finalizar compra', style: TextStyle(fontSize: 16, color: Colors.white),),
                 ),
@@ -245,7 +240,6 @@ class _CartPageState extends State<CartPage> {
            FlatButton(
             onPressed: (){
               control.clearCart();
-              Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);
