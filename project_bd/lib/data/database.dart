@@ -44,7 +44,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT, hora_abre SMALLDATETIME, hora_fecha SMALLDATETIME, entregaGratis INTEGER);");
     await db.execute(
-        "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT, idPreco INTEGER ,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idPreco) REFERENCES Preco(idPreco));");
+        "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
         'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
     await db.execute(
@@ -54,9 +54,7 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Pedidos(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
     await db.execute(
-        'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL)');
-    await db.execute(
-        'CREATE TABLE HistoricoPreco(idPreco INTEGER, idPrato INTEGER, FOREIGN KEY (idPreco) REFERENCES Preco(idPreco), FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
+        'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL, idPrato INTEGER, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
@@ -101,51 +99,27 @@ class DatabaseHelper {
     }
   }
 
-  Future<int> saveRestWithCategorie(Restaurant rest, List<Categories> list) async {
-    var dbClient = await db;
-    int res = await dbClient.rawInsert(
-        "INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email, address) VALUES(?,?,?,?,?,?,?,?)",
-        [
-          rest.name,
-          rest.password,
-          rest.numPedidos,
-          rest.url,
-          rest.descriprion,
-          rest.nume,
-          rest.email,
-          rest.address
-        ]);
-    for (Categories i in list) {
-      await dbClient.rawInsert(
-          'INSERT INTO CategoriasRest(idRest, idCategoria) VALUES(?,?)',
-          [rest.id, i.id]);
-    }
-    return res;
-  }
-
   Future<bool> savePrato(Prato prato) async {
     var dbClient = await db;
     try {
-      dbClient.rawInsert('''INSERT INTO Preco( preco, date) VALUES(?,datetime('now','localtime'))''',
-          [prato.preco.preco]);
-      
-      dynamic response = await dbClient
-          .rawQuery('SELECT idPreco FROM Preco ORDER BY idPreco DESC LIMIT 1');
-      
-      print(response[0]['idPedido']);
 
       int res = await dbClient.rawInsert(
-          "INSERT INTO Prato (name,descricao, idPreco, idRest,img) VALUES(?,?,?,?,?)",
+          "INSERT INTO Prato (name,descricao, idRest,img) VALUES(?,?,?,?)",
           [
             prato.name,
             prato.descricao,
-            response[0]['idPreco'],
             prato.idRest,
             prato.img
           ]);
-      dynamic newPrato =  await dbClient.rawQuery('SELECT idPrato FROM Prato ORDER BY idPreco DESC LIMIT 1');
-      print(newPrato);
-      await dbClient.rawInsert('INSERT INTO HistoricoPreco(idPreco,idPrato) VALUES(?,?)', [response[0]['idPreco'],newPrato[0]['idPrato']]);
+      
+      dynamic response = await dbClient
+          .rawQuery('SELECT idPrato FROM Prato ORDER BY idPrato DESC LIMIT 1');
+      
+      dbClient.rawInsert('''INSERT INTO Preco( preco, date, idPrato) VALUES(?,datetime('now','localtime'), ?)''',
+          [prato.preco.preco, response[0]['idPrato']]);
+      
+      print(response[0]['idPedido']);
+
       return true;
     } catch (err) {
       return false;
@@ -244,21 +218,10 @@ class DatabaseHelper {
     try {
       await dbClient.rawInsert(
       '''
-        INSERT INTO Preco(preco, date) VALUES( $preco ,  datetime('now','localtime'))
+        INSERT INTO Preco(preco, date,idPrato) VALUES( $preco ,  datetime('now','localtime'), $id)
         '''
       );
-
-      dynamic newPreco = await dbClient.rawQuery('SELECT * FROM Preco ORDER BY idPreco DESC LIMIT 1');
-
-      await dbClient.rawUpdate(
-        '''
-        UPDATE Prato 
-            SET idPreco = ${newPreco[0]['idPreco']} WHERE Prato.idPrato = $id
-        '''
-        );
-      await dbClient.rawInsert('INSERT INTO HistoricoPreco (idPrato, idPreco) VALUES($id,${newPreco[0]['idPreco']})');
       print(DateTime.now().toString().substring(0,19));
-      print('$newPreco');
       return true;
 
     } catch (err) {
@@ -322,9 +285,11 @@ class DatabaseHelper {
         FROM 
               CategoriaRest INNER JOIN Restaurant ON Restaurant.idRest = CategoriaRest.idRest
               LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-              LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+              LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
         WHERE 
-              CategoriaRest.idCategoria = $idCat''');
+              CategoriaRest.idCategoria = $idCat 
+        ORDER BY Preco.idPreco DESC
+              ''');
     print('Restaurant test --> $resp');
     List<Restaurant> rests = new List<Restaurant>();
     List<Prato> usual= new List<Prato>();
@@ -386,6 +351,7 @@ class DatabaseHelper {
   //Confere se existe restaurante, caso exista retorna o mesmo
   Future<Restaurant> getRestLogin(String email, String password) async {
     var dbClient = await db;
+    print('eai');
     List<Map> rest = await dbClient.rawQuery('''
       SELECT 
             Restaurant.*,
@@ -395,27 +361,24 @@ class DatabaseHelper {
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
-            Prato.idPreco,
             Prato.img AS imgPrato,
-            Preco.idPreco,
-            Preco.date,
-            Preco.preco
+            MAX(Preco.idPreco),
+            Preco.*
       FROM 
             Restaurant LEFT JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest
             LEFT JOIN Categoria ON CategoriaRest.idCategoria = Categoria.idCategoria
             LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-            LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+            LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE 
-            Restaurant.email=? and Restaurant.password=?''', [email, password]
+            Restaurant.email=? and Restaurant.password=? 
+      GROUP BY Prato.idPrato
+    
+            ''', [email, password]
     );
     try {
       print('login Rest --> $rest');
       Restaurant usual = Restaurant.map(rest[0]);
-      List<Prato> cardapio = await this.getPratos(rest[0]['idRest']);
-      List<Categories> categories =
-          await this.getCategorieByIdRest(rest[0]['idRest']);
-      usual.setCardapio(cardapio);
-      usual.setCategories(categories);
+  
       return usual;
     } catch (err) {
       print(err);
@@ -437,7 +400,6 @@ class DatabaseHelper {
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
-            Prato.idPreco,
             Prato.img AS imgPrato,
             Preco.idPreco,
             Preco.date,
@@ -446,9 +408,11 @@ class DatabaseHelper {
             Restaurant LEFT JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest
             LEFT JOIN Categoria ON CategoriaRest.idCategoria = Categoria.idCategoria
             LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-            LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+            LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE 
-            Restaurant.idRest = $id'''
+            Restaurant.idRest = $id
+      GROUP BY Prato.idPrato
+            '''
     );
     print(test);
     try {
@@ -470,11 +434,14 @@ class DatabaseHelper {
       '''
       SELECT 
             Prato.*,
+            MAX(Preco.idPreco),
             Preco.* 
       FROM 
-            Prato LEFT JOIN Preco ON Preco.idPreco = Prato.idPreco
+            Prato LEFT JOIN Preco ON Preco.idPrato = Prato.idPrato
       WHERE 
-            Prato.idRest=?''', [idRest]);
+            Prato.idRest=?
+      GROUP BY Prato.idPrato
+            ''', [idRest]);
     try {
       test[0];
       List<Prato> cardapio = new List<Prato>();
@@ -500,16 +467,13 @@ class DatabaseHelper {
               Prato.idPrato,
               Prato.name AS namePrato,
               Prato.descricao AS descricaoPrato,
-              Prato.idPreco,
               Prato.img AS imgPrato,
               Preco.idPreco,
               Preco.preco,
-              AVG(Preco.preco) AS mediaPreco,
-              HistoricoPreco.*
+              AVG(Preco.preco) AS mediaPreco
           FROM 
               Preco
-              LEFT JOIN HistoricoPreco on Preco.idPreco = HistoricoPreco.idPreco
-              LEFT JOIN Prato on HistoricoPreco.idPrato = Prato.idPrato
+              LEFT JOIN Prato on Preco.idPrato = Prato.idPrato
               LEFT JOIN Restaurant on Prato.idRest = Restaurant.idRest
               
           WHERE 
@@ -567,7 +531,7 @@ class DatabaseHelper {
             Pedidos.*,
             PedidoPratoUser.*
       FROM
-            Prato INNER JOIN Preco ON Preco.idPreco = Prato.idPreco
+            Prato INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
             INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
@@ -635,14 +599,13 @@ class DatabaseHelper {
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
-            Prato.idPreco,
             Prato.img AS imgPrato,
             Preco.idPreco,
             Preco.date,
             Preco.preco
       FROM 
             Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-            LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+            LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE 
             Restaurant.name LIKE '%$text%' OR Prato.name LIKE '%$text%' 
             ''' 
@@ -658,14 +621,13 @@ class DatabaseHelper {
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
-            Prato.idPreco,
             Prato.img AS imgPrato,
             Preco.idPreco,
             Preco.date,
             Preco.preco
       FROM 
           Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-          LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+          LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       GROUP BY
           Restaurant.idRest
       HAVING MAX(Preco.preco) < 10.0  
@@ -681,14 +643,13 @@ class DatabaseHelper {
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
-            Prato.idPreco,
             Prato.img AS imgPrato,
             Preco.idPreco,
             Preco.date,
             Preco.preco
       FROM 
           Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-          LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+          LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE Restaurant.entregaGratis = 1 
     ''');
     return transforming(response);
@@ -702,14 +663,13 @@ class DatabaseHelper {
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
-            Prato.idPreco,
             Prato.img AS imgPrato,
             Preco.idPreco,
             Preco.date,
             Preco.preco
       FROM 
           Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
-          LEFT JOIN Preco ON Prato.idPreco = Preco.idPreco
+          LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE Restaurant.entregaGratis = 2 
     ''');
     return transforming(response);
