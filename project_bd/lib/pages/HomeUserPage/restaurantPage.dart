@@ -217,6 +217,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   bool checkIfOpen()
   {
+    if(this._restaurant.horaAbre == null || this._restaurant.horaAbre== null) return false;
     TimeOfDay close = TimeOfDay.fromDateTime(this._restaurant.horaFecha);
     TimeOfDay open = TimeOfDay.fromDateTime(this._restaurant.horaAbre);
 

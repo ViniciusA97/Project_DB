@@ -39,37 +39,7 @@ class _MenuState extends State<Menu> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top:20),
-              height: 20,
-              child: Row(
-                children: <Widget>[
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }, 
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: Color(0xff38ad53),
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(right: MediaQuery.of(context).size.width / 8),),
-                  Text(
-                    '${this._restaurant.name}'.toUpperCase(),
-                    style: TextStyle(fontSize: 16, letterSpacing: 1.0),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20),
-            ),
-            Container(
-              height: 10,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.grey.shade200,
-            ),
+            
             Padding(padding: EdgeInsets.only(top: 20)),
             Container(
               height: MediaQuery.of(context).size.height - 200,
@@ -77,10 +47,10 @@ class _MenuState extends State<Menu> {
               margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () {delivery(context);},
+                  MaterialButton(
+                    onPressed: () {delivery(context);},
                     child: Row(
                       children: <Widget>[
                         Padding(padding: EdgeInsets.fromLTRB(0, 30, 0, 20),),
@@ -111,8 +81,8 @@ class _MenuState extends State<Menu> {
                       color: Color(0xff38ad53),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: (){chooseTime(context);},
+                  MaterialButton(
+                    onPressed: (){chooseTime(context);},
                     child: Row(
                       children: <Widget>[
                         Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 30),),

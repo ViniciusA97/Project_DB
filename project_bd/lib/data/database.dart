@@ -81,16 +81,18 @@ class DatabaseHelper {
     var dbClient = await db;
     try {
       await dbClient.rawInsert(
-          "INSERT INTO Restaurant (name, password, numPedidos,image,description,num,email,address) VALUES(?,?,?,?,?,?,?,?)",
+          "INSERT INTO Restaurant (name, password,image,description,num,email,address,hora_abre, hora_fecha, entregaGratis ) VALUES(?,?,?,?,?,?,?,?,?,?)",
           [
             rest.name,
             rest.password,
-            rest.numPedidos,
             rest.url,
             rest.descriprion,
             rest.nume,
             rest.email,
             rest.address,
+            rest.horaAbre.toString(),
+            rest.horaFecha.toString(),
+            rest.entregaGratis
           ]);
       return true;
     } catch (err) {

@@ -16,14 +16,13 @@ class Restaurant implements Client{
   String _email;
   DateTime _horaAbre;
   DateTime _horaFecha;
-  double _nota;
-  int _entrega = 0;
+  int _entrega;
   List<Prato> _cardapio;
   List<Categories> _categories;
 
 
-  Restaurant(this._name,this._password, this._cardapio, this._numPedidos, this._urlImage,
-              this._description,this._num, this._email,this._adress);
+  Restaurant(this._name,this._password, this._urlImage,
+              this._description,this._num, this._email,this._adress, this._entrega,this._horaAbre, this._horaFecha);
 
   Restaurant.map(dynamic obj){
     _name = obj['name'];
@@ -35,15 +34,10 @@ class Restaurant implements Client{
     _num = obj['num'];
     _adress= obj['address'];
     _email = obj['email'];
-
-    if(obj['hora_abre'] != null)
-      _horaAbre = DateTime.parse(obj['hora_abre']);
-    if(obj['hora_fecha'] != null)
-      _horaFecha = DateTime.parse(obj['hora_fecha']);
-
+    if(obj['hora_abre'] != null) _horaAbre = DateTime.parse(obj['hora_abre']);
+    if(obj['hora_fecha'] != null) _horaFecha = DateTime.parse(obj['hora_fecha']);
     _entrega = obj['entregaGratis'];
     _cardapio = new List<Prato>();
-    // this._date = DateTime.parse(obj['date']);
   }
 
   Map<String, dynamic> map(){
@@ -59,8 +53,6 @@ class Restaurant implements Client{
     map['address']= _adress;
     map['pratos'] = _cardapio;
     map['categorias'] = _categories;
-    // map['hora_abre'] = _horaAbre;
-    // map['hora_fecha'] = _horaFecha;
     map['entregaGratis'] = _entrega;
     return map;
   }
@@ -108,9 +100,8 @@ class Restaurant implements Client{
     {
       return "${TimeOfDay.fromDateTime(horaAbre).format(context)} - ${TimeOfDay.fromDateTime(horaFecha).format(context)}";
     }
+    return '';
   }
-
-  // String get entrega => _entregaGratis == 1 ? 'Entrega Grátis' : 'Entrega Rápida';
 
   void setCategories(List<Categories> cat) =>this._categories=cat;
   void setCardapio(List<Prato> list) => this._cardapio = list;
