@@ -1,4 +1,0 @@
-#Thu Mar 19 19:42:53 BRT 2020
-base.0=/home/lu/Documents/UFPB/P5/BD/Project/code/v4/Project_DB/project_bd/build/app/intermediates/transforms/dexMerger/debug/0
-path.0=classes.dex
-renamed.0=classes.dex
