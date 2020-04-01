@@ -5,6 +5,7 @@ import 'package:project_bd/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_bd/data/database.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:project_bd/pages/HomeRestPages/reports.dart';
 
 class Menu extends StatefulWidget {
 
@@ -39,7 +40,6 @@ class _MenuState extends State<Menu> {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: <Widget>[
-            
             Padding(padding: EdgeInsets.only(top: 20)),
             Container(
               height: MediaQuery.of(context).size.height - 200,
@@ -97,6 +97,38 @@ class _MenuState extends State<Menu> {
                             ),
                             Text(
                               'Escolha o horário de funcionamento',
+                              style: kSubTextMenu,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                    width: MediaQuery.of(context).size.width,
+                    child: Divider(
+                      color: Color(0xff38ad53),
+                    ),
+                  ),
+                  MaterialButton(
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Report(_restaurant)));
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 30),),
+                        Icon(FontAwesomeIcons.chartLine, size: 25, color: Colors.grey),
+                        Padding(padding: EdgeInsets.fromLTRB(20, 0, 0, 0),),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Relatórios',
+                              style: kTextMenu,
+                            ),
+                            Text(
+                              'Visualize seus relatórios',
                               style: kSubTextMenu,
                             ),
                           ],

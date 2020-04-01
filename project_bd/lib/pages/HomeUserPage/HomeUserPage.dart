@@ -8,6 +8,7 @@ import 'package:project_bd/components/DinamicsRestaurants.dart';
 import 'package:project_bd/components/Search.dart';
 import 'package:project_bd/constants.dart';
 import 'package:project_bd/pages/HomeUserPage/RestForCategoriesPage.dart';
+import 'package:project_bd/pages/HomeUserPage/CartPage.dart';
 
 class HomePageUser extends StatefulWidget {
   User _user;
@@ -52,7 +53,8 @@ class HomePageStateUser extends State<HomePageUser> {
       key: scaffolKey,
       backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
-        onPressed: null,
+        onPressed: () async => await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => CartPage())),
         child: Icon(Icons.shopping_cart),
         backgroundColor: Color(0xff38ad53),
         elevation: 6.0,

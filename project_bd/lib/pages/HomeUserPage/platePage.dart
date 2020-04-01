@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:project_bd/pages/HomeUserPage/CartPage.dart';
+import 'package:project_bd/Control/Control.dart';
+import 'package:project_bd/Model/itemCart.dart';
 
 class PlatePage extends StatefulWidget {
   Prato _prato;
@@ -14,6 +17,9 @@ class _PlatePageState extends State<PlatePage> {
 
   Prato _prato;
   int quant = 1;
+  List<Prato> bag = List<Prato>();
+  Control control = Control.internal();
+  ItemCart cart;
 
   _PlatePageState(this._prato);
 
@@ -184,8 +190,15 @@ class _PlatePageState extends State<PlatePage> {
                   color: Color(0xff38ad53),
                   child: MaterialButton(
                     minWidth: 100.0,
-                    // TODO: Adicionar ao carrinho
-                    onPressed: null,
+                    onPressed: () async{
+                      cart = ItemCart(_prato, quant);
+                      print(cart.prato.name);
+                      print("CARALHO\n\n\n\n\n\n\n");
+                      print(await control.saveCart(cart));
+                      print("Dados no bd\n\n\n\n\n\n\n");
+                      print(await control.getCart());
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+                    },
                     child: Text('Adicionar     \$${(this._prato.preco.preco) * quant}', style: TextStyle(color: Colors.white),),
                   ),
                 )

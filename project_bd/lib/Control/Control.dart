@@ -8,6 +8,7 @@ import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
+import 'package:project_bd/Model/itemCart.dart';
 
 class Control{
 
@@ -108,5 +109,21 @@ class Control{
   }
   
   Future<List<Restaurant>> getRestMaisPedido() async{}
+
+  Future<bool> saveCart(ItemCart cart) async{
+    return await this._db.saveCart(cart);
+  }
+
+  Future<Map<Prato, int>> getCart() async{
+    return await this._db.getCart();
+  }
+
+  Future<int> clearCart() async{
+    return await this._db.clearCart();
+  }
+  
+  Future<bool> removeItemCart(Prato p, int quant) async{
+    return await this._db.removeItemCart(p, quant);
+  }
 
 }

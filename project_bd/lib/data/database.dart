@@ -13,6 +13,7 @@ import 'package:sqflite/sqflite.dart';
 import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
 import '../Model/restaurant.dart';
+import '../Model/itemCart.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -55,6 +56,8 @@ class DatabaseHelper {
         'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Pedidos(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
     await db.execute(
         'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL, idPrato INTEGER, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
+    await db.execute(
+        'CREATE TABLE Carrinho(idItem INTEGER PRIMARY KEY, idPrato INTEGER, quant INTEGER)');
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
@@ -718,7 +721,7 @@ class DatabaseHelper {
             PedidoPratoUser 
             INNER JOIN Pedidos ON Pedidos.idPedido =PedidoPratoUser.idPedido 
             INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco on Preco.idPreco = Prato.idPreco
+            INNER JOIN Preco on Preco.idPrato = Prato.idPrato
       WHERE 
             PedidoPratoUser.idUser = $idUser
       '''
@@ -729,13 +732,68 @@ class DatabaseHelper {
     } catch(err) {
         return null;
     }
+  }
+
+  Future<bool> saveCart(ItemCart c) async {
+    var dbClient = await db;
+    try {
+      await dbClient.rawInsert(
+        'INSERT INTO Carrinho(idPrato, quant) VALUES(?,?)', [c.prato.idPrato, c.quant]);
+      return true;
+    } catch (err) {
+      print(err.toString());
+      return false;
+    }
+   }
+
+   Future<Map<Prato, int>> getCart() async {
+    var dbClient = await db;
+
+    dynamic idsItens = await dbClient.rawQuery('SELECT * FROM Carrinho');
+    Map<Prato, int> list = Map<Prato, int>();
 
 
-
+    for(dynamic m in idsItens){
+        dynamic test = await dbClient.rawQuery(
+        '''
+        SELECT 
+              Prato.*,
+              Preco.* 
+        FROM 
+              Prato INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+        WHERE 
+              Preco.idPrato=?''', [m['idPrato']]);
+        int quant = m['quant'];
+      try {
+        print("\n\n\n Pegou prato ${test[0]['name']} com $quant quantidades");
+        list.addAll({Prato.map(test[0]): quant});
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    print(list);
+    return list;
   }
 
 
   //deletion
+  Future<int> clearCart() async {
+    var dbClient = await db;
+    int res = await dbClient.rawDelete("DELETE From Carrinho");
+    return res;
+  }  
+
+  Future<bool> removeItemCart(Prato p, int quant) async {
+    var dbClient = await db;
+    try{
+      await dbClient.rawDelete("DELETE From Carrinho WHERE idPrato=${p.idPrato} AND quant=$quant;");
+      print(true);
+      return true;
+    } catch(err){
+      print(false);
+      return false;
+    }
+  } 
   
 
 }

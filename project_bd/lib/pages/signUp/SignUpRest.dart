@@ -135,33 +135,33 @@ class _SignUpRestState extends State<SignUpRest> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
                             RaisedButton(
-              onPressed: (){
-                timePicker(true,1);
-                // tp();
-              },
-              color: Color(0xff38ad53),
-              child: Text(
-                '$buttonNameA',
-                style: TextStyle(color: Colors.white),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-            RaisedButton(
-              color: Color(0xff38ad53),
-              onPressed: (){
-                timePicker(true,0);
-                // Navigator.pop(context);
-              },
-              child: Text(
-                '$buttonNameB',
-                style: TextStyle(color: Colors.white),
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
+                              onPressed: (){
+                                timePicker(true,1);
+                                // tp();
+                              },
+                              color: Color(0xff38ad53),
+                              child: Text(
+                                '$buttonNameA',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            RaisedButton(
+                              color: Color(0xff38ad53),
+                              onPressed: (){
+                                timePicker(true,0);
+                                // Navigator.pop(context);
+                              },
+                              child: Text(
+                                '$buttonNameB',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
                           ],
                         ),
                         Padding(

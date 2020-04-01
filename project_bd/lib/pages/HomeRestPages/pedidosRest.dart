@@ -81,7 +81,7 @@ class _PedidosRestState extends State<PedidosRest> {
         itemBuilder: (BuildContext cntx, int index) {
           return Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20), color: Colors.white),
+                borderRadius: BorderRadius.circular(20), color: Color(0xff38ad53)),
             child: Column(
               children: <Widget>[
                 Row(

@@ -66,14 +66,13 @@ class _LoginPageState extends State<LoginPage> {
                           Padding(
                             padding: EdgeInsets.only(top: 5),
                           ),
-
                           Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[Image.asset('./assets/comida4.jpg')],
                           )
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ))
           ],
