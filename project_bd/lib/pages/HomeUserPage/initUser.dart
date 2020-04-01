@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/pages/HomeUserPage/HomeUserPage.dart';
 import 'package:project_bd/pages/HomeUserPage/userRequest.dart';
@@ -27,6 +28,8 @@ class _InitUserState extends State<InitUser> {
 
   @override
   void initState() {
+    Control control = Control();
+    control.setUser(this._user);
     _homeUser = HomePageUser(this._user);
     _userReqs = Requests(this._user);
     pages = [_homeUser, _userReqs];

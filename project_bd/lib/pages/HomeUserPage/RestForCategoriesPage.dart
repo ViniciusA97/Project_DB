@@ -30,7 +30,7 @@ class _RestForCategoriesPageState extends State<RestForCategoriesPage> {
   }
 
   _asyncMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     control.getCategoriesRest(this._categories.id).then((onValue) {
       setState(() {
         this._restaurant = onValue;

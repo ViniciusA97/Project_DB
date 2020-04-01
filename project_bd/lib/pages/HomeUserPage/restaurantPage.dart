@@ -25,7 +25,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   _asyncMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     await control.getPratosRestaurant(this._restaurant.id).then((onValue) {
       setState(() {
         this._pratos = onValue;
@@ -179,7 +179,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
         itemBuilder: (BuildContext cntx, int index) {
           return GestureDetector(
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => PlatePage(this._pratos[index])),);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => PlatePage(this._pratos[index], this._restaurant.entregaGratis)),);
             },
             child: Container(
               child: Column(

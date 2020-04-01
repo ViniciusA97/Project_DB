@@ -76,10 +76,9 @@ class Restaurant implements Client{
   String get tipoEntrega{
     if(_entrega == 1)
       return 'Entrega Grátis';
-    else if(_entrega == 2)
+    else{
       return 'Entrega Rápida';
-    else 
-      return 'escolha';
+    }
   }
 
   String gethorario(context) {

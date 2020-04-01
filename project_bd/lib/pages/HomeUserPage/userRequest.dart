@@ -29,9 +29,10 @@ class _RequestsState extends State<Requests> {
   }
 
   void _asyncMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     await control.getUserPedidos(this._user.id).then((onValue) {
       setState(() {
+        print(onValue);
         this._pedidos = onValue;
       });
     });

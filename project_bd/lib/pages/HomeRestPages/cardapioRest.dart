@@ -28,7 +28,7 @@ class _CardapioPageState extends State<CardapioPage> {
   }
 
   _asyncMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     await control.getPratosRestaurant(this._id).then((onValue) {
       setState(() {
         print('on value : $onValue');

@@ -2,35 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:project_bd/pages/HomeRestPages/addPrato.dart';
 
 class CartPage extends StatefulWidget {
-  List<Prato> _pratos = List<Prato>();
-  List<int> _quant = List<int>();
 
-  //BagPage(this._pratos, this._quant);
 
   @override
-  _CartPageState createState() => _CartPageState();
+  CartPageState createState() => CartPageState();
 }
 
-class _CartPageState extends State<CartPage> {
+class CartPageState extends State<CartPage> {
 
+
+  CartPageState();
+  int isGratis;
+  Control control = Control();
   List<Prato> _pratos = List<Prato>();
   List<int> _quant = List<int>();
-  Control control = Control.internal();
+  double value;
+  final scafolldKey = GlobalKey<ScaffoldState>();
 
   //_BagPageState(this._pratos, this._quant);
 
   void initState() {
     super.initState();
-    _ayncInitMethod();
-  }
-  _ayncInitMethod() async {
-    await control.getCart().then((value) {
-      setState(() {
-        this._pratos = value.keys.toList();
-        this._quant = value.values.toList();
-      });
+    setState(() {
+      this._pratos = control.plate;
+      this._quant = control.quant;
+      this.isGratis = control.isGratis;
+      if(isGratis==1){
+        value = 0;
+      }else{
+        value = 2;
+      }
     });
     print("Pratos novos");
     print(_pratos);
@@ -40,6 +44,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scafolldKey,
       body: Column(
         children: <Widget> [
           page(),
@@ -156,10 +161,11 @@ class _CartPageState extends State<CartPage> {
                               Padding(padding: EdgeInsets.only(left: 15),),
                               GestureDetector(
                                 onTap: (){
-                                  control.removeItemCart(this._pratos[index], this._quant[index]);
-                                  
-                                  //Colocar código pra atualizar página, pensar em outro depois
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage())); 
+                                  control.removeItem(index);
+                                  setState(() {
+                                    this._pratos = control.plate;
+                                    this._quant = control.quant;
+                                  });
                                 },
                                 child: Icon(Icons.delete_sweep, color: Color(0xff38ad53),),
                               ),
@@ -210,9 +216,9 @@ class _CartPageState extends State<CartPage> {
                     children: <Widget>[
                       Text("R\$${calculatePreco()}0", textAlign: TextAlign.end, style: TextStyle(fontSize: 15, color: Colors.grey),),
                       Padding(padding: EdgeInsets.only(top: 10),),
-                      Text("R\$ 2.00", textAlign: TextAlign.end, style: TextStyle(fontSize: 15, color: Colors.grey),),
+                      Text("R\$$value", textAlign: TextAlign.end, style: TextStyle(fontSize: 15, color: Colors.grey),),
                       Padding(padding: EdgeInsets.only(top: 10),),
-                      Text("R\$${calculatePreco() + 2}0", textAlign: TextAlign.end, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                      Text("R\$${calculatePreco() + value}0", textAlign: TextAlign.end, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -229,10 +235,14 @@ class _CartPageState extends State<CartPage> {
                 minWidth: MediaQuery.of(context).size.width-120,
                 //MANDAR PROS PEDIDOS AQUI
                 onPressed: () async{
-                  control.clearCart();
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  bool response = await control.savePedido();
+                  if(response){
+                    control.savePedido();
+                    control.clearCart();
+                    Navigator.pop(context);
+                  }else{
+                    _showSnackBar('Houve algum erro durante o pedido.');
+                  }
                 },
                 child: Text('Finalizar compra', style: TextStyle(fontSize: 16, color: Colors.white),),
                 ),
@@ -251,4 +261,12 @@ class _CartPageState extends State<CartPage> {
       );
     }
   }
+
+_showSnackBar(String text) {
+    final keyState = scafolldKey.currentState;
+    keyState.showSnackBar(new SnackBar(
+      content: new Text(text),
+    ));
+  }
+
 }

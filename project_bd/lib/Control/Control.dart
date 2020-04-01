@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:core';
+import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:project_bd/Model/categories.dart';
@@ -9,15 +10,24 @@ import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/data/database.dart';
 import 'package:project_bd/Model/itemCart.dart';
+import 'package:project_bd/pages/HomeUserPage/CartPage.dart';
 
 class Control{
 
   final DatabaseHelper _db = DatabaseHelper.internal();
 
-  static final Control _instance = new Control.internal();
-  factory Control() => _instance;
-  Control.internal();
+  static Control _instance;
 
+  factory Control() {
+    _instance ??= Control._internal();
+    return _instance;
+  }
+  Control._internal();
+
+  List<Prato> _pratos = new List<Prato>();
+  List<int> _qnt = new List<int>();
+  int isGratis;
+  User user;
   
   //faz login do usuario
   Future<User> doLogin(String email, String password) async{
@@ -110,20 +120,80 @@ class Control{
   
   Future<List<Restaurant>> getRestMaisPedido() async{}
 
-  Future<bool> saveCart(ItemCart cart) async{
-    return await this._db.saveCart(cart);
-  }
-
-  Future<Map<Prato, int>> getCart() async{
-    return await this._db.getCart();
-  }
-
-  Future<int> clearCart() async{
-    return await this._db.clearCart();
-  }
-  
   Future<bool> removeItemCart(Prato p, int quant) async{
     return await this._db.removeItemCart(p, quant);
   }
+
+  Future<bool> savePedido() async {
+    if(this._pratos==null || this._pratos.isEmpty){
+      return false;
+    }
+    Pedido p  = new Pedido(this._pratos,this.user, this._qnt);
+    double value = 0;
+    for(int i = 0; i < this._pratos.length; i++){
+      value += this._pratos[i].preco.preco * this._qnt[i];
+    }
+    if(isGratis != 1){
+      value+=2;
+    }
+    bool b = await this._db.savePedido(p, value);
+    this._pratos= new List<Prato>();
+    this._qnt= new List<int>();
+    return b;
+  }
+
+
+  void addPrato(Prato p , int q, int gratis){
+    if(isGratis==null){
+      isGratis=gratis;
+    }
+    int cont =0;
+
+    for(int i =0 ; i<this._pratos.length; i++){
+      if(this._pratos[i].idPrato==p.idPrato){
+        this._qnt[i]+=q;
+        cont++;
+      }
+    }
+    if(cont>0){
+      return;
+    }
+
+    this._pratos.add(p);
+    this._qnt.add(q);
+  }
+
+  void removeItem(int index){
+    this._qnt.removeAt(index);
+    this._pratos.removeAt(index);
+    if(this._qnt.isEmpty){
+      this.isGratis = null;
+    }
+  }
+
+  void clearCart(){
+    this._qnt = new List<int>();
+    this._pratos = new List<Prato>();
+    this.isGratis = null;
+  }
+
+  void setUser(User u){
+    this.user = u;
+  }
+
+  bool canAddPlate(Prato p){
+    if(this._pratos.isEmpty){
+      return true;
+    }
+    else if(this._pratos[0].idRest == p.idRest){
+      return true;
+    }
+    return false;
+  }
+
+
+  List<Prato> get plate => this._pratos;
+  List<int> get quant => this._qnt;
+
 
 }

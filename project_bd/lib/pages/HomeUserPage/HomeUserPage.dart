@@ -36,7 +36,7 @@ class HomePageStateUser extends State<HomePageUser> {
   }
 
   _ayncInitMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     await control.getAllCategories().then((value) {
       setState(() {
         this._categories = value;

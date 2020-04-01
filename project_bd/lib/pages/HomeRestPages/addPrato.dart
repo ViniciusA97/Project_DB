@@ -143,7 +143,7 @@ class _AddPratoState extends State<AddPrato> {
     Preco preco = Preco(precoValue, DateTime.now());
     print(preco.id);
     Prato prato = Prato(_id, name, preco, descricao, img);
-    Control control = Control.internal();
+    Control control = Control();
     bool response = await control.savePrato(prato);
     if (response) {
       Restaurant res = await control.getRestByIdRest(prato.idRest);

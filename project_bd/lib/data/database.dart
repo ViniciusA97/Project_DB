@@ -56,8 +56,6 @@ class DatabaseHelper {
         'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Pedidos(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
     await db.execute(
         'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL, idPrato INTEGER, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
-    await db.execute(
-        'CREATE TABLE Carrinho(idItem INTEGER PRIMARY KEY, idPrato INTEGER, quant INTEGER)');
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
@@ -105,22 +103,17 @@ class DatabaseHelper {
   Future<bool> savePrato(Prato prato) async {
     var dbClient = await db;
     try {
-
       int res = await dbClient.rawInsert(
           "INSERT INTO Prato (name,descricao, idRest,img) VALUES(?,?,?,?)",
-          [
-            prato.name,
-            prato.descricao,
-            prato.idRest,
-            prato.img
-          ]);
-      
+          [prato.name, prato.descricao, prato.idRest, prato.img]);
+
       dynamic response = await dbClient
           .rawQuery('SELECT idPrato FROM Prato ORDER BY idPrato DESC LIMIT 1');
-      
-      dbClient.rawInsert('''INSERT INTO Preco( preco, date, idPrato) VALUES(?,datetime('now','localtime'), ?)''',
+
+      dbClient.rawInsert(
+          '''INSERT INTO Preco( preco, date, idPrato) VALUES(?,datetime('now','localtime'), ?)''',
           [prato.preco.preco, response[0]['idPrato']]);
-      
+
       print(response[0]['idPedido']);
 
       return true;
@@ -129,18 +122,27 @@ class DatabaseHelper {
     }
   }
 
-  Future<void> savePedido(Pedido p, double preco) async {
-    var dbClient = await db;
-    dbClient.rawInsert(
-        'INSERT INTO Pedidos(data, preco) VALUES(?,?)', [p.data, preco]);
-    dynamic pedido = dbClient.rawQuery(
-        'SELECT idPedido From Pedidos ORDER BY idPedido DESC LIMIT 1;');
-    int idPedido = pedido[0]['idPedido'];
-    List<Prato> pratos;
-    for (Prato i in pratos) {
-      dbClient.rawInsert(
-          'INSERT INTO PedidoPratoUser (idPrato, idUser, idPedido) VALUES(?,?,?)',
-          [i.idPrato, p.user.id, idPedido]);
+  Future<bool> savePedido(Pedido p, double preco) async {
+    try {
+      var dbClient = await db;
+      await dbClient.rawInsert( '''INSERT INTO Pedidos(data, preco) VALUES(datetime('now','localtime'),?)''',[preco]);
+      dynamic pedido = await dbClient.rawQuery( 'SELECT idPedido From Pedidos ORDER BY idPedido DESC LIMIT 1');
+      int idPedido = pedido[0]['idPedido'];
+      print('idpedido---->$idPedido');
+      List<Prato> pratos = p.prato;
+      List<int> qnt = p.qnt;
+      print('${pratos.length}  ${qnt.length}');
+
+      for (int i = 0; i < pratos.length; i++) {
+        print('idprato --> ${pratos[0].idPrato}');
+        await dbClient.rawInsert(
+            'INSERT INTO PedidoPratoUser (idPrato, idUser, idPedido, quantidade) VALUES(?,?,?,?)',
+            [pratos[i].idPrato, p.user.id, idPedido, qnt[i]]);
+      }
+      return true;
+    } catch (err) {
+      print(err);
+      return false;
     }
   }
 
@@ -148,13 +150,11 @@ class DatabaseHelper {
     var dbClient = await db;
     // Usei update pq já inicializo com 0 no cadastro
     // entrega é inteiro 1 - gratis 2 - rapida  0 - não definida
-    await dbClient.rawUpdate(
-      '''
+    await dbClient.rawUpdate('''
       UPDATE Restaurant
       SET entregaGratis=?
       WHERE Restaurant.idRest=?
-      ''', [a,res.id]
-    );
+      ''', [a, res.id]);
     // res.setEntrega(a);
   }
 
@@ -177,20 +177,17 @@ class DatabaseHelper {
   Future<void> saveOpenTime(int idRest, DateTime time) async {
     var dbClient = await db;
     try {
-      dbClient.rawUpdate(
-        '''
+      dbClient.rawUpdate('''
         UPDATE Restaurant
         SET hora_abre=datetime('$time')
         WHERE Restaurant.idRest=$idRest
-        '''
-      );
+        ''');
     } catch (e) {
       print(e);
     }
-    
-    List<Map> open = await dbClient.rawQuery(
-      'SELECT * FROM Restaurant WHERE Restaurant.idRest=$idRest'
-    );
+
+    List<Map> open = await dbClient
+        .rawQuery('SELECT * FROM Restaurant WHERE Restaurant.idRest=$idRest');
 
     print(open[0]['hora_abre']);
   }
@@ -198,35 +195,29 @@ class DatabaseHelper {
   Future<void> saveCloseTime(int idRest, DateTime time) async {
     var dbClient = await db;
     try {
-      dbClient.rawUpdate(
-        '''
+      dbClient.rawUpdate('''
         UPDATE Restaurant
         SET hora_fecha=datetime('$time')
         WHERE Restaurant.idRest=$idRest
-        '''
-      );
+        ''');
     } catch (e) {
       print(e);
     }
 
     List<Map> close = await dbClient.rawQuery(
-      'SELECT hora_fecha FROM Restaurant WHERE Restaurant.idRest=$idRest'
-    );
+        'SELECT hora_fecha FROM Restaurant WHERE Restaurant.idRest=$idRest');
     print(close[0]['hora_fecha']);
   }
 
   // Atualiza o preco do prato
-  Future<bool> updatePrecoPrato(double preco, int id) async{
+  Future<bool> updatePrecoPrato(double preco, int id) async {
     var dbClient = await db;
     try {
-      await dbClient.rawInsert(
-      '''
+      await dbClient.rawInsert('''
         INSERT INTO Preco(preco, date,idPrato) VALUES( $preco ,  datetime('now','localtime'), $id)
-        '''
-      );
-      print(DateTime.now().toString().substring(0,19));
+        ''');
+      print(DateTime.now().toString().substring(0, 19));
       return true;
-
     } catch (err) {
       print(err);
       return false;
@@ -251,8 +242,7 @@ class DatabaseHelper {
   //Busca todas as categorias do restaurante
   Future<List<Categories>> getCategorieByIdRest(int idRest) async {
     var dbClient = await db;
-    List<Map> resp =
-        await dbClient.rawQuery('''
+    List<Map> resp = await dbClient.rawQuery('''
           SELECT 
                 CategoriaRest.idCategoria,
                 Categoria.name,
@@ -261,8 +251,7 @@ class DatabaseHelper {
           FROM 
                 CategoriaRest INNER JOIN  Categoria ON Categoria.idCategoria = CategoriaRest.idCategoria 
           WHERE 
-                CategoriaRest.idRest=?''', [idRest]
-          );
+                CategoriaRest.idRest=?''', [idRest]);
     List<Categories> cat = List<Categories>();
     for (var i in resp) {
       cat.add(Categories.map(i));
@@ -274,8 +263,7 @@ class DatabaseHelper {
   // pega todos os restaurantes cadastrados em determinada categoria
   Future<List<Restaurant>> getRestByIdCategories(int idCat) async {
     var dbClient = await db;
-    dynamic resp = await dbClient.rawQuery(
-      '''
+    dynamic resp = await dbClient.rawQuery('''
       SELECT 
               Restaurant.*,
               Prato.name AS namePrato,
@@ -295,14 +283,14 @@ class DatabaseHelper {
               ''');
     print('Restaurant test --> $resp');
     List<Restaurant> rests = new List<Restaurant>();
-    List<Prato> usual= new List<Prato>();
+    List<Prato> usual = new List<Prato>();
     int savedIdRest;
     for (dynamic i in resp) {
       rests.add(Restaurant.map(i));
-      if(i['idRest'] == savedIdRest ){
+      if (i['idRest'] == savedIdRest) {
         rests.last.addPrato(Prato.mapJOIN(i));
       }
-      savedIdRest= i['idRest'];
+      savedIdRest = i['idRest'];
     }
     return rests;
   }
@@ -330,9 +318,9 @@ class DatabaseHelper {
   Future<User> getUser(String email, String pass) async {
     var dbClient = await db;
     dynamic test = await dbClient.rawQuery(
-        'SELECT * FROM User WHERE email=? and password=?',
-        [email, pass]);
+        'SELECT * FROM User WHERE email=? and password=?', [email, pass]);
     try {
+      print('test $test');
       return User.map(test[0]);
     } catch (err) {
       print(err);
@@ -376,12 +364,11 @@ class DatabaseHelper {
             Restaurant.email=? and Restaurant.password=? 
       GROUP BY Prato.idPrato
     
-            ''', [email, password]
-    );
+            ''', [email, password]);
     try {
       print('login Rest --> $rest');
       Restaurant usual = Restaurant.map(rest[0]);
-  
+
       return usual;
     } catch (err) {
       print(err);
@@ -393,8 +380,7 @@ class DatabaseHelper {
   //Busca um restaurante pelo id
   Future<Restaurant> getRestById(int id) async {
     var dbClient = await db;
-    dynamic test = await dbClient.rawQuery(
-      '''
+    dynamic test = await dbClient.rawQuery('''
       SELECT 
             Restaurant.*,
             CategoriaRest.idCategoria AS idCategoria,
@@ -415,8 +401,7 @@ class DatabaseHelper {
       WHERE 
             Restaurant.idRest = $id
       GROUP BY Prato.idPrato
-            '''
-    );
+            ''');
     print(test);
     try {
       Restaurant temp = Restaurant.map(test[0]);
@@ -433,8 +418,7 @@ class DatabaseHelper {
   //Pega os pratos ligados ao idRest
   Future<List<Prato>> getPratos(int idRest) async {
     var dbClient = await db;
-    List<Map> test = await dbClient.rawQuery(
-      '''
+    List<Map> test = await dbClient.rawQuery('''
       SELECT 
             Prato.*,
             MAX(Preco.idPreco),
@@ -448,10 +432,10 @@ class DatabaseHelper {
     try {
       test[0];
       List<Prato> cardapio = new List<Prato>();
-      for(var i in test){
+      for (var i in test) {
         cardapio.add(Prato.map(i));
       }
-      
+
       return cardapio;
     } catch (err) {
       print(err);
@@ -461,10 +445,10 @@ class DatabaseHelper {
 
   Future<List<Restaurant>> getRestPromocao() async {
     var dbClient = await db;
-    String preDate = DateTime.now().subtract(Duration(days:7)).toString().substring(0,19);
-    String atualDate = DateTime.now().toString().substring(0,19);
-    dynamic response = await dbClient.rawQuery(
-      '''
+    String preDate =
+        DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
+    String atualDate = DateTime.now().toString().substring(0, 19);
+    dynamic response = await dbClient.rawQuery('''
         SELECT 
               Restaurant.*,
               Prato.idPrato,
@@ -486,12 +470,12 @@ class DatabaseHelper {
           HAVING 
                 Preco.preco <= mediaPreco/2
       ''');
-      print(' -->$response');
-      List<Restaurant> rest = transforming(response);
-      return rest;
+    print(' -->$response');
+    List<Restaurant> rest = transforming(response);
+    return rest;
   }
 
-  //ok 
+  //ok
   //Pega o preco pelo seu id
   Future<Preco> getPreco(int idPreco) async {
     var dbClient = await db;
@@ -504,8 +488,7 @@ class DatabaseHelper {
   //Pega o prato pelo seu id
   Future<Prato> getPratoById(int idPrato) async {
     var dbClient = await db;
-    dynamic test = await dbClient.rawQuery(
-      '''
+    dynamic test = await dbClient.rawQuery('''
       SELECT 
             Prato.*,
             Preco.* 
@@ -526,8 +509,7 @@ class DatabaseHelper {
   // Pega todos os pedidos do restaurante
   Future<List<Pedido>> getPedidosByRest(int rest) async {
     var dbClient = await this.db;
-    var test = await dbClient.rawQuery(
-      '''
+    var test = await dbClient.rawQuery('''
       SELECT 
             Prato.*,
             Preco.*,
@@ -544,8 +526,7 @@ class DatabaseHelper {
     try {
       pratos[0];
       List<Pedido> list = List<Pedido>();
-      for (Prato a in pratos) {
-      }
+      for (Prato a in pratos) {}
       return list;
     } catch (err) {
       return null;
@@ -596,8 +577,7 @@ class DatabaseHelper {
 
   Future<List<Restaurant>> search(String text) async {
     var dbClient = await db;
-    List<Map> response = await dbClient.rawQuery(
-      '''SELECT 
+    List<Map> response = await dbClient.rawQuery('''SELECT 
             Restaurant.*,
             Prato.idPrato,
             Prato.name AS namePrato,
@@ -611,13 +591,12 @@ class DatabaseHelper {
             LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE 
             Restaurant.name LIKE '%$text%' OR Prato.name LIKE '%$text%' 
-            ''' 
-    );
+            ''');
     return transforming(response);
   }
 
-  Future<List<Restaurant>> getRestPopular() async{
-    var dbClient = await  this.db;
+  Future<List<Restaurant>> getRestPopular() async {
+    var dbClient = await this.db;
     List<Map> response = await dbClient.rawQuery('''
       SELECT
             Restaurant.*,
@@ -685,22 +664,22 @@ class DatabaseHelper {
     return res;
   }
 
-  List<Restaurant> transforming( List<Map> response){
-    try{
+  List<Restaurant> transforming(List<Map> response) {
+    try {
       response[0];
       print(response);
-      Map<int,Restaurant> map = new Map<int, Restaurant>();
-      for(var i in response){
-        if(!map.containsKey(i['idRest'])){
+      Map<int, Restaurant> map = new Map<int, Restaurant>();
+      for (var i in response) {
+        if (!map.containsKey(i['idRest'])) {
           map[i['idRest']] = Restaurant.map(i);
-        }else{
+        } else {
           map[i['idRest']].addPrato(Prato.mapJOIN(i));
         }
       }
       List<Restaurant> rest = new List<Restaurant>();
-      map.forEach((k,v)=>rest.add(v));
+      map.forEach((k, v) => rest.add(v));
       return rest;
-    }catch(err){
+    } catch (err) {
       print(err);
       print('deu ruim otaro');
       return new List<Restaurant>();
@@ -709,53 +688,73 @@ class DatabaseHelper {
 
   Future<List<Pedido>> getPedidosByUser(int idUser) async {
     var dbClient = await this.db;
-    var test = await dbClient.rawQuery(
-      '''
+    print('id user->$idUser');
+    List<Map> test = await dbClient.rawQuery('''
       SELECT 
-            Prato.*,
-            Preco.*,
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
             Pedidos.*,
-            PedidoPratoUser.*
-            
+            Restaurant.*,
+            PedidoPratoUser.*,
+            User.name AS nameUser,
+            User.email AS emailUser,
+            User.address AS addressUser,
+            User.number AS numberUser 
       FROM 
             PedidoPratoUser 
             INNER JOIN Pedidos ON Pedidos.idPedido =PedidoPratoUser.idPedido 
             INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco on Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN User on User.idUser = PedidoPratoUser.idUser
       WHERE 
             PedidoPratoUser.idUser = $idUser
-      '''
-    );
-    try{
-      List<Pedido> p = List<Pedido>();
-      return p;
-    } catch(err) {
-        return null;
-    }
+      GROUP BY  
+            PedidoPratoUser.idPedido
+            
+      ''');
+    
+      print('test--> $test');
+      Map<int, Pedido> map = new Map<int, Pedido>();
+      for(var i in test){
+        if(!map.containsKey(i['idPedido'])){
+          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }else{
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }
+      print('maaap --> $map');
+      }
+      List<Pedido> pedidos = new List<Pedido>();
+      map.forEach((k, v) => pedidos.add(v));
+      return pedidos;
+  
   }
 
   Future<bool> saveCart(ItemCart c) async {
     var dbClient = await db;
     try {
       await dbClient.rawInsert(
-        'INSERT INTO Carrinho(idPrato, quant) VALUES(?,?)', [c.prato.idPrato, c.quant]);
+          'INSERT INTO Carrinho(idPrato, quant) VALUES(?,?)',
+          [c.prato.idPrato, c.quant]);
       return true;
     } catch (err) {
       print(err.toString());
       return false;
     }
-   }
+  }
 
-   Future<Map<Prato, int>> getCart() async {
+  Future<Map<Prato, int>> getCart() async {
     var dbClient = await db;
 
     dynamic idsItens = await dbClient.rawQuery('SELECT * FROM Carrinho');
     Map<Prato, int> list = Map<Prato, int>();
 
-
-    for(dynamic m in idsItens){
-        dynamic test = await dbClient.rawQuery(
-        '''
+    for (dynamic m in idsItens) {
+      dynamic test = await dbClient.rawQuery('''
         SELECT 
               Prato.*,
               Preco.* 
@@ -763,7 +762,7 @@ class DatabaseHelper {
               Prato INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
         WHERE 
               Preco.idPrato=?''', [m['idPrato']]);
-        int quant = m['quant'];
+      int quant = m['quant'];
       try {
         print("\n\n\n Pegou prato ${test[0]['name']} com $quant quantidades");
         list.addAll({Prato.map(test[0]): quant});
@@ -775,32 +774,28 @@ class DatabaseHelper {
     return list;
   }
 
-
   //deletion
   Future<int> clearCart() async {
     var dbClient = await db;
     int res = await dbClient.rawDelete("DELETE From Carrinho");
     return res;
-  }  
+  }
 
   Future<bool> removeItemCart(Prato p, int quant) async {
     var dbClient = await db;
-    try{
-      await dbClient.rawDelete("DELETE From Carrinho WHERE idPrato=${p.idPrato} AND quant=$quant;");
+    try {
+      await dbClient.rawDelete(
+          "DELETE From Carrinho WHERE idPrato=${p.idPrato} AND quant=$quant;");
       print(true);
       return true;
-    } catch(err){
+    } catch (err) {
       print(false);
       return false;
     }
-  } 
-  
-
+  }
 }
 
-  //update
-
-
+//update
 
 // Categoria : Padaria, Doces & Bolos, Salgados,  Saudavel , Brasileira, cozinha rapida, lanches
 //  pizza, japonesa , poke , espetinhos , Hot Dog, Carnes, Açaí

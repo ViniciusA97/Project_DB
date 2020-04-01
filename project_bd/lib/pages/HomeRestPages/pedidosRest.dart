@@ -28,7 +28,7 @@ class _PedidosRestState extends State<PedidosRest> {
   }
 
   void _asyncMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     await control.getRestPedidos(this._rest.id).then((onValue) {
       setState(() {
         this._pedidos = onValue;

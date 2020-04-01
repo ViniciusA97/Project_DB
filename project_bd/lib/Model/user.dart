@@ -12,12 +12,20 @@ class User implements Client{
   User(this._name, this._password,this._email, this._address, this._celNumber);
   
   User.map(dynamic obj) {
-    this._id = obj['id'];
+    this._id = obj['idUser'];
     this._name = obj['name'];
     this._password = obj['password'];
     this._email = obj['email'];
     this._address = obj['address'];
     this._celNumber = obj['celNumber'];
+  }
+
+  User.mapJOIN(dynamic obj){
+    this._id = obj['idUser'];
+    this._name = obj['nameUser'];
+    this._email = obj['emailUser'];
+    this._address = obj['addressUser'];
+    this._celNumber = obj['numerUser'];
   }
 
   int get id=> _id;

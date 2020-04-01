@@ -24,7 +24,7 @@ class _DinamicRestaurantsState extends State<DinamicRestaurants> {
   @override
   void initState() {
     setState(() {
-      Control _control = Control.internal();
+      Control _control = Control();
       Map<String, Future<List<Restaurant>>> map = {
         "Restaurante popular": _control.getRestPopular(),
         "Promoção": _control.getRestPromocao(),

@@ -121,7 +121,7 @@ class _SignUpState extends State<SignUp> {
         isLoading = true;
       });
     }
-    Control control = Control.internal();
+    Control control = Control();
     User temp = User(name, pass, email, address, number);
     print('$name');
     bool confirmate = await control.saveUser(temp);

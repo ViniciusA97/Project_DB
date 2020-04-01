@@ -183,7 +183,7 @@ class _SearchState extends State<Search> {
       });
       return;
     }
-    Control control = Control.internal();
+    Control control = Control();
     await control.getListForSearch(value).then((onValue) {
       setState(() {
         this._list = onValue;

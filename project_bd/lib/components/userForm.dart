@@ -101,9 +101,10 @@ class _UserFormState extends State<UserForm> {
         form.save();
       });
     }
-    var control = Control.internal();
+    var control = Control();
     var user = await control.doLogin(_email, _password);
     if (user != null) {
+      
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => InitUser(user)));
     } else {
@@ -122,7 +123,7 @@ class _UserFormState extends State<UserForm> {
       return;
     }
     print('email: '+_email);
-    var control = Control.internal();
+    var control = Control();
     Restaurant rest = await control.doLoginRestaurant(_email, _password);
     if (rest != null) {
       Navigator.push(

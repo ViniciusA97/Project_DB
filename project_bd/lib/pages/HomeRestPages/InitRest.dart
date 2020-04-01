@@ -57,7 +57,7 @@ class _InitRestState extends State<InitRest> {
   }
 
   _asyncMetod() async {
-    Control control = Control.internal();
+    Control control = Control();
     control.getAllCategories().then((onValue) {
       setState(() {
         this._allCategories = onValue;

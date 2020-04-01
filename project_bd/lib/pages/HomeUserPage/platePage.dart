@@ -7,25 +7,30 @@ import 'package:project_bd/Model/itemCart.dart';
 
 class PlatePage extends StatefulWidget {
   Prato _prato;
-  PlatePage(this._prato);
+  PlatePage(this._prato, this.isEntregaGratis);
+  int isEntregaGratis;
 
   @override
-  _PlatePageState createState() => _PlatePageState(_prato);
+  _PlatePageState createState() => _PlatePageState(_prato, isEntregaGratis);
 }
 
 class _PlatePageState extends State<PlatePage> {
 
+  int _isGratis;
   Prato _prato;
   int quant = 1;
   List<Prato> bag = List<Prato>();
-  Control control = Control.internal();
+  Control control = Control();
   ItemCart cart;
+  
+  final scafolldKey = GlobalKey<ScaffoldState>();
 
-  _PlatePageState(this._prato);
+  _PlatePageState(this._prato, this._isGratis);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scafolldKey,
       body: page(),
     );
   }
@@ -191,13 +196,15 @@ class _PlatePageState extends State<PlatePage> {
                   child: MaterialButton(
                     minWidth: 100.0,
                     onPressed: () async{
-                      cart = ItemCart(_prato, quant);
-                      print(cart.prato.name);
-                      print("CARALHO\n\n\n\n\n\n\n");
-                      print(await control.saveCart(cart));
+                      bool response = control.canAddPlate(_prato);
+                      if(response){
+                        control.addPrato(_prato, quant,this._isGratis);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
+                      }
+                      else{
+                        _showSnackBar('Erro ao adicionar a sacola.');
+                      }
                       print("Dados no bd\n\n\n\n\n\n\n");
-                      print(await control.getCart());
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage()));
                     },
                     child: Text('Adicionar     \$${(this._prato.preco.preco) * quant}', style: TextStyle(color: Colors.white),),
                   ),
@@ -208,5 +215,12 @@ class _PlatePageState extends State<PlatePage> {
         ],
       ),
     );
+  }
+
+  _showSnackBar(String text) {
+    final keyState = scafolldKey.currentState;
+    keyState.showSnackBar(new SnackBar(
+      content: new Text(text),
+    ));
   }
 }

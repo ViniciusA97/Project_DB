@@ -210,7 +210,7 @@ class _SignUpRestState extends State<SignUpRest> {
         isLoading = true;
       });
     }
-    Control control = Control.internal();
+    Control control = Control();
     Restaurant temp = Restaurant(
         name, pass, image, description, nume, email, address,tipoEntrega,hrAbre,hrFecha);
     bool condiction = await control.saveRest(temp);

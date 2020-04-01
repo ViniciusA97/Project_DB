@@ -27,7 +27,7 @@ class _RestForRestaurantsPageState extends State<RestForRestaurantsPage> {
   }
 
   _asyncMethod() async {
-    Control control = Control.internal();
+    Control control = Control();
     control.getAllRestaurants();
   }
 

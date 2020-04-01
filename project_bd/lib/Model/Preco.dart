@@ -9,7 +9,11 @@ class Preco{
   Preco.map(dynamic obj){
     this._idPreco = obj['idPreco'];
     this._preco = obj['preco'];
+    try{
     this._date = DateTime.parse(obj['date']);
+    }catch(err){
+      
+    }
   }
 
   void setId(int id){
