@@ -235,6 +235,7 @@ class CartPageState extends State<CartPage> {
                 minWidth: MediaQuery.of(context).size.width-120,
                 //MANDAR PROS PEDIDOS AQUI
                 onPressed: () async{
+<<<<<<< HEAD
                   bool response = await control.savePedido();
                   if(response){
                     control.savePedido();
@@ -243,6 +244,12 @@ class CartPageState extends State<CartPage> {
                   }else{
                     _showSnackBar('Houve algum erro durante o pedido.');
                   }
+=======
+                  control.clearCart();
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+>>>>>>> 66247979d05453887d452d5bdd87e4c825dd4e79
                 },
                 child: Text('Finalizar compra', style: TextStyle(fontSize: 16, color: Colors.white),),
                 ),
