@@ -14,6 +14,9 @@ import '../Model/pedidos.dart';
 import '../Model/pratos.dart';
 import '../Model/restaurant.dart';
 import '../Model/itemCart.dart';
+import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
+import '../Model/restaurant.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -505,79 +508,301 @@ class DatabaseHelper {
     return null;
   }
 
+  Future<Pedido> getRelatorio1(int idRest) async{
+    var dbClient = await this.db;
+    List<Map> test =await  dbClient.rawQuery(
+      '''
+      SELECT
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
+            Restaurant.*,
+            Preco.*,
+            PedidoPratoUser.*,
+            Pedidos.*,
+            SUM(PedidoPratoUser.quantidade) AS qntPedidoPrato
+      FROM 
+            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
+      WHERE
+            Restaurant.idRest=$idRest 
+      GROUP BY
+            Prato.idPrato
+      ORDER BY 
+            qntPedidoPrato DESC
+      LIMIT 1
+      '''
+      );
+    try{
+      Pedido pedido = Pedido.map(test[0]);
+      pedido.addPrato(Prato.mapJOIN(test[0]));
+      pedido.addQnt(test[0]['qntPedidoPrato']);
+      return pedido;
+    }catch(err){
+      return null;
+    }    
+  }
+
+
+  Future<List<Pedido>> getRelatorio2_1day(int idRest) async{
+    String date1 = DateTime.now().subtract(Duration(days: 1)).toString().substring(0, 19);
+    var dbClient = await this.db;
+    List<Map> test1 =await  dbClient.rawQuery(
+      '''
+      SELECT
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
+            Restaurant.*,
+            Preco.*,
+            PedidoPratoUser.*,
+            Pedidos.*,
+      FROM 
+            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
+      WHERE
+            Restaurant.idRest=$idRest AND Pedido.data>'$date1'
+      GROUP BY
+            Prato.idPrato
+      ORDER BY Pedido.data DESC
+      '''
+      );
+    Map<int, Pedido> map = new Map<int, Pedido>();
+      for(var i in test1){
+        if(!map.containsKey(i['idPedido'])){
+          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }else{
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }
+      print('maaap --> $map');
+      }
+      List<Pedido> pedidos = new List<Pedido>();
+      map.forEach((k, v) => pedidos.add(v));
+      return pedidos;
+  }
+
+  
+
+  Future<List<Pedido>> getRelatorio2_7days(int idRest) async{
+    String date1 = DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
+    var dbClient = await this.db;
+    List<Map> test1 =await  dbClient.rawQuery(
+      '''
+      SELECT
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
+            Restaurant.*,
+            Preco.*,
+            PedidoPratoUser.*,
+            Pedidos.*,
+      FROM 
+            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
+      WHERE
+            Restaurant.idRest=$idRest AND Pedido.data>'$date1'
+      GROUP BY
+            Prato.idPrato
+      ORDER BY Pedido.data DESC
+      '''
+      );
+    Map<int, Pedido> map = new Map<int, Pedido>();
+      for(var i in test1){
+        if(!map.containsKey(i['idPedido'])){
+          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }else{
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }
+      print('maaap --> $map');
+      }
+      List<Pedido> pedidos = new List<Pedido>();
+      map.forEach((k, v) => pedidos.add(v));
+      return pedidos;
+  }
+  
+
+  Future<List<Pedido>> getRelatiorio2_15days(int idRest) async{
+    var dbClient = await this.db;
+    String date15 = DateTime.now().subtract(Duration(days: 15)).toString().substring(0, 19);
+      List<Map> test =await  dbClient.rawQuery(
+      '''
+      SELECT
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
+            Restaurant.*,
+            Preco.*,
+            PedidoPratoUser.*,
+            Pedidos.*,
+      FROM 
+            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
+      WHERE
+            Restaurant.idRest=$idRest AND Pedido.data>'$date15'
+      GROUP BY
+            Prato.idPrato
+      ORDER BY Pedido.data DESC
+      '''
+      );
+      Map<int, Pedido> map = new Map<int, Pedido>();
+      for(var i in test){
+        if(!map.containsKey(i['idPedido'])){
+          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }else{
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }
+      print('maaap --> $map');
+      }
+      List<Pedido> pedidos = new List<Pedido>();
+      map.forEach((k, v) => pedidos.add(v));
+      return pedidos;
+
+  }
+
+//não esta completo
+  Future<List<Pedido>> getRelatorio3(int idRest) async{
+    String date1 = DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
+    var dbClient = await this.db;
+    List<Map> test1 =await  dbClient.rawQuery(
+      '''
+      SELECT
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
+            Restaurant.*,
+            Preco.*,
+            PedidoPratoUser.*,
+            Pedidos.*,
+            AVG(Pedidos.preco) AS mediaPreco
+      FROM 
+            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
+      WHERE
+            Restaurant.idRest=$idRest AND Pedido.data>'$date1'
+      GROUP BY
+            Prato.idPrato
+      ORDER BY Pedido.data DESC
+      '''
+      );
+    Map<int, Pedido> map = new Map<int, Pedido>();
+      for(var i in test1){
+        if(!map.containsKey(i['idPedido'])){
+          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }else{
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }
+      print('maaap --> $map');
+      }
+      List<Pedido> pedidos = new List<Pedido>();
+      map.forEach((k, v) => pedidos.add(v));
+      return pedidos;
+  }
+
+  
+
   //ok - não testada
   // Pega todos os pedidos do restaurante
   Future<List<Pedido>> getPedidosByRest(int rest) async {
     var dbClient = await this.db;
     dynamic test = await dbClient.rawQuery('''
       SELECT 
-            Prato.*,
-            Preco.*,
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
             Pedidos.*,
-            PedidoPratoUser.*
+            Restaurant.*,
+            PedidoPratoUser.*,
+            User.name AS nameUser,
+            User.email AS emailUser,
+            User.address AS addressUser,
+            User.number AS numberUser
       FROM
-            Prato INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
-            INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato
-            INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
+            PedidoPratoUser 
+            INNER JOIN Pedidos ON Pedidos.idPedido =PedidoPratoUser.idPedido 
+            INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
+            INNER JOIN User on User.idUser = PedidoPratoUser.idUser
       WHERE
             Prato.idRest = $rest
+      GROUP BY
+            PedidoPratoUser.idPedido
       ''');
-    
-    dynamic user;
-    List<Prato> pratos = new List<Prato>();
-    for(dynamic d in test){
-      pratos.add(Prato.map(d));
-    }
-    print("PRATOS");
-    print(pratos);
+    Map<int, Pedido> map = new Map<int, Pedido>();
+      for(var i in test){
+        if(!map.containsKey(i['idPedido'])){
+          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }else{
+          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+          map[i['idPedido']].addQnt(i['quantidade']);
+        }
+      print('maaap --> $map');
+      }
+      List<Pedido> pedidos = new List<Pedido>();
+      map.forEach((k, v) => pedidos.add(v));
+      return pedidos;
+  }
 
-    List<Map<String, dynamic>> idsPedidos = await dbClient.rawQuery("SELECT DISTINCT idPedido FROM PedidoPratoUser INNER JOIN Prato WHERE Prato.idRest=$rest");
-    List<List<Map<String, dynamic>>> listaPedidos = new List(idsPedidos.length);
-    for(int i = 0; i < idsPedidos.length; i++){
-      dynamic temp = await dbClient.rawQuery('''
-      SELECT 
-            Prato.*,
+  Future<List<Restaurant>> getMaisPedidos() async{
+    var dbClient = await this.db;
+    String date = DateTime.now().subtract(Duration(days: 1)).toString().substring(0, 19);
+    List<Map> test =await  dbClient.rawQuery(
+      '''
+      SELECT
+            Prato.idPrato,
+            Prato.name AS namePrato,
+            Prato.descricao AS descricaoPrato,
+            Prato.img AS imgPrato,
+            Restaurant.*,
             Preco.*,
+            PedidoPratoUser.*,
             Pedidos.*,
-            PedidoPratoUser.*
-      FROM
-            Prato INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
-            INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato
+            SUM(PedidoPratoUser.quantidade) AS qntPedidoPrato
+      FROM 
+            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Pedidos.idPedido = ${idsPedidos[i]['idPedido']}
-      ''');
-      listaPedidos[i] = new List();
-      for(dynamic prato in temp){
-        listaPedidos[i].add(prato);
-      }
-    }
-
-    try {
-
-      /*List<Pedido> list = List<Pedido>();
-      for (int i = 0; i < test.length; i++) {
-        list.add(Pedido.map(test[i]));
-        user = await dbClient.rawQuery("SELECT * FROM User WHERE idUser=${test[i]['idUser']}");
-        list[i].setUser(User.map(user[0]));
-      }*/
-      
-      List<Pedido> list = List<Pedido>();
-      for (dynamic d in listaPedidos) {
-        user = await dbClient.rawQuery("SELECT * FROM User WHERE idUser=${d[0]['idUser']}");
-        Pedido pedido = Pedido.map(d[0]);
-        pedido.setUser(User.map(user[0]));
-        for(dynamic prato in d){
-          pedido.addIntoPratos(Prato.map(prato));
-        }
-        list.add(pedido);
-      }
-      print(list[0]);
-      return list;
-    } catch (err) {
-      print(err);
-      return null;
-    }
+            Pedidos.data>'$date' 
+      GROUP BY
+            Prato.idPrato
+      ORDER BY 
+            qntPedidoPrato DESC
+      LIMIT 5
+      '''
+      );
+      List<Restaurant> rests = transforming(test);
+      return rests;
   }
 
   // ok - nao testada

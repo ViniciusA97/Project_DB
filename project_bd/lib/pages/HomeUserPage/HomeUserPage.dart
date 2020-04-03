@@ -348,7 +348,32 @@ class HomePageStateUser extends State<HomePageUser> {
               Text('PROMOCAO',style:kTextCategorie ,)
             ],
           )
+          ),
+          MaterialButton(
+            onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>DinamicRestaurants("Mais pedidos")));
+          } , 
+          child:
+          Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  './assets/maisPedidos.jpg',
+                  width: 230,
+                  height: 130,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top:5),
+              ),
+              Text('MAIS PEDIDOS',style:kTextCategorie ,)
+            ],
           )
+          ),
+          
+          
           ],
           
       ),

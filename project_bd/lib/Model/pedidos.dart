@@ -28,6 +28,7 @@ class Pedido{
     _data = DateTime.parse(obj['data']);
     _idPedido = obj['idPedido'];
     _precoTotal = obj['preco'];
+    
   }
 
   Map<String, dynamic> getMap(){
