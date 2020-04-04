@@ -7,7 +7,6 @@ class MyApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     Map<int, Color> color =
     {
       50:Color.fromRGBO(0,0,0, .1),

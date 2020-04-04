@@ -10,13 +10,7 @@ import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:sqflite/sqflite.dart';
-import '../Model/pedidos.dart';
-import '../Model/pratos.dart';
-import '../Model/restaurant.dart';
 import '../Model/itemCart.dart';
-import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
-import '../Model/restaurant.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
@@ -528,14 +522,14 @@ class DatabaseHelper {
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=$idRest 
+            Restaurant.idRest=$idRest
       GROUP BY
             Prato.idPrato
       ORDER BY 
             qntPedidoPrato DESC
       LIMIT 1
       '''
-      );
+    );
     try{
       Pedido pedido = Pedido.map(test[0]);
       pedido.addPrato(Prato.mapJOIN(test[0]));
@@ -560,17 +554,17 @@ class DatabaseHelper {
             Restaurant.*,
             Preco.*,
             PedidoPratoUser.*,
-            Pedidos.*,
+            Pedidos.*
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=$idRest AND Pedido.data>'$date1'
+            Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
       GROUP BY
-            Prato.idPrato
-      ORDER BY Pedido.data DESC
+            PedidoPratoUser.idPedido 
+      ORDER BY Pedidos.data DESC
       '''
       );
     Map<int, Pedido> map = new Map<int, Pedido>();
@@ -605,17 +599,17 @@ class DatabaseHelper {
             Restaurant.*,
             Preco.*,
             PedidoPratoUser.*,
-            Pedidos.*,
+            Pedidos.*
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=$idRest AND Pedido.data>'$date1'
+            Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
       GROUP BY
-            Prato.idPrato
-      ORDER BY Pedido.data DESC
+            PedidoPratoUser.idPedido
+      ORDER BY Pedidos.data DESC
       '''
       );
     Map<int, Pedido> map = new Map<int, Pedido>();
@@ -636,9 +630,9 @@ class DatabaseHelper {
   }
   
 
-  Future<List<Pedido>> getRelatiorio2_15days(int idRest) async{
+  Future<List<Pedido>> getRelatiorio2_30days(int idRest) async{
     var dbClient = await this.db;
-    String date15 = DateTime.now().subtract(Duration(days: 15)).toString().substring(0, 19);
+    String date15 = DateTime.now().subtract(Duration(days: 30)).toString().substring(0, 19);
       List<Map> test =await  dbClient.rawQuery(
       '''
       SELECT
@@ -649,17 +643,17 @@ class DatabaseHelper {
             Restaurant.*,
             Preco.*,
             PedidoPratoUser.*,
-            Pedidos.*,
+            Pedidos.*
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=$idRest AND Pedido.data>'$date15'
+            Restaurant.idRest=$idRest AND Pedidos.data>'$date15'
       GROUP BY
-            Prato.idPrato
-      ORDER BY Pedido.data DESC
+            PedidoPratoUser.idPedido
+      ORDER BY Pedidos.data DESC
       '''
       );
       Map<int, Pedido> map = new Map<int, Pedido>();
@@ -702,10 +696,10 @@ class DatabaseHelper {
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=$idRest AND Pedido.data>'$date1'
+            Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
       GROUP BY
             Prato.idPrato
-      ORDER BY Pedido.data DESC
+      ORDER BY Pedidos.data DESC
       '''
       );
     Map<int, Pedido> map = new Map<int, Pedido>();
@@ -984,7 +978,7 @@ class DatabaseHelper {
             PedidoPratoUser.idUser = $idUser
       GROUP BY  
             PedidoPratoUser.idPedido
-            
+      ORDER BY Pedidos.data DESC
       ''');
     
       print('test--> $test');

@@ -12,6 +12,7 @@ class Pedido{
   List<int> _qnt = new List<int>();
   DateTime _data;
   double _precoTotal;
+  double _precoMedio;
 
   addPrato(Prato p){
     this._prato.add(p);
@@ -28,7 +29,6 @@ class Pedido{
     _data = DateTime.parse(obj['data']);
     _idPedido = obj['idPedido'];
     _precoTotal = obj['preco'];
-    
   }
 
   Map<String, dynamic> getMap(){

@@ -3,6 +3,7 @@ import 'package:project_bd/Model/pedidos.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/constants.dart';
 import 'package:project_bd/Control/Control.dart';
+import 'package:intl/intl.dart';
 
 class Requests extends StatefulWidget {
 
@@ -121,7 +122,7 @@ class _RequestsState extends State<Requests> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                height: 220,
+                height: 230,
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
                 color: Colors.white),
                 child: Column(
@@ -131,7 +132,7 @@ class _RequestsState extends State<Requests> {
                     Padding(padding: EdgeInsets.only(bottom:5),),
                     Text('${this._pedidos[index].rest.name}', style: TextStyle(fontSize: 20, color: Colors.black,  fontWeight: FontWeight.bold)),
                     Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('${this._pedidos[index].data}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
+                    Text('${DateFormat('dd/MM/yyyy - kk:mm').format(this._pedidos[index].data)}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
                     Padding(padding: EdgeInsets.only(bottom:5),),
                     Text('Pedido nº ${this._pedidos[index].idPedido}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
                     Padding(padding: EdgeInsets.only(bottom:10),),
@@ -157,7 +158,7 @@ class _RequestsState extends State<Requests> {
                             }
                           );
                         },
-                        child: Text('Ver recibo', style: TextStyle(fontSize: 13, color: Colors.green),),
+                        child: Text('Ver recibo', style: TextStyle(fontSize: 13, color: Color(0xff38ad53)),),
                       ),
                     )
                   ],

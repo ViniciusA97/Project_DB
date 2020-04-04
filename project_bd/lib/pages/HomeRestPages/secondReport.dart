@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/pages/HomeRestPages/reportList.dart';
 
-class Report extends StatefulWidget {
+class SecondReport extends StatefulWidget {
 
   Restaurant _restaurant;
-  Report(this._restaurant);
+  SecondReport(this._restaurant);
 
   @override
-  _ReportState createState() => _ReportState(this._restaurant);
+  _SecondReportState createState() => _SecondReportState(this._restaurant);
 }
 
-class _ReportState extends State<Report> {
+class _SecondReportState extends State<SecondReport> {
 
   Restaurant _restaurant;
-  _ReportState(this._restaurant);
+  _SecondReportState(this._restaurant);
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class _ReportState extends State<Report> {
           Container(
             margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.87,
+            height: MediaQuery.of(context).size.height - 100,
             child: body(),
           ),
         ],
@@ -100,7 +100,7 @@ class _ReportState extends State<Report> {
                 ],
               ),
               Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height - 200,
                 width: MediaQuery.of(context).size.width - 50,
                 child: TabBarView(
                   children: <Widget>[
@@ -128,8 +128,8 @@ class _ReportState extends State<Report> {
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.9,
-              child:null, // TODO: Chamar ReportList
+              height: MediaQuery.of(context).size.height - 245,
+              child: ReportList(_restaurant, 1), 
             ),
           ],
         ),
@@ -148,8 +148,8 @@ class _ReportState extends State<Report> {
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.9,
-              child: null, // TODO: Chamar ReportList
+              height: MediaQuery.of(context).size.height - 245,
+              child: ReportList(_restaurant, 7), 
             ),
           ],
         ),
@@ -168,8 +168,8 @@ class _ReportState extends State<Report> {
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.9,
-              child: null, // TODO: Chamar ReportList
+              height: MediaQuery.of(context).size.height - 245,
+              child: ReportList(_restaurant, 30), 
             ),
           ],
         ),

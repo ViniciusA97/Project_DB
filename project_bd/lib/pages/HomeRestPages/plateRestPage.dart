@@ -7,8 +7,8 @@ import 'HomeRestPage.dart';
 import 'package:project_bd/Model/restaurant.dart';
 
 class RestPlate extends StatefulWidget {
-  final Prato _prato;
 
+  final Prato _prato;
   RestPlate(this._prato);
 
   @override

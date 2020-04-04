@@ -117,7 +117,7 @@ class _PedidosRestState extends State<PedidosRest> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                height: 220,
+                height: 230,
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
                 color: Colors.white),
                 child: Column(
@@ -139,7 +139,7 @@ class _PedidosRestState extends State<PedidosRest> {
                     Padding(padding: EdgeInsets.only(bottom:7),),
                     Center(
                       child: MaterialButton(
-                        height: 20,
+                        height: 10,
                         minWidth: 100,
                         onPressed: (){
                           print(this._pedidos[index].prato);
@@ -153,7 +153,7 @@ class _PedidosRestState extends State<PedidosRest> {
                             }
                           );
                         },
-                        child: Text('Ver itens do pedido', style: TextStyle(fontSize: 13, color: Colors.green),),
+                        child: Text('Ver itens do pedido', style: TextStyle(fontSize: 13, color: Color(0xff38ad53)),),
                       ),
                     )
                   ],

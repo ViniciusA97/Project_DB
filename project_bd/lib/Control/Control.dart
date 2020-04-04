@@ -130,12 +130,16 @@ class Control{
     return await this._db.getRelatorio2_7days(idRest);
   }
 
-Future<List<Pedido>> getRelatorio15day(int idRest) async{
-    return await this._db.getRelatiorio2_15days(idRest);
+  Future<List<Pedido>> getRelatorio30day(int idRest) async{
+    return await this._db.getRelatiorio2_30days(idRest);
   }
 
-  Future<Pedido> getRelatorio1(int idRest)async{
+  Future<Pedido> getRelatorio1(int idRest) async{
     return await this._db.getRelatorio1(idRest);
+  }
+
+  Future<List<Pedido>> getRelatorio3(int idRest) async{
+    return await this._db.getRelatorio3(idRest);
   }
 
   Future<bool> removeItemCart(Prato p, int quant) async{
