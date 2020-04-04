@@ -239,7 +239,12 @@ class CartPageState extends State<CartPage> {
                   if(response){
                     control.savePedido();
                     control.clearCart();
-                    Navigator.pop(context);
+                    _showSnackBar('Compra realizada');
+                    await Future.delayed(Duration(milliseconds: 500), () {
+                      setState(() {
+                        Navigator.pop(context);
+                      });
+                    });
                   }else{
                     _showSnackBar('Houve algum erro durante o pedido.');
                   }
@@ -262,7 +267,7 @@ class CartPageState extends State<CartPage> {
     }
   }
 
-_showSnackBar(String text) {
+  _showSnackBar(String text) {
     final keyState = scafolldKey.currentState;
     keyState.showSnackBar(new SnackBar(
       content: new Text(text),

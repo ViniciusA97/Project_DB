@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/constants.dart';
+import 'package:intl/intl.dart';
 import '../../Model/Preco.dart';
 import '../../Model/pedidos.dart';
 import '../../Model/restaurant.dart';
@@ -127,7 +128,7 @@ class _PedidosRestState extends State<PedidosRest> {
                     Padding(padding: EdgeInsets.only(bottom:5),),
                     Text('${this._pedidos[index].user.name}', style: TextStyle(fontSize: 20, color: Colors.black,  fontWeight: FontWeight.bold)),
                     Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('${this._pedidos[index].data}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
+                    Text('${DateFormat('dd/MM/yyyy - kk:mm').format(this._pedidos[index].data)}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
                     Padding(padding: EdgeInsets.only(bottom:5),),
                     Text('Pedido nº ${this._pedidos[index].idPedido}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
                     Padding(padding: EdgeInsets.only(bottom:10),),
@@ -143,7 +144,7 @@ class _PedidosRestState extends State<PedidosRest> {
                         minWidth: 100,
                         onPressed: (){
                           print(this._pedidos[index].prato);
-                        showDialog(
+                          showDialog(
                             context: context,
                             builder: (BuildContext context) {
                             return AlertDialog(
