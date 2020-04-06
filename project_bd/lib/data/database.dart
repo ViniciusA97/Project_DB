@@ -689,7 +689,8 @@ class DatabaseHelper {
             Preco.*,
             PedidoPratoUser.*,
             Pedidos.*,
-            AVG(Pedidos.preco) AS mediaPreco
+            SUM(PedidoPratoUser.quantidade) AS sumQnt,
+            SUM(Pedidos.preco) AS media
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
@@ -702,10 +703,11 @@ class DatabaseHelper {
       ORDER BY Pedidos.data DESC
       '''
       );
+      print(test1);
     Map<int, Pedido> map = new Map<int, Pedido>();
       for(var i in test1){
         if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.map(i);
+          map[i['idPedido']] = Pedido.mapRelatorio(i);
           map[i['idPedido']].addPrato(Prato.mapJOIN(i));
           map[i['idPedido']].addQnt(i['quantidade']);
         }else{

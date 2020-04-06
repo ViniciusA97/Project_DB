@@ -146,8 +146,8 @@ class Control{
     return await this._db.removeItemCart(p, quant);
   }
 
-  Future<void> setAdressUser(String adress){
-    this.user.setAdress(adress);
+  Future<void> setAdressUser(String adress) async{
+    await this.user.setAdress(adress);
   }
 
   Future<bool> savePedido(String adress) async {
