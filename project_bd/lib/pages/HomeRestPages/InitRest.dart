@@ -523,7 +523,7 @@ class _InitRestState extends State<InitRest> {
               child: ListView.builder(
                 itemCount: this._allCategories.length,
                 itemBuilder: (BuildContext cntx, int index) {
-                  if (this._categories == null) {
+                  if (this._allCategories == null) {
                     return Center(
                       child: Text('Sem categorias cadastradas'),
                     );

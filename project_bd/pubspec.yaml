@@ -56,7 +56,7 @@ flutter:
     - ./assets/entrega_rapida.jpg
     - ./assets/entrega_gratis.jpg
     - ./assets/promocao.jpg
-    - ./assets/maisPedidos.jpg
+    - ./assets/maisPedidos.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

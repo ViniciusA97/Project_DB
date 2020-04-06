@@ -38,6 +38,7 @@ class Restaurant implements Client{
     if(obj['hora_fecha'] != null) _horaFecha = DateTime.parse(obj['hora_fecha']);
     _entrega = obj['entregaGratis'];
     _cardapio = new List<Prato>();
+    
   }
 
   Map<String, dynamic> map(){

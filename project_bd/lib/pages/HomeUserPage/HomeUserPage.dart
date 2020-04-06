@@ -359,7 +359,7 @@ class HomePageStateUser extends State<HomePageUser> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Image.asset(
-                  './assets/maisPedidos.jpg',
+                  './assets/maisPedidos.png',
                   width: 230,
                   height: 130,
                   fit: BoxFit.fill,

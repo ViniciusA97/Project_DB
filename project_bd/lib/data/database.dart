@@ -166,9 +166,16 @@ class DatabaseHelper {
 
   Future<void> saveRelacionCatRest(int idRest, int idCat) async {
     var dbClient = await db;
-    dbClient.rawInsert(
-        'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
-        [idRest, idCat]);
+    dynamic test = await dbClient.rawQuery('SELECT * FROM CategoriaRest WHERE idRest=$idRest AND idCategoria=$idCat');
+    try{
+      test[0]['idRest'];
+      return;
+    }catch(err){
+     await dbClient.rawInsert(
+          'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
+          [idRest, idCat]);
+
+    }
   }
 
   Future<void> saveOpenTime(int idRest, DateTime time) async {
@@ -225,7 +232,7 @@ class DatabaseHelper {
   //Busca todas as categorias
   Future<List<Categories>> getAllCategories() async {
     var dbClient = await db;
-    dynamic response = await dbClient.rawQuery('SELECT * FROM Categoria');
+    dynamic response = await dbClient.rawQuery('SELECT Categoria.idCategoria , Categoria.image AS imageCategoria, Categoria.name AS nameCategoria FROM Categoria');
     print(response);
     List<Categories> list = List<Categories>();
     for (dynamic i in response) {
@@ -350,7 +357,7 @@ class DatabaseHelper {
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
-            MAX(Preco.idPreco),
+            Preco.idPreco,
             Preco.*
       FROM 
             Restaurant LEFT JOIN CategoriaRest ON Restaurant.idRest = CategoriaRest.idRest
@@ -359,13 +366,21 @@ class DatabaseHelper {
             LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
       WHERE 
             Restaurant.email=? and Restaurant.password=? 
-      GROUP BY Prato.idPrato
+      GROUP BY
+            Categoria.idCategoria
     
             ''', [email, password]);
     try {
       print('login Rest --> $rest');
       Restaurant usual = Restaurant.map(rest[0]);
+      if(rest[0]['idCategoria']!=null){
+        List<Categories> cat = new List<Categories>();
+        for( Map i in rest){
+          cat.add(Categories.map(i));
+        }
+        usual.setCategories(cat);
 
+      }
       return usual;
     } catch (err) {
       print(err);
