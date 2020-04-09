@@ -179,8 +179,8 @@ class _MenuState extends State<Menu> {
               color: Color(0xff38ad53),
               onPressed: (){
                 setState(() {
-                  this._restaurant.setEntrega(2);
-                  saveDeliveryType(2);
+                  this._restaurant.setEntrega(0);
+                  saveDeliveryType(0);
                 });
                 Navigator.pop(context);
               },

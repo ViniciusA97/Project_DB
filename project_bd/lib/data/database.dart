@@ -291,8 +291,9 @@ class DatabaseHelper {
     int savedIdRest;
     for (dynamic i in resp) {
       rests.add(Restaurant.map(i));
+      rests.last.addPrato(Prato.mapJOIN(i));
       if (i['idRest'] == savedIdRest) {
-        rests.last.addPrato(Prato.mapJOIN(i));
+        rests.removeLast();
       }
       savedIdRest = i['idRest'];
     }
@@ -935,7 +936,7 @@ class DatabaseHelper {
       FROM 
           Restaurant LEFT JOIN Prato ON Restaurant.idRest = Prato.idRest
           LEFT JOIN Preco ON Prato.idPrato = Preco.idPrato
-      WHERE Restaurant.entregaGratis = 2 
+      WHERE Restaurant.entregaGratis = 0 
     ''');
     return transforming(response);
   }

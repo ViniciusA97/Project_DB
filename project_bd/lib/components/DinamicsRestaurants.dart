@@ -109,6 +109,7 @@ class _DinamicRestaurantsState extends State<DinamicRestaurants> {
                       _call(this._rest[index]);
                     },
                     child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
                       width: MediaQuery.of(context).size.width - 20,
                       height: 80,
                       decoration: BoxDecoration(
@@ -148,7 +149,7 @@ class _DinamicRestaurantsState extends State<DinamicRestaurants> {
                               child: Text('${this._rest[index].name}',
                                   style: kTextRest),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
