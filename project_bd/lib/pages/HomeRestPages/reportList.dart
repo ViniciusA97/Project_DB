@@ -33,34 +33,41 @@ class _ReportListState extends State<ReportList> {
     Control control = Control();
     if(this.days == 1)
     {
-      await control.getRelatorio1day(this._restaurant.id).then((onValue) {
-        setState(() {
-          this._pedidos = onValue;
-          print(this._pedidos.length);
-          print(this._pedidos[0].prato.length);
+      try {
+        await control.getRelatorio1day(this._restaurant.id).then((onValue) {
+          setState(() {
+            this._pedidos = onValue;
+            print(this._pedidos.length);
+            print(this._pedidos[0].prato.length);
+          });
         });
-      });
-      
+      }
+      catch(err) {}
     }
     else if(this.days == 7)
     {
-      await control.getRelatorio7day(this._restaurant.id).then((onValue) {
-        setState(() {
-          this._pedidos = onValue;
-          print(this._pedidos);
+
+      try {
+        await control.getRelatorio7day(this._restaurant.id).then((onValue) {
+          setState(() {
+            this._pedidos = onValue;
+            print(this._pedidos);
+          });
         });
-      });
+      } catch (e) {}
     }
     else if(this.days == 30)
     {
-      await control.getRelatorio30day(this._restaurant.id).then((onValue) {
-        setState(() {
-          this._pedidos = onValue;
-          print(this._pedidos[0].prato[0].name);
-        });
-      });
-    }
 
+      try {
+        await control.getRelatorio30day(this._restaurant.id).then((onValue) {
+          setState(() {
+            this._pedidos = onValue;
+            print(this._pedidos[0].prato[0].name);
+          });
+        });
+      } catch (e) {}
+    }
   }
 
   Widget setupAlertDialoadContainer(Pedido p) {
@@ -81,7 +88,7 @@ class _ReportListState extends State<ReportList> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Text('${p.qnt[index]}x  ${p.prato[index].name}'),
-                  subtitle: Text("R\$ ${p.prato[index].preco.preco}0"),
+                  subtitle: Text("R\$ ${(p.prato[index].preco.preco).toStringAsFixed(2)}"),
                 );
               },
             ),
@@ -132,9 +139,9 @@ class _ReportListState extends State<ReportList> {
                     Padding(padding: EdgeInsets.only(bottom:5),),
                     Divider(color: Colors.grey),
                     Padding(padding: EdgeInsets.only(bottom:7),),
-                    Text('Total R\$ ${this._pedidos[index].preco}0', style: TextStyle(fontSize: 15, color: Colors.black,)),
+                    Text('Total R\$ ${(this._pedidos[index].preco).toStringAsFixed(2)}', style: TextStyle(fontSize: 15, color: Colors.black,)),
                     Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('Restaurante: R\$ ${this._pedidos[index].preco - 2}0', style: TextStyle(fontSize: 14, color: Colors.grey,)),
+                    Text('Restaurante: R\$ ${(this._pedidos[index].preco - 2).toStringAsFixed(2)}', style: TextStyle(fontSize: 14, color: Colors.grey,)),
                     Text('Frete: R\$ 2.00', style: TextStyle(fontSize: 14, color: Colors.grey,)),
                     Padding(padding: EdgeInsets.only(bottom:7),),
                     Center(

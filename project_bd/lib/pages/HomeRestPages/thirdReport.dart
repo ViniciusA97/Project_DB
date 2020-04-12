@@ -26,12 +26,16 @@ class _ThirdReportState extends State<ThirdReport> {
 
   void _asyncMethod() async {
     Control control = Control();
-    await control.getRelatorio3(this._restaurant.id).then((onValue) {
-      setState(() {
-        this._pratos = onValue;
-        print(this._pratos[0].name);
+
+    try {
+      await control.getRelatorio3(this._restaurant.id).then((onValue) {
+        setState(() {
+          this._pratos = onValue;
+          print(this._pratos[0].name);
+        });
       });
-    });
+    } catch (e) {}
+
   }
 
   @override

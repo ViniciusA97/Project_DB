@@ -64,23 +64,23 @@ class DatabaseHelper {
         INSERT INTO User(name, password, email, address, number) values("test","test","test","test","test");
         ''');
     await db.execute('''
-          INSERT INTO Restaurant(name, password,image,description,num,address,email,hora_abre, hora_fecha, entregaGratis ) VALUES("Texas","123","https://media-cdn.tripadvisor.com/media/photo-s/16/a2/c7/26/nosso-salao-interno-super.jpg"," Restaunte com comida gostosa","99887766", "Rua Boa vista 33","texas@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          INSERT INTO Restaurant(name, password,image,description,num,address,email,hora_abre, hora_fecha, entregaGratis ) VALUES("Texas","123","https://media-cdn.tripadvisor.com/media/photo-s/16/a2/c7/26/nosso-salao-interno-super.jpg"," Restaunte com comida gostosa","99887766", "Rua Boa vista 33","texas@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",1),
           
-          ("Sweet","123","https://media-cdn.tripadvisor.com/media/photo-s/06/37/ca/b7/sweet-garden-cafe-restaurant.jpg", "Restaunte especializado em doces","99887766", "Rua Doceria 43","sweet@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          ("Sweet","123","https://media-cdn.tripadvisor.com/media/photo-s/06/37/ca/b7/sweet-garden-cafe-restaurant.jpg", "Restaunte especializado em doces","99887766", "Rua Doceria 43","sweet@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",1),
           
-          ("Cafeteria","123","https://image.chavesnamao.com.br/api/view/iK7w62_emrjOv4hgDHFsWnpOxts=/412x400/filters:quality(90)/blog-cnm/2016/09/cafeteria.jpg", "Restaunte especializado em Cafés","99887766", "Rua cafeteria 55","cafeteria@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          ("Cafeteria","123","https://image.chavesnamao.com.br/api/view/iK7w62_emrjOv4hgDHFsWnpOxts=/412x400/filters:quality(90)/blog-cnm/2016/09/cafeteria.jpg", "Restaunte especializado em Cafés","99887766", "Rua cafeteria 55","cafeteria@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
           
-          ("Hamburgueria","123","https://media-cdn.tripadvisor.com/media/photo-s/12/44/cc/ce/nosso-x-picanha-especial.jpg", "Restaunte especializado em Hamburguer","99887766", "Rua Hamburgueria 99","hamburgueria@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          ("Hamburgueria","123","https://media-cdn.tripadvisor.com/media/photo-s/12/44/cc/ce/nosso-x-picanha-especial.jpg", "Restaunte especializado em Hamburguer","99887766", "Rua Hamburgueria 99","hamburgueria@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
           
-          ("Saladex","123","https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk7X0Aulb0EqkDU0iFG2l8hwYufMEiULM7lTgXTKNijuWtekAW&usqp=CAU"," Restaunte especializado em Salada","99887766", "Rua da salada 67","saladex@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          ("Saladex","123","https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk7X0Aulb0EqkDU0iFG2l8hwYufMEiULM7lTgXTKNijuWtekAW&usqp=CAU"," Restaunte especializado em Salada","99887766", "Rua da salada 67","saladex@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
           
-          ("Massa","123","https://abrilvejario.files.wordpress.com/2016/11/massa_ambiente_foto-tomas-rangel-2.jpeg?quality=70&strip=info&w=920", "Restaunte especializado em massas","99887766", "Rua da Massa 13","massa@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          ("Massa","123","https://abrilvejario.files.wordpress.com/2016/11/massa_ambiente_foto-tomas-rangel-2.jpeg?quality=70&strip=info&w=920", "Restaunte especializado em massas","99887766", "Rua da Massa 13","massa@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
           
-          ("Pizzaria","123","https://img.stpu.com.br/?img=https://s3.amazonaws.com/pu-mgr/default/a0RG000000jZ3P9MAK/5a2fd72de4b0b6c56629e7ae.jpg&w=710&h=462", "Restaunte especializado em pizza","99887766", "Rua da pizza 233","pizzaria@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          ("Pizzaria","123","https://img.stpu.com.br/?img=https://s3.amazonaws.com/pu-mgr/default/a0RG000000jZ3P9MAK/5a2fd72de4b0b6c56629e7ae.jpg&w=710&h=462", "Restaunte especializado em pizza","99887766", "Rua da pizza 233","pizzaria@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",1),
           
-          ("Choperia","123","https://i.ytimg.com/vi/_bzHBzwWu6U/maxresdefault.jpg", "Restaunte especializado em chopp","99887766", "Rua da embreagues 233","chopp@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          ("Choperia","123","https://i.ytimg.com/vi/_bzHBzwWu6U/maxresdefault.jpg", "Restaunte especializado em chopp","99887766", "Rua da embreagues 233","chopp@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",1),
           
-          ("Japones","123","https://media-cdn.tripadvisor.com/media/photo-s/03/a2/90/81/restaurante-japones-dao.jpg", "Restaunte especializado em comida japonesa","99887766", "Rua do japinha 233","japa@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1);    
+          ("Japones","123","https://media-cdn.tripadvisor.com/media/photo-s/03/a2/90/81/restaurante-japones-dao.jpg", "Restaunte especializado em comida japonesa","99887766", "Rua do japinha 233","japa@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",1);    
     
     ''');
 
@@ -128,42 +128,42 @@ class DatabaseHelper {
     await db.execute('''
                 INSERT INTO Preco(preco,date,idPrato)
                 VALUES(15.90, "2020-04-10 10:00:00", 1),
-                (12.90, "2020-04-10 10:00:00", 2),
-                (15.90, "2020-04-10 10:00:00", 3),
-                (18.90, "2020-04-10 10:00:00", 4),
-                (18.90, "2020-04-10 10:00:00", 5),
-                (4.90, "2020-04-10 10:00:00", 6),
-                (6.90, "2020-04-10 10:00:00", 7),
-                (9.90, "2020-04-10 10:00:00", 8),
-                (3.90, "2020-04-10 10:00:00", 9),
-                (3.90, "2020-04-10 10:00:00", 10),
-                (6.90, "2020-04-10 10:00:00", 10),
-                (4.00, "2020-04-10 10:00:00", 11),
-                (8.90, "2020-04-10 10:00:00", 12),
-                (15.90, "2020-04-10 10:00:00", 13),
-                (16.99, "2020-04-10 10:00:00", 14),
-                (20.90, "2020-04-10 10:00:00", 15),
-                (6.00, "2020-04-10 10:00:00", 16),
-                (7.50, "2020-04-10 10:00:00", 17),
-                (6.50, "2020-04-10 10:00:00", 18),
-                (9.99, "2020-04-10 10:00:00", 19),
-                (9.99, "2020-04-10 10:00:00", 20),
-                (12.90, "2020-04-10 10:00:00", 21),
-                (18.20, "2020-04-10 10:00:00", 22),
-                (15.60, "2020-04-10 10:00:00", 23),
-                (11.00, "2020-04-10 10:00:00", 24),
-                (19.90, "2020-04-10 10:00:00", 25),
-                (17.80, "2020-04-10 10:00:00", 26),
-                (21.99, "2020-04-10 10:00:00", 27),
-                (24.60, "2020-04-10 10:00:00", 28),
-                (7.99, "2020-04-10 10:00:00", 29),
-                (12.00, "2020-04-10 10:00:00", 30),
-                (11.99, "2020-04-10 10:00:00", 31),
-                (9.99, "2020-04-10 10:00:00", 32),
-                (8.99, "2020-04-10 10:00:00", 33),
-                (9.99, "2020-04-10 10:00:00", 34),
-                (8.99, "2020-04-10 10:00:00", 35),
-                (9.99, "2020-04-10 10:00:00", 36);
+                (12.90, "2020-04-01 10:00:00", 2),
+                (15.90, "2020-04-01 10:00:00", 3),
+                (18.90, "2020-04-01 10:00:00", 4),
+                (18.90, "2020-04-01 10:00:00", 5),
+                (4.90, "2020-04-01 10:00:00", 6),
+                (6.90, "2020-04-01 10:00:00", 7),
+                (9.90, "2020-04-01 10:00:00", 8),
+                (3.90, "2020-04-01 10:00:00", 9),
+                (3.90, "2020-04-01 10:00:00", 10),
+                (6.90, "2020-04-01 10:00:00", 10),
+                (4.00, "2020-04-01 10:00:00", 11),
+                (8.90, "2020-04-01 10:00:00", 12),
+                (15.90, "2020-04-01 10:00:00", 13),
+                (16.99, "2020-04-01 10:00:00", 14),
+                (20.90, "2020-04-01 10:00:00", 15),
+                (6.00, "2020-04-01 10:00:00", 16),
+                (7.50, "2020-04-01 10:00:00", 17),
+                (6.50, "2020-04-01 10:00:00", 18),
+                (9.99, "2020-04-01 10:00:00", 19),
+                (9.99, "2020-04-01 10:00:00", 20),
+                (12.90, "2020-04-01 10:00:00", 21),
+                (18.20, "2020-04-01 10:00:00", 22),
+                (15.60, "2020-04-01 10:00:00", 23),
+                (11.00, "2020-04-01 10:00:00", 24),
+                (19.90, "2020-04-01 10:00:00", 25),
+                (17.80, "2020-04-01 10:00:00", 26),
+                (21.99, "2020-04-01 10:00:00", 27),
+                (24.60, "2020-04-01 10:00:00", 28),
+                (7.99, "2020-04-01 10:00:00", 29),
+                (12.00, "2020-04-01 10:00:00", 30),
+                (11.99, "2020-04-01 10:00:00", 31),
+                (9.99, "2020-04-01 10:00:00", 32),
+                (8.99, "2020-04-01 10:00:00", 33),
+                (9.99, "2020-04-01 10:00:00", 34),
+                (8.99, "2020-04-01 10:00:00", 35),
+                (9.99, "2020-04-01 10:00:00", 36);
 
     ''');
 

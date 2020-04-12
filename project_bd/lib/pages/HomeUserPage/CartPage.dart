@@ -172,7 +172,7 @@ class CartPageState extends State<CartPage> {
                       //color: Color(0xff38ad53),
                     ),
                     width: MediaQuery.of(context).size.width,
-                    height: 50,
+                    height: 59,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
@@ -186,7 +186,7 @@ class CartPageState extends State<CartPage> {
                                   style: TextStyle(
                                       fontSize: 17, color: Colors.black)),
                               Text(
-                                  'Preço un. R\$ ${this._pratos[index].preco.preco}0',
+                                  'Preço un. R\$ ${(this._pratos[index].preco.preco).toStringAsFixed(2)}',
                                   style: TextStyle(
                                       fontSize: 12, color: Colors.grey))
                             ],
@@ -197,9 +197,9 @@ class CartPageState extends State<CartPage> {
                           child: Row(
                             children: <Widget>[
                               Text(
-                                'R\$ ${this._pratos[index].preco.preco * this._quant[index]}0',
+                                'R\$ ${(this._pratos[index].preco.preco * this._quant[index]).toStringAsFixed(2)}',
                                 style: TextStyle(
-                                    fontSize: 20, color: Colors.black),
+                                    fontSize: 17, color: Colors.black),
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 15),
@@ -289,7 +289,7 @@ class CartPageState extends State<CartPage> {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        "R\$${calculatePreco()}0",
+                        "R\$${(calculatePreco()).toStringAsFixed(2)}",
                         textAlign: TextAlign.end,
                         style: TextStyle(fontSize: 15, color: Colors.grey),
                       ),
@@ -305,7 +305,7 @@ class CartPageState extends State<CartPage> {
                         padding: EdgeInsets.only(top: 10),
                       ),
                       Text(
-                        "R\$${calculatePreco() + value}0",
+                        "R\$${(calculatePreco() + value).toStringAsFixed(2)}",
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
@@ -353,7 +353,6 @@ class CartPageState extends State<CartPage> {
           FlatButton(
             onPressed: () {
               control.clearCart();
-              Navigator.pop(context);
               Navigator.pop(context);
               Navigator.pop(context);
             },

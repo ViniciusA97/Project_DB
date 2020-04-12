@@ -53,7 +53,7 @@ class _PedidosRestState extends State<PedidosRest> {
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
                   title: Text('${p.qnt[index]}x  ${p.prato[index].name}'),
-                  subtitle: Text("R\$ ${p.prato[index].preco.preco}0"),
+                  subtitle: Text("R\$ ${(p.prato[index].preco.preco).toStringAsFixed(2)}"),
                 );
               },
             ),
@@ -136,7 +136,7 @@ class _PedidosRestState extends State<PedidosRest> {
                     Padding(padding: EdgeInsets.only(bottom:7),),
                     Text('Entregue em: ${this._pedidos[index].adress}', style: TextStyle(fontSize: 12, color: Colors.grey,)),                    
                     Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('Total R\$ ${this._pedidos[index].preco}0', style: TextStyle(fontSize: 15, color: Colors.black,)),
+                    Text('Total R\$ ${(this._pedidos[index].preco).toStringAsFixed(2)}', style: TextStyle(fontSize: 15, color: Colors.black,)),
                     Padding(padding: EdgeInsets.only(bottom:7),),
                     Center(
                       child: MaterialButton(

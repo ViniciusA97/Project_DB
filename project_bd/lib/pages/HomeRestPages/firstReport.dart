@@ -30,12 +30,18 @@ class _FirstReportState extends State<FirstReport> {
 
   void _asyncMethod() async {
     Control control = Control();
-    await control.getRelatorio1(this._restaurant.id).then((onValue) {
-      setState(() {
-        this._pedido = onValue;
-        print(this._pedido);
+
+    try {
+
+      await control.getRelatorio1(this._restaurant.id).then((onValue) {
+        setState(() {
+          this._pedido = onValue;
+          print(this._pedido);
+        });
       });
-    });
+      
+    } catch (e) {
+    }
   }
 
   @override
@@ -99,8 +105,11 @@ class _FirstReportState extends State<FirstReport> {
   Widget plate() {
 
     if(this._pedido == null){
-      return Center(
-        child: Text('Você não vendeu nenhum prato'),
+      return Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Text('Você não vendeu nenhum prato ainda'),
+        ),
       );
     }
     else{
