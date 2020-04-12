@@ -232,6 +232,7 @@ class CartPageState extends State<CartPage> {
           FlatButton(
             onPressed: () {
               Navigator.pop(context);
+              Navigator.pop(context);
             },
             child: Text(
               'Adicionar mais itens',

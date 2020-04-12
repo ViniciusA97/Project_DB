@@ -48,7 +48,7 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria INTEGER, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
     await db.execute(
-        'CREATE TABLE Pedidos( idPedido INTEGER PRIMARY KEY, data DATATIME, preco REAL, adress TEXT)');
+        'CREATE TABLE Pedidos( idPedido INTEGER PRIMARY KEY, data DATATIME, precoTotal REAL, adress TEXT)');
     await db.execute(
         'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL, idPrato INTEGER, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
     await db.execute(
@@ -124,7 +124,7 @@ class DatabaseHelper {
     try {
       var dbClient = await db;
       await dbClient.rawInsert(
-          '''INSERT INTO Pedidos(data, preco, adress) VALUES(datetime('now','localtime'),?,?)''',
+          '''INSERT INTO Pedidos(data, precoTotal, adress) VALUES(datetime('now','localtime'),?,?)''',
           [preco, p.adress]);
       dynamic pedido = await dbClient.rawQuery(
           'SELECT idPedido From Pedidos ORDER BY idPedido DESC LIMIT 1');
@@ -146,17 +146,6 @@ class DatabaseHelper {
     } catch (err) {
       print(err);
       return false;
-    }
-  }
-
-  Future<void> aaa() async {
-    var dbClient = await db;
-    dynamic resp = await dbClient.rawQuery('''
-      SELECT Prato.idPrato, Prato PedidoPratoUser.* FROM Prato INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato WHERE PedidoPratoUser.idPedido=5
-      ''');
-
-    for (var i in resp) {
-      print('oi ---> ${i['idPrato']}');
     }
   }
 
@@ -544,9 +533,7 @@ class DatabaseHelper {
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
+            Pedidos.*,
             Preco.*,
             PedidoPratoUser.*,
             SUM(PedidoPratoUser.quantidade) AS qntPedidoPrato
@@ -584,9 +571,7 @@ class DatabaseHelper {
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
+            Pedidos.*,
             Preco.*,
             PedidoPratoUser.*
       FROM 
@@ -606,7 +591,7 @@ class DatabaseHelper {
     for (var i in test1) {
       // print('$i\n\n\n');
       if (!map.containsKey(i['idPedido'])) {
-        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']] = Pedido.map(i);
 
         map[i['idPedido']].addPrato(Prato.mapJOIN(i));
         map[i['idPedido']].addQnt(i['quantidade']);
@@ -632,9 +617,7 @@ class DatabaseHelper {
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
+            Pedidos.*,
             Preco.*,
             PedidoPratoUser.*
       FROM 
@@ -654,7 +637,7 @@ class DatabaseHelper {
     for (var i in test1) {
       // print('$i\n\n\n');
       if (!map.containsKey(i['idPedido'])) {
-        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']] = Pedido.map(i);
 
         map[i['idPedido']].addPrato(Prato.mapJOIN(i));
         map[i['idPedido']].addQnt(i['quantidade']);
@@ -680,9 +663,7 @@ class DatabaseHelper {
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
+            Pedidos.*,
             Preco.*,
             PedidoPratoUser.*
       FROM 
@@ -702,7 +683,7 @@ class DatabaseHelper {
     for (var i in test1) {
       // print('$i\n\n\n');
       if (!map.containsKey(i['idPedido'])) {
-        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']] = Pedido.map(i);
 
         map[i['idPedido']].addPrato(Prato.mapJOIN(i));
         map[i['idPedido']].addQnt(i['quantidade']);
@@ -729,16 +710,14 @@ class DatabaseHelper {
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
+            Pedidos.*,
             Preco.*,
             PedidoPratoUser.*,
             SUM(PedidoPratoUser.quantidade) AS sumQnt,
             SUM(Preco.preco) AS media
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco ON Preco.idPrato = PedidoPratoUser.idPrato
+            INNER JOIN Preco ON Preco.idPreco = PedidoPratoUser.idPreco
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
@@ -747,7 +726,9 @@ class DatabaseHelper {
             Prato.idPrato
       ORDER BY Pedidos.data DESC
       ''');
+
     print(test1);
+
     Map<int, Pedido> map = new Map<int, Pedido>();
     for (var i in test1) {
       if (!map.containsKey(i['idPedido'])) {
@@ -776,10 +757,7 @@ class DatabaseHelper {
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
-            Pedidos.adress,
+            Pedidos.*,
             Restaurant.*,
             PedidoPratoUser.*,
             Preco.*,
@@ -803,7 +781,7 @@ class DatabaseHelper {
     Map<int, Pedido> map = new Map<int, Pedido>();
     for (var i in test) {
       if (!map.containsKey(i['idPedido'])) {
-        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']] = Pedido.map(i);
         map[i['idPedido']].addPrato(Prato.mapJOIN(i));
         map[i['idPedido']].addQnt(i['quantidade']);
       } else {
@@ -1012,10 +990,7 @@ class DatabaseHelper {
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
-            Pedidos.preco AS PrecoTotal,
-            Pedidos.idPedido,
-            Pedidos.data,
-            Pedidos.adress,
+            Pedidos.*,
             Restaurant.*,
             PedidoPratoUser.*,
             Preco.*,
@@ -1041,7 +1016,7 @@ class DatabaseHelper {
     Map<int, Pedido> map = new Map<int, Pedido>();
     for (var i in test) {
       if (!map.containsKey(i['idPedido'])) {
-        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']] = Pedido.map(i);
         map[i['idPedido']].addPrato(Prato.mapJOIN(i));
         map[i['idPedido']].addQnt(i['quantidade']);
       } else {

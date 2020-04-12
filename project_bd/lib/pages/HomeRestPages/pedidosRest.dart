@@ -52,7 +52,7 @@ class _PedidosRestState extends State<PedidosRest> {
               itemCount: p.prato.length,
               itemBuilder: (BuildContext context, int index) {
                 return ListTile(
-                  title: Text(p.prato[index].name),
+                  title: Text('${p.qnt[index]}x  ${p.prato[index].name}'),
                   subtitle: Text("R\$ ${p.prato[index].preco.preco}0"),
                 );
               },
