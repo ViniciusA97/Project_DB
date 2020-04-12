@@ -138,7 +138,7 @@ class Control{
     return await this._db.getRelatorio1(idRest);
   }
 
-  Future<List<Pedido>> getRelatorio3(int idRest) async{
+  Future<List<Prato>> getRelatorio3(int idRest) async{
     return await this._db.getRelatorio3(idRest);
   }
 

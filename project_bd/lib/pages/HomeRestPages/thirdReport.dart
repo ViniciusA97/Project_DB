@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:project_bd/Control/Control.dart';
 import 'package:project_bd/Model/pedidos.dart';
+import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:intl/intl.dart';
 
-class ThirdReport extends StatefulWidget {   
-
+class ThirdReport extends StatefulWidget {
   final Restaurant _restaurant;
   ThirdReport(this._restaurant);
 
   @override
-  _ThirdReportState createState() => _ThirdReportState(this._restaurant);   
+  _ThirdReportState createState() => _ThirdReportState(this._restaurant);
 }
 
-class _ThirdReportState extends State<ThirdReport> {    
-
+class _ThirdReportState extends State<ThirdReport> {
   Restaurant _restaurant;
   _ThirdReportState(this._restaurant);
-  List<Pedido> _pedidos;
+  List<Prato> _pratos;
 
-    @override
+  @override
   void initState() {
-    
     _asyncMethod();
     super.initState();
   }
@@ -30,12 +28,10 @@ class _ThirdReportState extends State<ThirdReport> {
     Control control = Control();
     await control.getRelatorio3(this._restaurant.id).then((onValue) {
       setState(() {
-        this._pedidos = onValue;
-        print(this._pedidos[0].prato[0].name);
+        this._pratos = onValue;
+        print(this._pratos[0].name);
       });
     });
-   
-
   }
 
   @override
@@ -109,7 +105,7 @@ class _ThirdReportState extends State<ThirdReport> {
                   borderRadius: BorderRadius.all(Radius.circular(20))),
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height - 140,
-              child: getList(), 
+              child: getList(),
             ),
           ],
         ),
@@ -118,46 +114,55 @@ class _ThirdReportState extends State<ThirdReport> {
   }
 
   Widget getList() {
-    if(this._pedidos == null) {
+    if (this._pratos == null) {
       return Center(
         child: Text('Sem pedidos'),
       );
-    }
-    else {
+    } else {
       return ListView.builder(
-        itemCount: this._pedidos.length,
-        itemBuilder: (BuildContext cntx, int index){
-          return Column(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.fromLTRB(10, 0, 10, 20),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                height: 190,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
+          itemCount: this._pratos.length,
+          itemBuilder: (BuildContext cntx, int index) {
+            return Column(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 20),
+                  padding: EdgeInsets.fromLTRB(20, 5, 20, 0),
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(bottom: 5)),
+                      Text(
+                        'Prato ${this._pratos[index].name}',
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 5)),
+                      Divider(color: Colors.grey),
+                      Padding(padding: EdgeInsets.only(bottom: 5)),
+                      Text(
+                        'Preço Médio R\$ ${this._pratos[index].preco.preco}0',
+                        style: TextStyle(
+                          fontSize: 17,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 7),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('Prato ${this._pedidos[index].prato[0].name}', style: TextStyle(fontSize: 20, color: Colors.black,  fontWeight: FontWeight.bold)),
-                    Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('${DateFormat('dd/MM/yyyy - kk:mm').format(this._pedidos[index].data)}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
-                    Padding(padding: EdgeInsets.only(bottom:5),),
-                    Text('Pedido nº ${this._pedidos[index].idPedido}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
-                    Padding(padding: EdgeInsets.only(bottom:10),),
-                    Divider(color: Colors.grey),
-                    Padding(padding: EdgeInsets.only(bottom:7),),
-                    Text('Preço Médio R\$ ${this._pedidos[index].preco}0', style: TextStyle(fontSize: 15, color: Colors.black,)),
-                    Padding(padding: EdgeInsets.only(bottom:7),),
-                  ],
-                ),
-              ),
-            ],
-          );
-        }
-      );
+              ],
+            );
+          });
     }
   }
 }

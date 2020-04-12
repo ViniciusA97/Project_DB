@@ -60,6 +60,7 @@ class _UserFormState extends State<UserForm> {
               return null;
             },
             decoration: kTextFieldDecoraction.copyWith(hintText: 'password'),
+            obscureText: true,
             onSaved: (value) => _password = value,
           ),
           Padding(

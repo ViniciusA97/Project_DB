@@ -104,44 +104,47 @@ class _SearchState extends State<Search> {
             ],
           ),
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: ListView.builder(
-                itemCount: this._list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  if (this._list.isEmpty) {
-                    return Center(
-                      child: text == ''
-                          ? Text('')
-                          : Text('Não foi encontrado nenhum restaurante.'),
-                    );
-                  } else {
-                    return MaterialButton(
-                        height: 120,
-                        minWidth: MediaQuery.of(context).size.width * 0.95,
-                        onPressed: () {
-                          goToRest(this._list[index]);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(left: 10),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xff38ad53),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height * 0.8,
+            child: ListView.builder(
+              itemCount: this._list.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (this._list.isEmpty) {
+                  return Center(
+                    child: text == ''
+                        ? Text('')
+                        : Text('Não foi encontrado nenhum restaurante.'),
+                  );
+                } else {
+                  return MaterialButton(
+                    height: 120,
+                    minWidth: MediaQuery.of(context).size.width * 0.95,
+                    onPressed: () {
+                      goToRest(this._list[index]);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      padding: EdgeInsets.only(left: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xff38ad53),
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      height: 130,
+                      child: Row(
+                        children: <Widget>[
+                          ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            child: Image.network(
+                              '${this._list[index].url}',
+                              height: 100,
+                              width: 150,
+                            ),
                           ),
-                          width: MediaQuery.of(context).size.width * 0.95,
-                          height: 120,
-                          child: Row(
-                            children: <Widget>[
-                              ClipRRect(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                child: Image.network(
-                                  '${this._list[index].url}',
-                                  height: 100,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.fromLTRB(15, 10, 10, 0),
+                          Container(
+                            child: Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: <Widget>[
                                     Text(
@@ -153,16 +156,21 @@ class _SearchState extends State<Search> {
                                     Text(
                                       '${this._list[index].descriprion}',
                                       style: TextStyle(color: Colors.white),
+                                      overflow: TextOverflow.fade,
                                     ),
                                   ],
                                 ),
-                              )
-                            ],
-                          ),
-                        ));
-                  }
-                },
-              ))
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              },
+            ),
+          )
         ],
       ),
     );

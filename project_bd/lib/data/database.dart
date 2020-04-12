@@ -809,29 +809,29 @@ class DatabaseHelper {
   }
 
 //não esta completo
-  Future<List<Pedido>> getRelatorio3(int idRest) async {
+  Future<List<Prato>> getRelatorio3(int idRest) async {
     String date1 =
         DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
     var dbClient = await this.db;
     List<Map> test1 = await dbClient.rawQuery('''
-      SELECT
+     SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
-            Pedidos.*,
             Preco.*,
             PedidoPratoUser.*,
-            SUM(PedidoPratoUser.quantidade) AS sumQnt,
-            SUM(Preco.preco) AS media
+            Pedidos.*,
+            SUM(Preco.preco*PedidoPratoUser.quantidade) AS media,
+            SUM(PedidoPratoUser.quantidade) as sumQnt
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Preco ON Preco.idPreco = PedidoPratoUser.idPreco
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=${rest.id} AND Pedidos.data>'$date1'
+            Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
       GROUP BY
             Prato.idPrato
       ORDER BY Pedidos.data DESC
@@ -841,24 +841,22 @@ class DatabaseHelper {
 
 
 
-    Map<int, Pedido> map = new Map<int, Pedido>();
+    Map<int, Prato> map = new Map<int, Prato>();
     for (var i in test1) {
 
       print('\n\n\n$i\n\n\n');
 
-      if (!map.containsKey(i['idPedido'])) {
-        map[i['idPedido']] = Pedido.mapRelatorio3(i);
-        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-        map[i['idPedido']].addQnt(i['quantidade']);
-      } else {
-        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-        map[i['idPedido']].addQnt(i['quantidade']);
+      if(!map.containsKey(i['idPrato'])) {
+        map[i['idPrato']] = Prato.mapJOIN(i);
       }
+    
       print('maaap --> $map');
     }
-    List<Pedido> pedidos = new List<Pedido>();
-    map.forEach((k, v) => pedidos.add(v));
-    return pedidos;
+    List<Prato> pratos = new List<Prato>();
+
+
+    map.forEach((k, v) => pratos.add(v));
+    return pratos;
   }
 
   //ok - não testada

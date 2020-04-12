@@ -42,7 +42,7 @@ class Pedido{
     _adress = obj['adress'];
   }
 
-  Pedido.mapRelatorio3(dynamic obj){
+  Pedido.mapRelatorio(dynamic obj){
     _user = User.mapJOIN(obj);
     _rest = Restaurant.map(obj);
     _data = DateTime.parse(obj['data']);

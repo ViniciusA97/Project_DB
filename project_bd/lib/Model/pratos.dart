@@ -20,6 +20,15 @@ class Prato{
     this._img = obj['img'];
   }
 
+  Prato.mapRelatorio(dynamic obj){
+    this._preco = obj['media']/obj['sumQnt'];
+    this._idPrato = obj['idPrato'];
+    this._idRest = obj['idRest'];
+    this._name = obj['namePrato'];
+    this._descricao = obj['descricaoPrato'];
+    this._img = obj['imgPrato'];
+  }
+
   Prato.mapJOIN(dynamic obj){
     this._preco = Preco.map(obj);
     this._idPrato = obj['idPrato'];
