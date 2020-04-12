@@ -37,9 +37,10 @@ class _ReportListState extends State<ReportList> {
         setState(() {
           this._pedidos = onValue;
           print(this._pedidos.length);
-          print(this._pedidos[0].prato[0].name);
+          print(this._pedidos[0].prato.length);
         });
       });
+      
     }
     else if(this.days == 7)
     {
@@ -63,6 +64,10 @@ class _ReportListState extends State<ReportList> {
   }
 
   Widget setupAlertDialoadContainer(Pedido p) {
+
+    print(p.prato[0].preco.preco);
+
+
     return Container(
       height: 300.0, // Change as per your requirement
       width: 300.0, // Change as per your requirement

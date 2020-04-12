@@ -71,7 +71,7 @@ class _DinamicRestaurantsState extends State<DinamicRestaurants> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width / 15),
+                      right: MediaQuery.of(context).size.width / 12),
                 ),
                 Text(
                   '${this._name}'.toUpperCase(),

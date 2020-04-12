@@ -33,7 +33,16 @@ class Pedido{
     _adress = obj['adress'];
   }
 
-  Pedido.mapRelatorio(dynamic obj){
+  Pedido.mapRelatorio2(dynamic obj){
+    _user = User.mapJOIN(obj);
+    _rest = Restaurant.map(obj);
+    _data = DateTime.parse(obj['data']);
+    _idPedido = obj['idPedido'];
+    _precoTotal = obj['PrecoTotal'];
+    _adress = obj['adress'];
+  }
+
+  Pedido.mapRelatorio3(dynamic obj){
     _user = User.mapJOIN(obj);
     _rest = Restaurant.map(obj);
     _data = DateTime.parse(obj['data']);

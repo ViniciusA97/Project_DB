@@ -50,9 +50,9 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE Pedidos( idPedido INTEGER PRIMARY KEY, data DATATIME, preco REAL, adress TEXT)');
     await db.execute(
-        'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, FOREIGN KEY(idPedido) REFERENCES Pedidos(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
-    await db.execute(
         'CREATE TABLE Preco(idPreco INTEGER PRIMARY KEY, date SMALLDATETIME, preco REAL, idPrato INTEGER, FOREIGN KEY(idPrato) REFERENCES Prato(idPrato))');
+    await db.execute(
+        'CREATE TABLE PedidoPratoUser(idUser INTEGER, idPrato INTEGER, quantidade INTEGER, idPedido INTEGER, idPreco INTEGER, FOREIGN KEY(idPreco) REFERENCES Preco(idPreco),FOREIGN KEY(idPedido) REFERENCES Pedidos(idPedido), FOREIGN KEY (idPrato) REFERENCES Prato(idPrato), FOREIGN KEY (idUser) REFERENCES User(idUser))');
     //User(idUser: 1 , name: joao , pass: 1 , email: joao@gmail.com, address: Rua soltino, number: 990)
     //Restaurant(idRest: 0 , name: LePresident , pass: 11 , numPedidos: 20 )
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
@@ -115,6 +115,7 @@ class DatabaseHelper {
 
       return true;
     } catch (err) {
+      print(err);
       return false;
     }
   }
@@ -122,24 +123,40 @@ class DatabaseHelper {
   Future<bool> savePedido(Pedido p, double preco) async {
     try {
       var dbClient = await db;
-      await dbClient.rawInsert( '''INSERT INTO Pedidos(data, preco, adress) VALUES(datetime('now','localtime'),?,?)''',[preco, p.adress]);
-      dynamic pedido = await dbClient.rawQuery( 'SELECT idPedido From Pedidos ORDER BY idPedido DESC LIMIT 1');
+      await dbClient.rawInsert(
+          '''INSERT INTO Pedidos(data, preco, adress) VALUES(datetime('now','localtime'),?,?)''',
+          [preco, p.adress]);
+      dynamic pedido = await dbClient.rawQuery(
+          'SELECT idPedido From Pedidos ORDER BY idPedido DESC LIMIT 1');
+      print('p.prato->${p.prato.length}');
       int idPedido = pedido[0]['idPedido'];
       print('idpedido---->$idPedido');
+      print('preco ---->${p.prato[0].preco.preco}');
       List<Prato> pratos = p.prato;
       List<int> qnt = p.qnt;
       print('${pratos.length}  ${qnt.length}');
 
       for (int i = 0; i < pratos.length; i++) {
-        print('idprato --> ${pratos[0].idPrato}');
+        print('idprato --> ${pratos[i].idPrato}');
         await dbClient.rawInsert(
-            'INSERT INTO PedidoPratoUser (idPrato, idUser, idPedido, quantidade) VALUES(?,?,?,?)',
-            [pratos[i].idPrato, p.user.id, idPedido, qnt[i]]);
+            'INSERT INTO PedidoPratoUser (idPrato, idUser, idPedido, quantidade, idPreco) VALUES(?,?,?,?,?)',
+            [pratos[i].idPrato, p.user.id, idPedido, qnt[i], pratos[i].preco.id]);
       }
       return true;
     } catch (err) {
       print(err);
       return false;
+    }
+  }
+
+  Future<void> aaa() async {
+    var dbClient = await db;
+    dynamic resp = await dbClient.rawQuery('''
+      SELECT Prato.idPrato, Prato PedidoPratoUser.* FROM Prato INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato WHERE PedidoPratoUser.idPedido=5
+      ''');
+
+    for (var i in resp) {
+      print('oi ---> ${i['idPrato']}');
     }
   }
 
@@ -166,15 +183,15 @@ class DatabaseHelper {
 
   Future<void> saveRelacionCatRest(int idRest, int idCat) async {
     var dbClient = await db;
-    dynamic test = await dbClient.rawQuery('SELECT * FROM CategoriaRest WHERE idRest=$idRest AND idCategoria=$idCat');
-    try{
+    dynamic test = await dbClient.rawQuery(
+        'SELECT * FROM CategoriaRest WHERE idRest=$idRest AND idCategoria=$idCat');
+    try {
       test[0]['idRest'];
       return;
-    }catch(err){
-     await dbClient.rawInsert(
+    } catch (err) {
+      await dbClient.rawInsert(
           'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
           [idRest, idCat]);
-
     }
   }
 
@@ -232,7 +249,8 @@ class DatabaseHelper {
   //Busca todas as categorias
   Future<List<Categories>> getAllCategories() async {
     var dbClient = await db;
-    dynamic response = await dbClient.rawQuery('SELECT Categoria.idCategoria , Categoria.image AS imageCategoria, Categoria.name AS nameCategoria FROM Categoria');
+    dynamic response = await dbClient.rawQuery(
+        'SELECT Categoria.idCategoria , Categoria.image AS imageCategoria, Categoria.name AS nameCategoria FROM Categoria');
     print(response);
     List<Categories> list = List<Categories>();
     for (dynamic i in response) {
@@ -374,13 +392,12 @@ class DatabaseHelper {
     try {
       print('login Rest --> $rest');
       Restaurant usual = Restaurant.map(rest[0]);
-      if(rest[0]['idCategoria']!=null){
+      if (rest[0]['idCategoria'] != null) {
         List<Categories> cat = new List<Categories>();
-        for( Map i in rest){
+        for (Map i in rest) {
           cat.add(Categories.map(i));
         }
         usual.setCategories(cat);
-
       }
       return usual;
     } catch (err) {
@@ -518,23 +535,24 @@ class DatabaseHelper {
     return null;
   }
 
-  Future<Pedido> getRelatorio1(int idRest) async{
+  Future<Pedido> getRelatorio1(int idRest) async {
     var dbClient = await this.db;
-    List<Map> test =await  dbClient.rawQuery(
-      '''
+    List<Map> test = await dbClient.rawQuery('''
       SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
             Preco.*,
             PedidoPratoUser.*,
-            Pedidos.*,
             SUM(PedidoPratoUser.quantidade) AS qntPedidoPrato
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Preco ON Preco.idPrato = PedidoPratoUser.idPreco
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
@@ -544,172 +562,183 @@ class DatabaseHelper {
       ORDER BY 
             qntPedidoPrato DESC
       LIMIT 1
-      '''
-    );
-    try{
+      ''');
+    try {
       Pedido pedido = Pedido.map(test[0]);
       pedido.addPrato(Prato.mapJOIN(test[0]));
       pedido.addQnt(test[0]['qntPedidoPrato']);
       return pedido;
-    }catch(err){
+    } catch (err) {
       return null;
-    }    
+    }
   }
 
-
-  Future<List<Pedido>> getRelatorio2_1day(int idRest) async{
-    String date1 = DateTime.now().subtract(Duration(days: 1)).toString().substring(0, 19);
+  Future<List<Pedido>> getRelatorio2_1day(int idRest) async {
+    String date1 =
+        DateTime.now().subtract(Duration(days: 1)).toString().substring(0, 19);
     var dbClient = await this.db;
-    List<Map> test1 =await  dbClient.rawQuery(
-      '''
+    List<Map> test1 = await dbClient.rawQuery('''
       SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
             Preco.*,
-            PedidoPratoUser.*,
-            Pedidos.*
+            PedidoPratoUser.*
       FROM 
-            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            Prato INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato
+            INNER JOIN Preco ON Preco.idPreco = PedidoPratoUser.idPreco
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
             Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
       GROUP BY
-            PedidoPratoUser.idPedido 
+            Prato.idPrato, PedidoPratoUser.idPedido
       ORDER BY Pedidos.data DESC
-      '''
-      );
+      ''');
+
     Map<int, Pedido> map = new Map<int, Pedido>();
-      for(var i in test1){
-        if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.map(i);
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }else{
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }
-      print('maaap --> $map');
+
+    for (var i in test1) {
+      // print('$i\n\n\n');
+      if (!map.containsKey(i['idPedido'])) {
+        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      } else {
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
       }
-      List<Pedido> pedidos = new List<Pedido>();
-      map.forEach((k, v) => pedidos.add(v));
-      return pedidos;
+      print('maaap --> $map');
+    }
+    List<Pedido> pedidos = new List<Pedido>();
+    map.forEach((k, v) => pedidos.add(v));
+    return pedidos;
   }
 
-  
-
-  Future<List<Pedido>> getRelatorio2_7days(int idRest) async{
-    String date1 = DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
+  Future<List<Pedido>> getRelatorio2_7days(int idRest) async {
+    String date1 =
+        DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
     var dbClient = await this.db;
-    List<Map> test1 =await  dbClient.rawQuery(
-      '''
+    List<Map> test1 = await dbClient.rawQuery('''
       SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
             Preco.*,
-            PedidoPratoUser.*,
-            Pedidos.*
+            PedidoPratoUser.*
       FROM 
-            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            Prato INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato
+            INNER JOIN Preco ON Preco.idPreco = PedidoPratoUser.idPreco
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
             Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
       GROUP BY
-            PedidoPratoUser.idPedido
+            Prato.idPrato, PedidoPratoUser.idPedido
       ORDER BY Pedidos.data DESC
-      '''
-      );
+      ''');
+      
     Map<int, Pedido> map = new Map<int, Pedido>();
-      for(var i in test1){
-        if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.map(i);
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }else{
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }
-      print('maaap --> $map');
-      }
-      List<Pedido> pedidos = new List<Pedido>();
-      map.forEach((k, v) => pedidos.add(v));
-      return pedidos;
-  }
-  
 
-  Future<List<Pedido>> getRelatiorio2_30days(int idRest) async{
+    for (var i in test1) {
+      // print('$i\n\n\n');
+      if (!map.containsKey(i['idPedido'])) {
+        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      } else {
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      }
+      print('maaap --> $map');
+    }
+    List<Pedido> pedidos = new List<Pedido>();
+    map.forEach((k, v) => pedidos.add(v));
+    return pedidos;
+  }
+
+  Future<List<Pedido>> getRelatiorio2_30days(int idRest) async {
     var dbClient = await this.db;
-    String date15 = DateTime.now().subtract(Duration(days: 30)).toString().substring(0, 19);
-      List<Map> test =await  dbClient.rawQuery(
-      '''
+    String date15 =
+        DateTime.now().subtract(Duration(days: 30)).toString().substring(0, 19);
+    List<Map> test1 = await dbClient.rawQuery('''
       SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
             Preco.*,
-            PedidoPratoUser.*,
-            Pedidos.*
+            PedidoPratoUser.*
       FROM 
-            PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            Prato INNER JOIN PedidoPratoUser ON PedidoPratoUser.idPrato = Prato.idPrato
+            INNER JOIN Preco ON Preco.idPreco = PedidoPratoUser.idPreco
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
             Restaurant.idRest=$idRest AND Pedidos.data>'$date15'
       GROUP BY
-            PedidoPratoUser.idPedido
+            Prato.idPrato, PedidoPratoUser.idPedido
       ORDER BY Pedidos.data DESC
-      '''
-      );
-      Map<int, Pedido> map = new Map<int, Pedido>();
-      for(var i in test){
-        if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.map(i);
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }else{
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }
-      print('maaap --> $map');
-      }
-      List<Pedido> pedidos = new List<Pedido>();
-      map.forEach((k, v) => pedidos.add(v));
-      return pedidos;
+      ''');
+      
+    Map<int, Pedido> map = new Map<int, Pedido>();
 
+    for (var i in test1) {
+      // print('$i\n\n\n');
+      if (!map.containsKey(i['idPedido'])) {
+        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      } else {
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      }
+      print('maaap --> $map');
+    }
+    List<Pedido> pedidos = new List<Pedido>();
+    map.forEach((k, v) => pedidos.add(v));
+    return pedidos;
   }
 
 //não esta completo
-  Future<List<Pedido>> getRelatorio3(int idRest) async{
-    String date1 = DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
+  Future<List<Pedido>> getRelatorio3(int idRest) async {
+    String date1 =
+        DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
     var dbClient = await this.db;
-    List<Map> test1 =await  dbClient.rawQuery(
-      '''
+    List<Map> test1 = await dbClient.rawQuery('''
       SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
             Restaurant.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
             Preco.*,
             PedidoPratoUser.*,
-            Pedidos.*,
             SUM(PedidoPratoUser.quantidade) AS sumQnt,
-            SUM(Pedidos.preco) AS media
+            SUM(Preco.preco) AS media
       FROM 
             PedidoPratoUser INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
-            INNER JOIN Preco ON Preco.idPrato = Prato.idPrato
+            INNER JOIN Preco ON Preco.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
@@ -717,41 +746,43 @@ class DatabaseHelper {
       GROUP BY
             Prato.idPrato
       ORDER BY Pedidos.data DESC
-      '''
-      );
-      print(test1);
+      ''');
+    print(test1);
     Map<int, Pedido> map = new Map<int, Pedido>();
-      for(var i in test1){
-        if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.mapRelatorio(i);
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }else{
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }
-      print('maaap --> $map');
+    for (var i in test1) {
+      if (!map.containsKey(i['idPedido'])) {
+        map[i['idPedido']] = Pedido.mapRelatorio3(i);
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      } else {
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
       }
-      List<Pedido> pedidos = new List<Pedido>();
-      map.forEach((k, v) => pedidos.add(v));
-      return pedidos;
+      print('maaap --> $map');
+    }
+    List<Pedido> pedidos = new List<Pedido>();
+    map.forEach((k, v) => pedidos.add(v));
+    return pedidos;
   }
-
-  
 
   //ok - não testada
   // Pega todos os pedidos do restaurante
   Future<List<Pedido>> getPedidosByRest(int rest) async {
     var dbClient = await this.db;
+
     dynamic test = await dbClient.rawQuery('''
       SELECT 
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
-            Pedidos.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
+            Pedidos.adress,
             Restaurant.*,
             PedidoPratoUser.*,
+            Preco.*,
             User.name AS nameUser,
             User.email AS emailUser,
             User.address AS addressUser,
@@ -762,33 +793,35 @@ class DatabaseHelper {
             INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN User on User.idUser = PedidoPratoUser.idUser
+            INNER JOIN Preco on Preco.idPreco = PedidoPratoUser.idPreco
       WHERE
             Prato.idRest = $rest
       GROUP BY
-            PedidoPratoUser.idPedido
+            Prato.idPrato, PedidoPratoUser.idPedido
+      ORDER BY Pedidos.data DESC
       ''');
     Map<int, Pedido> map = new Map<int, Pedido>();
-      for(var i in test){
-        if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.map(i);
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }else{
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }
-      print('maaap --> $map');
+    for (var i in test) {
+      if (!map.containsKey(i['idPedido'])) {
+        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      } else {
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
       }
-      List<Pedido> pedidos = new List<Pedido>();
-      map.forEach((k, v) => pedidos.add(v));
-      return pedidos;
+      print('maaap --> $map');
+    }
+    List<Pedido> pedidos = new List<Pedido>();
+    map.forEach((k, v) => pedidos.add(v));
+    return pedidos;
   }
 
-  Future<List<Restaurant>> getMaisPedidos() async{
+  Future<List<Restaurant>> getMaisPedidos() async {
     var dbClient = await this.db;
-    String date = DateTime.now().subtract(Duration(days: 1)).toString().substring(0, 19);
-    List<Map> test =await  dbClient.rawQuery(
-      '''
+    String date =
+        DateTime.now().subtract(Duration(days: 1)).toString().substring(0, 19);
+    List<Map> test = await dbClient.rawQuery('''
       SELECT
             Prato.idPrato,
             Prato.name AS namePrato,
@@ -811,10 +844,9 @@ class DatabaseHelper {
       ORDER BY 
             qntPedidoPrato DESC
       LIMIT 5
-      '''
-      );
-      List<Restaurant> rests = transforming(test);
-      return rests;
+      ''');
+    List<Restaurant> rests = transforming(test);
+    return rests;
   }
 
   // ok - nao testada
@@ -973,15 +1005,20 @@ class DatabaseHelper {
   Future<List<Pedido>> getPedidosByUser(int idUser) async {
     var dbClient = await this.db;
     print('id user->$idUser');
+
     List<Map> test = await dbClient.rawQuery('''
       SELECT 
             Prato.idPrato,
             Prato.name AS namePrato,
             Prato.descricao AS descricaoPrato,
             Prato.img AS imgPrato,
-            Pedidos.*,
+            Pedidos.preco AS PrecoTotal,
+            Pedidos.idPedido,
+            Pedidos.data,
+            Pedidos.adress,
             Restaurant.*,
             PedidoPratoUser.*,
+            Preco.*,
             User.name AS nameUser,
             User.email AS emailUser,
             User.address AS addressUser,
@@ -992,30 +1029,30 @@ class DatabaseHelper {
             INNER JOIN Prato ON Prato.idPrato = PedidoPratoUser.idPrato
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN User on User.idUser = PedidoPratoUser.idUser
+            INNER JOIN Preco on Preco.idPreco = PedidoPratoUser.idPreco
       WHERE 
             PedidoPratoUser.idUser = $idUser
       GROUP BY  
-            PedidoPratoUser.idPedido
+            Prato.idPrato, PedidoPratoUser.idPedido
       ORDER BY Pedidos.data DESC
       ''');
-    
-      print('test--> $test');
-      Map<int, Pedido> map = new Map<int, Pedido>();
-      for(var i in test){
-        if(!map.containsKey(i['idPedido'])){
-          map[i['idPedido']] = Pedido.map(i);
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }else{
-          map[i['idPedido']].addPrato(Prato.mapJOIN(i));
-          map[i['idPedido']].addQnt(i['quantidade']);
-        }
-      print('maaap --> $map');
+
+    print('test--> $test');
+    Map<int, Pedido> map = new Map<int, Pedido>();
+    for (var i in test) {
+      if (!map.containsKey(i['idPedido'])) {
+        map[i['idPedido']] = Pedido.mapRelatorio2(i);
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
+      } else {
+        map[i['idPedido']].addPrato(Prato.mapJOIN(i));
+        map[i['idPedido']].addQnt(i['quantidade']);
       }
-      List<Pedido> pedidos = new List<Pedido>();
-      map.forEach((k, v) => pedidos.add(v));
-      return pedidos;
-  
+      print('maaap --> $map');
+    }
+    List<Pedido> pedidos = new List<Pedido>();
+    map.forEach((k, v) => pedidos.add(v));
+    return pedidos;
   }
 
   Future<bool> saveCart(ItemCart c) async {
