@@ -168,10 +168,6 @@ class Control{
     return b;
   }
 
-  Future<void> aaaa() async {
-    await _db.aaa();
-  }
-
   void addPrato(Prato p , int q, int gratis){
     if(isGratis==null){
       isGratis=gratis;

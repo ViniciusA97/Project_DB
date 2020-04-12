@@ -58,6 +58,116 @@ class DatabaseHelper {
     //Prato(idPrato:20 , name: Sopa de batata, preco: 15.6 , idRest:0)
     //Pedidos(idPedido: 1, data: 03/02/2020)
     //PedidoPratoRestUser( idPrato: 20, idRest:0, idUser: 1)
+
+
+    await db.execute('''
+        INSERT INTO User(name, password, email, address, number) values("test","test","test","test","test");
+        ''');
+    await db.execute('''
+          INSERT INTO Restaurant(name, password,image,description,num,address,email,hora_abre, hora_fecha, entregaGratis ) VALUES("Texas","123","https://media-cdn.tripadvisor.com/media/photo-s/16/a2/c7/26/nosso-salao-interno-super.jpg"," Restaunte com comida gostosa","99887766", "Rua Boa vista 33","texas@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          
+          ("Sweet","123","https://media-cdn.tripadvisor.com/media/photo-s/06/37/ca/b7/sweet-garden-cafe-restaurant.jpg", "Restaunte especializado em doces","99887766", "Rua Doceria 43","sweet@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          
+          ("Cafeteria","123","https://image.chavesnamao.com.br/api/view/iK7w62_emrjOv4hgDHFsWnpOxts=/412x400/filters:quality(90)/blog-cnm/2016/09/cafeteria.jpg", "Restaunte especializado em Cafés","99887766", "Rua cafeteria 55","cafeteria@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          
+          ("Hamburgueria","123","https://media-cdn.tripadvisor.com/media/photo-s/12/44/cc/ce/nosso-x-picanha-especial.jpg", "Restaunte especializado em Hamburguer","99887766", "Rua Hamburgueria 99","hamburgueria@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          
+          ("Saladex","123","https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk7X0Aulb0EqkDU0iFG2l8hwYufMEiULM7lTgXTKNijuWtekAW&usqp=CAU"," Restaunte especializado em Salada","99887766", "Rua da salada 67","saladex@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          
+          ("Massa","123","https://abrilvejario.files.wordpress.com/2016/11/massa_ambiente_foto-tomas-rangel-2.jpeg?quality=70&strip=info&w=920", "Restaunte especializado em massas","99887766", "Rua da Massa 13","massa@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",0),
+          
+          ("Pizzaria","123","https://img.stpu.com.br/?img=https://s3.amazonaws.com/pu-mgr/default/a0RG000000jZ3P9MAK/5a2fd72de4b0b6c56629e7ae.jpg&w=710&h=462", "Restaunte especializado em pizza","99887766", "Rua da pizza 233","pizzaria@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          
+          ("Choperia","123","https://i.ytimg.com/vi/_bzHBzwWu6U/maxresdefault.jpg", "Restaunte especializado em chopp","99887766", "Rua da embreagues 233","chopp@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1),
+          
+          ("Japones","123","https://media-cdn.tripadvisor.com/media/photo-s/03/a2/90/81/restaurante-japones-dao.jpg", "Restaunte especializado em comida japonesa","99887766", "Rua do japinha 233","japa@gmail.com","2020-04-10 00:00:00.000","2020-04-10 19:00:00.000",1);    
+    
+    ''');
+
+    await db.execute('''
+        INSERT INTO Prato (name,descricao, idRest,img) 
+        VALUES("Carne com fritas", "Carne de sol com batatas fritas acompanhado de alface e cebola",1,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQAorAZWxXo6QEiwrkpMcF0Fu5xT8uE8gfQYJIL6Ly78mqHj6ZD&usqp=CAU"),
+        ("Frango a passarinha", "Frango a passarinha frita com alho e temperos",1,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS5FRxlIuWAmwjwdF2oxoaNIkqTzWXkj7QLVNRvFsXlckBPw0fI&usqp=CAU"),
+        ("Calabresa acebolada", "Calabresa frita com cebolas",1,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSs1iSmt2rup6TsGu-DyantOxNgWgerY9hLzbIojGi3rn6dKKJS&usqp=CAU"),
+        ("Caldinho de feijão", "Caldinho de feijão com ovo de codorna e torresmo frito",1,"https://i.ytimg.com/vi/EZxg3fihC94/maxresdefault.jpg"),
+        ("Torta alemã", "Fatia média de torta alemã",2,"https://p2.trrsf.com/image/fget/cf/940/0/images.terra.com/2018/08/09/tortaholandesa.jpg"),
+        ("Bolo de morango", "Fatia média de bolo de morgano",2,"https://p2.trrsf.com/image/fget/cf/800/450/middle/images.terra.com/2017/12/18/morangosnobolo.jpg"),
+        ("MilkShake", "Milkshake de varios sabores",2,"https://p2.trrsf.com/image/fget/cf/940/0/images.terra.com/2018/07/31/milk-shake-de-caramelo.jpg"),
+        ("Brownie", "Brownie",2,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQaugzWOwni7C3eAbn3YhbEu7VjMkdEJWJhGEnRfdyPWbbXwo5f&usqp=CAU"),
+        ("Café expresso", "Cafe expresso sem açucar",3,"https://upload.wikimedia.org/wikipedia/commons/2/23/Captura_de_Tela_2017-08-30_%C3%A0s_23.42.42.png"),
+        ("Cappuccino", "Cappuccino",3,"https://img.elo7.com.br/product/zoom/2539449/painel-adesivo-cappuccino-cafe-expresso-leite-p-comercio-hd-adesivo-mercadinho.jpg"),
+        ("Café com leite", "Café com leite",3,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ5lcLCyGYrq3SmKMfJTJ2UvB1E0EJK6Qv5Q8QVXefuiPGcqLEv&usqp=CAU"),
+        ("Café com chantilly", "Café delicioso com chantilly por cima",3,"https://abrilmdemulher.files.wordpress.com/2016/10/receita-frape-de-cafe-com-chantilly.jpg?quality=90&strip=info&w=620&h=372&crop=1"),
+        ("X-Tudo", "X-Tudo com tudo que temos direito",4,"https://media-cdn.tripadvisor.com/media/photo-s/0b/ed/c8/10/x-tudo.jpg"),
+        ("X-Baccon", "X-Baccon com bastante baccon e queijo chedar",4,"https://prazeresdamesa.uol.com.br/wp-content/uploads/2018/08/x-bacon-cl%C3%A1ssico-1-411x405.jpeg"),
+        ("Beirute", "Delicioso sanduba de tradição indiana",4,"https://www.receitasnestle.com.br/images/default-source/recipes/beirute-de-carne_alta.jpg"),
+        ("Misto quente", "Misto feito na chapa",4,"https://t1.uc.ltmcdn.com/pt/images/4/6/0/img_como_fazer_um_misto_quente_24064_orig.jpg"),
+        ("Salada de rabanete", "Salada de rabanete",5,"https://img.cybercook.com.br/receitas/145/salada-de-rabanete-600x600.jpeg"),
+        ("Salada de Frutas","Saladas de frutas com grande variações de fruta",5,"https://img.cybercook.com.br/receitas/84/salada-de-frutas-2-623x350.jpeg"),
+        ("Salada de Atum","Saladas de verduras com atum",5,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTKZnRcD2Qw_tHYSMfcVW1LYHfF2m0pq1xXEVx1I6R4R4sGlgA5&usqp=CAU"),
+        ("Salada de grão de bico","Saladas de verduras com grão de bico",5,"https://abrilmdemulher.files.wordpress.com/2016/10/receita-salada-de-grao-de-bico-cenoura-e-batata.jpg?quality=90&strip=info&w=620&h=372&crop=1"),
+        ("Massa com espinafre","Massa acompanhada de molho de espinafre",6,"https://img.cybercook.com.br/receitas/460/massa-com-espinafre-2-623x350.jpeg"),
+        ("Massa com camarão","Massa acompanhada de camarão e molho de tomate",6,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ8lbje3aat-9p2Tmy4Qzxr3-ZU3VQBsTQ1DYHPTfQlgKHa9Cvl&usqp=CAU"),
+        ("Carbonara","Massa com guanchale, queijo e ovo",6,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRCf3ZJ0ns6CegDANhzHiQtP3agLC8AbZEJRev7mREAsI9fxeK1&usqp=CAU"),
+        ("Lasanha a bolonhesa","Lasanha a bolonhesa",6,"https://static.carrefour.com.br/imagens/chef-carrefour/imagem-receita/lasanha-a-bolonhesa.jpg"),
+        ("Pizza de calabresa","Pizza feita com calabresa, molho de tomate e cebola",7,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTier13YV8zQMO01gFk-QgLqbZfAWhgMXL9UCCeC_U6DDluCDBY&usqp=CAU"),
+        ("Pizza de frango com catupiry","Pizza feita com frango e catupiry",7,"https://s2.glbimg.com/ZBsYqDj_hRSeBwLhppilEg3JwfM=/696x390/smart/filters:cover():strip_icc()/s.glbimg.com/po/rc/media/2012/06/13/14/31/15/151/2607201005261284043239.jpg"),
+        ("Pizza Portuguesa","Pizza portuguesa",7,"https://img.itdg.com.br/tdg/images/recipes/000/062/161/14806/14806_original.jpg?mode=crop&width=710&height=400"),
+        ("Pizza 4 queijos","Pizza feita com 4 tipos de queijo",7,"https://img.cybercook.com.br/receitas/550/pizza-pan-4-queijos-2-623x350.png"),
+        ("Chopp Bhrama","Copo de 900 ml de Chopp",8,"https://img.stpu.com.br/?img=https://s3.amazonaws.com/pu-mgr/default/a0R0f00000srGC2EAM/5c94cc58e4b0d52543352dd8.jpg&w=710&h=462"),
+        ("Cerveja artesanal Musa","Garrafa de cerveja artesanal puro malte Musa",8,"https://www.lojinhauai.com/image/cache/catalog/Fotos/cerveja-artesanal-pilsen-puro-malte-musa-600x600.jpg"),
+        ("Cerveja artesanal Bil Bil","Garrafa de cerveja artesanal Bil bil",8,"https://cdn.awsli.com.br/600x450/874/874479/produto/40947775/17757e888d.jpg"),
+        ("Chopp Heineken","Caneca de 900 ml do chopp Heineken",8,"https://img.elo7.com.br/product/zoom/270BC13/caneca-chopp-bristol-heineken-barato.jpg"),
+        ("Temaki","Temaki de kani",9,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRZd4LJ6WfWfTZCoeoufHxs0KfI_upyla-3HVuWuJnMsOsSvXdm&usqp=CAU"),
+        ("Niguri","8 unidades de niguri de salmão",9,"https://cdn.neemo.com.br/uploads/item/photo/2405/prod15_original.jpg"),
+        ("Sushi california hot holl","4 unidades de sushi empanado de salmão",9,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRcN4iceS3-9bVrj0hIAvmbTEA7s5lXXLB7Oj8U4Bqwyt7NDKYT&usqp=CAU"),
+        ("Ceviche","Peixe cru com cebola roxa ao molho de pimenta e limão",9,"https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQm4pvW2aoXGOg2_V03TDdrEqCXnGB6nVtVRT8TwSGGX8KkD72c&usqp=CAU");
+    
+    ''');
+
+    await db.execute('''
+                INSERT INTO Preco(preco,date,idPrato)
+                VALUES(15.90, "2020-04-10 10:00:00", 1),
+                (12.90, "2020-04-10 10:00:00", 2),
+                (15.90, "2020-04-10 10:00:00", 3),
+                (18.90, "2020-04-10 10:00:00", 4),
+                (18.90, "2020-04-10 10:00:00", 5),
+                (4.90, "2020-04-10 10:00:00", 6),
+                (6.90, "2020-04-10 10:00:00", 7),
+                (9.90, "2020-04-10 10:00:00", 8),
+                (3.90, "2020-04-10 10:00:00", 9),
+                (3.90, "2020-04-10 10:00:00", 10),
+                (6.90, "2020-04-10 10:00:00", 10),
+                (4.00, "2020-04-10 10:00:00", 11),
+                (8.90, "2020-04-10 10:00:00", 12),
+                (15.90, "2020-04-10 10:00:00", 13),
+                (16.99, "2020-04-10 10:00:00", 14),
+                (20.90, "2020-04-10 10:00:00", 15),
+                (6.00, "2020-04-10 10:00:00", 16),
+                (7.50, "2020-04-10 10:00:00", 17),
+                (6.50, "2020-04-10 10:00:00", 18),
+                (9.99, "2020-04-10 10:00:00", 19),
+                (9.99, "2020-04-10 10:00:00", 20),
+                (12.90, "2020-04-10 10:00:00", 21),
+                (18.20, "2020-04-10 10:00:00", 22),
+                (15.60, "2020-04-10 10:00:00", 23),
+                (11.00, "2020-04-10 10:00:00", 24),
+                (19.90, "2020-04-10 10:00:00", 25),
+                (17.80, "2020-04-10 10:00:00", 26),
+                (21.99, "2020-04-10 10:00:00", 27),
+                (24.60, "2020-04-10 10:00:00", 28),
+                (7.99, "2020-04-10 10:00:00", 29),
+                (12.00, "2020-04-10 10:00:00", 30),
+                (11.99, "2020-04-10 10:00:00", 31),
+                (9.99, "2020-04-10 10:00:00", 32),
+                (8.99, "2020-04-10 10:00:00", 33),
+                (9.99, "2020-04-10 10:00:00", 34),
+                (8.99, "2020-04-10 10:00:00", 35),
+                (9.99, "2020-04-10 10:00:00", 36);
+
+    ''');
+
+
   }
 
 //insertion
@@ -721,7 +831,7 @@ class DatabaseHelper {
             INNER JOIN Restaurant ON Restaurant.idRest = Prato.idRest
             INNER JOIN Pedidos ON Pedidos.idPedido = PedidoPratoUser.idPedido
       WHERE
-            Restaurant.idRest=$idRest AND Pedidos.data>'$date1'
+            Restaurant.idRest=${rest.id} AND Pedidos.data>'$date1'
       GROUP BY
             Prato.idPrato
       ORDER BY Pedidos.data DESC
@@ -729,8 +839,13 @@ class DatabaseHelper {
 
     print(test1);
 
+
+
     Map<int, Pedido> map = new Map<int, Pedido>();
     for (var i in test1) {
+
+      print('\n\n\n$i\n\n\n');
+
       if (!map.containsKey(i['idPedido'])) {
         map[i['idPedido']] = Pedido.mapRelatorio3(i);
         map[i['idPedido']].addPrato(Prato.mapJOIN(i));
