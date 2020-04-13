@@ -43,10 +43,12 @@ class CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scafolldKey,
-      body: Column(
-        children: <Widget>[
-          page(),
-        ],
+      body: SingleChildScrollView(
+              child: Column(
+          children: <Widget>[
+            page(),
+          ],
+        ),
       ),
     );
   }

@@ -106,8 +106,8 @@ class _RestPlateState extends State<RestPlate> {
                   Padding(
                     padding: EdgeInsets.only(top: 40),
                   ),
+
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
                         '${this._prato.name}',
@@ -122,7 +122,8 @@ class _RestPlateState extends State<RestPlate> {
                           chageName();
                         },
                         child: Icon(Icons.mode_edit),
-                      )
+                      ),
+
                     ],
                   ),
                   Padding(
@@ -132,19 +133,26 @@ class _RestPlateState extends State<RestPlate> {
                     padding: EdgeInsets.only(top: 10),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text('${this._prato.descricao}',
+                      SizedBox(
+                        width: 300,
+                        child: Text(
+                          '${this._prato.descricao}',
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 15.0,
-                          )),
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                       FlatButton(
                         onPressed: () {
                           chageDesc();
                         },
                         child: Icon(Icons.mode_edit),
-                      )
+                      ),
                     ],
                   ),
                   Padding(

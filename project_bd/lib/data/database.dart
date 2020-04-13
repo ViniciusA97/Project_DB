@@ -591,6 +591,7 @@ class DatabaseHelper {
       test[0];
       List<Prato> cardapio = new List<Prato>();
       for (var i in test) {
+        print(i);
         cardapio.add(Prato.map(i));
       }
 
@@ -613,8 +614,7 @@ class DatabaseHelper {
               Prato.name AS namePrato,
               Prato.descricao AS descricaoPrato,
               Prato.img AS imgPrato,
-              Preco.idPreco,
-              Preco.preco,
+              Preco.*,
               AVG(Preco.preco) AS mediaPreco
           FROM 
               Preco
@@ -629,6 +629,9 @@ class DatabaseHelper {
                 Preco.preco <= mediaPreco/2
       ''');
     print(' -->$response');
+
+    
+
     List<Restaurant> rest = transforming(response);
     return rest;
   }
@@ -959,7 +962,7 @@ class DatabaseHelper {
       WHERE
             Pedidos.data>'$date' 
       GROUP BY
-            Prato.idPrato
+            Restaurant.idRest
       ORDER BY 
             qntPedidoPrato DESC
       LIMIT 5
