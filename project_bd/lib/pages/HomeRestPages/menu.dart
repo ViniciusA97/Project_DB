@@ -5,7 +5,8 @@ import 'package:project_bd/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_bd/data/database.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:project_bd/pages/HomeRestPages/reports.dart';
+import 'package:project_bd/pages/HomeRestPages/reportsPage.dart';
+import 'package:project_bd/pages/HomeRestPages/secondReport.dart';
 
 class Menu extends StatefulWidget {
 
@@ -113,7 +114,7 @@ class _MenuState extends State<Menu> {
                   ),
                   MaterialButton(
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => Report(_restaurant)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ReportsPage(_restaurant)));
                     },
                     child: Row(
                       children: <Widget>[
@@ -178,8 +179,8 @@ class _MenuState extends State<Menu> {
               color: Color(0xff38ad53),
               onPressed: (){
                 setState(() {
-                  this._restaurant.setEntrega(2);
-                  saveDeliveryType(2);
+                  this._restaurant.setEntrega(0);
+                  saveDeliveryType(0);
                 });
                 Navigator.pop(context);
               },

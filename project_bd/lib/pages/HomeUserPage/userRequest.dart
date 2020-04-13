@@ -3,6 +3,7 @@ import 'package:project_bd/Model/pedidos.dart';
 import 'package:project_bd/Model/user.dart';
 import 'package:project_bd/constants.dart';
 import 'package:project_bd/Control/Control.dart';
+import 'package:intl/intl.dart';
 
 class Requests extends StatefulWidget {
 
@@ -36,6 +37,43 @@ class _RequestsState extends State<Requests> {
         this._pedidos = onValue;
       });
     });
+  }
+
+  void sortPedidos(){
+    this._pedidos.sort();
+  }
+
+  Widget setupAlertDialoadContainer(Pedido p) {
+    return Container(
+      height: 300.0, // Change as per your requirement
+      width: 300.0, // Change as per your requirement
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: 250.0, // Change as per your requirement
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: p.prato.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text('${p.qnt[index]}x  ${p.prato[index].name}'),
+                  subtitle: Text("R\$ ${(p.prato[index].preco.preco).toStringAsFixed(2)}"),
+                );
+              },
+            ),
+          ),
+          MaterialButton(
+            height: 20,
+            minWidth: 100,
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            child: Text('Voltar', style: TextStyle(fontSize: 16, color: Colors.green),
+          ),)
+
+        ],
+      ),
+    );
   }
 
   @override
@@ -78,23 +116,56 @@ class _RequestsState extends State<Requests> {
       return (Center(child: Text('Nenhum pedido realizado')));
     } else {
       return ListView.builder(
-        reverse: true,
         itemCount: _pedidos.length,
         itemBuilder: (BuildContext cntx, int index) {
-          return Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20), color: Colors.white),
-            child: Column(
-              children: <Widget>[
-                Row(
+          return Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                height: 230,
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20),
+                color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Numero do Pedido: ${this._pedidos[index].idPedido}'),
-                    Text('Preço: ${this._pedidos[index].preco}'),
+                    //Icon(Icons.check_circle_outline, color: Color(0xff38ad53),),
+                    Padding(padding: EdgeInsets.only(bottom:5),),
+                    Text('${this._pedidos[index].rest.name}', style: TextStyle(fontSize: 20, color: Colors.black,  fontWeight: FontWeight.bold)),
+                    Padding(padding: EdgeInsets.only(bottom:5),),
+                    Text('${DateFormat('dd/MM/yyyy - kk:mm').format(this._pedidos[index].data)}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
+                    Padding(padding: EdgeInsets.only(bottom:5),),
+                    Text('Pedido nº ${this._pedidos[index].idPedido}', style: TextStyle(fontSize: 15, color: Colors.grey,)),
+                    Padding(padding: EdgeInsets.only(bottom:10),),
+                    Divider(color: Colors.grey),
+                    Padding(padding: EdgeInsets.only(bottom:7),),
+                    Text('Entregue em: ${this._pedidos[index].adress}', style: TextStyle(fontSize: 12, color: Colors.grey,)),                    
+                    Padding(padding: EdgeInsets.only(bottom:5),),
+                    Text('Total R\$ ${(this._pedidos[index].preco).toStringAsFixed(2)}', style: TextStyle(fontSize: 15, color: Colors.black,)),
+                    Padding(padding: EdgeInsets.only(bottom:7),),
+                    Center(
+                      child: MaterialButton(
+                        height: 20,
+                        minWidth: 100,
+                        onPressed: (){
+                          print(this._pedidos[index].prato);
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                            return AlertDialog(
+                                title: Text('ITENS', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold)),
+                                content: setupAlertDialoadContainer(this._pedidos[index]),
+                            );
+                            }
+                          );
+                        },
+                        child: Text('Ver recibo', style: TextStyle(fontSize: 13, color: Color(0xff38ad53)),),
+                      ),
+                    )
                   ],
                 ),
-                Text('Data: ${this._pedidos[index].data}')
-              ],
-            ),
+              ),
+              Padding(padding: EdgeInsets.only(bottom:20),),
+            ],
           );
         },
       );

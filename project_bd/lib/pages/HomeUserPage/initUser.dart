@@ -16,7 +16,6 @@ class InitUser extends StatefulWidget {
 class _InitUserState extends State<InitUser> {
   _InitUserState(this._user);
 
-  //TODO: Adicionar as páginas da sacola e dos pedidos
 
   final scaffolKey = GlobalKey<ScaffoldState>();
   User _user;

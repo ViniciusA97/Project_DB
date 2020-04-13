@@ -12,8 +12,6 @@ class Pedido{
   List<int> _qnt = new List<int>();
   DateTime _data;
   double _precoTotal;
-  double _precoMedio;
-  String _adress;
 
   addPrato(Prato p){
     this._prato.add(p);
@@ -22,33 +20,14 @@ class Pedido{
     this._qnt.add(i);
   }
 
-  Pedido(this._prato,this._user, this._qnt, this._adress);
-
-  Pedido.map2(dynamic obj){
-    _user = User.mapJOIN(obj);
-    _rest = Restaurant.map(obj);
-    _data = DateTime.parse(obj['data']);
-    _idPedido = obj['idPedido'];
-    _precoTotal = obj['preco'];
-    _adress = obj['adress'];
-  }
+  Pedido(this._prato,this._user, this._qnt);
 
   Pedido.map(dynamic obj){
     _user = User.mapJOIN(obj);
     _rest = Restaurant.map(obj);
     _data = DateTime.parse(obj['data']);
     _idPedido = obj['idPedido'];
-    _precoTotal = obj['precoTotal'];
-    _adress = obj['adress'];
-  }
-
-  Pedido.mapRelatorio(dynamic obj){
-    _user = User.mapJOIN(obj);
-    _rest = Restaurant.map(obj);
-    _data = DateTime.parse(obj['data']);
-    _idPedido = obj['idPedido'];
-    _precoTotal = obj['media']/obj['sumQnt'];
-    _adress = obj['adress'];
+    _precoTotal = obj['preco'];
   }
 
   Map<String, dynamic> getMap(){
@@ -67,8 +46,6 @@ class Pedido{
   DateTime get data=> this._data;
   double get preco => this._precoTotal;
   List<int> get qnt => this._qnt;
-  String get adress => this._adress;
 
   void setUser(User user) => this._user = user;
-  void addIntoPratos(Prato p) => this._prato.add(p);
 }

@@ -30,6 +30,7 @@ class _InitRestState extends State<InitRest> {
 
   //variaveis para criar categorias
   String name;
+  int point;
   String img;
 
   //variaveis utilizadas no AnimedContainer
@@ -523,14 +524,31 @@ class _InitRestState extends State<InitRest> {
               child: ListView.builder(
                 itemCount: this._allCategories.length,
                 itemBuilder: (BuildContext cntx, int index) {
-                  if (this._categories == null) {
+                  if (this._allCategories == null) {
                     return Center(
                       child: Text('Sem categorias cadastradas'),
                     );
                   }
                   return RawMaterialButton(
                     onPressed: () {
-                      addCategories(index);
+                      point = index;
+                      _addCategories();
+                      setState(() {
+                  isSubindo = false;
+                  x = 0;
+                  this._search = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                  this._create = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                  tab = Container(
+                    height: 0,
+                    width: 0,
+                  );
+                });
                     },
                     child: Container(
                       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -605,13 +623,18 @@ class _InitRestState extends State<InitRest> {
         keyState.save();
       });
       var db = DatabaseHelper.internal();
-      Categories cat = await db.saveCategoria(name, img);
-      db.saveRelacionCatRest(this._rest.id, cat.id);
-      List<Categories> list = await db.getCategorieByIdRest(this._rest.id);
-      setState(() {
-        this._categories = list;
-        x = 0;
-      });
+      try{
+        await db.saveCategoria(name, img,this._rest.id);
+        
+        List<Categories> list = await db.getCategorieByIdRest(this._rest.id);
+        print(list);
+        setState(() {
+          this._categories = list;
+          x = 0;
+        });
+      }catch(a){
+
+      }
     }
   }
 
@@ -659,16 +682,25 @@ class _InitRestState extends State<InitRest> {
     });
   }
 
-  void addCategories(int index) async {
-    Categories cat = this._allCategories[index];
+  void _addCategories() async {
+    Categories cat = this._allCategories[point];
+    print(cat);
     DatabaseHelper db = DatabaseHelper.internal();
-    await db.saveRelacionCatRest(this._rest.id, cat.id).catchError(() {
-      _showSnackBar('Não foi possivel adicionar a categoria ao restaurante.');
-    }).then((onValue) {
-      this.setState(() {
-        this._categories.add(this._allCategories[index]);
+    try{
+      await db.saveRelacionCatRest(this._rest.id, cat.id);
+      setState(() {
+        if(this._categories==null || this._categories.isEmpty){
+          this._categories = new List<Categories>();
+        }
+        this._categories.add(cat);
+        
       });
-    });
+
+    }catch(ee){
+
+    }
+
+    
   }
 
   String hourFunc(){

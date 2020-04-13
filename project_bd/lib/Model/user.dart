@@ -35,6 +35,8 @@ class User implements Client{
   String get address => _address;
   String get celNumber => _celNumber;
 
+  void setAdress(String adress) => this._address = adress;
+  
   Map<String, dynamic> toMap() {
     var map = new Map<String, dynamic>();
     map['id'] = _id;

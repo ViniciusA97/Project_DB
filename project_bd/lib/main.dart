@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:project_bd/pages/login/loginPage.dart';
 
 void main()=> runApp(MyApp());
@@ -7,7 +8,10 @@ class MyApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent, statusBarIconBrightness: Brightness.dark));
+
     Map<int, Color> color =
     {
       50:Color.fromRGBO(0,0,0, .1),

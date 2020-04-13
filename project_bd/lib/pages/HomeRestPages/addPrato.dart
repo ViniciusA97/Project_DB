@@ -6,7 +6,6 @@ import 'package:project_bd/Model/Preco.dart';
 import 'package:project_bd/Model/pratos.dart';
 import 'package:project_bd/Model/restaurant.dart';
 import 'package:project_bd/constants.dart';
-import 'package:project_bd/data/database.dart';
 
 import 'HomeRestPage.dart';
 
@@ -52,30 +51,36 @@ class _AddPratoState extends State<AddPrato> {
                     'Adicionar Prato',
                     style: kTextTitle.copyWith(fontSize: 20.0),
                   ),
-                  Padding(padding: EdgeInsets.only(top: 40),),
+                  Padding(
+                    padding: EdgeInsets.only(top: 40),
+                  ),
                   Form(
                     key: formKey,
                     child: Container(
                       child: Column(
                         children: <Widget>[
                           TextFormField(
-                            decoration: kTextFieldDecoraction.copyWith(hintText: "Nome do prato"),
+                            decoration: kTextFieldDecoraction.copyWith(
+                                hintText: "Nome do prato"),
                             onSaved: (val) => name = val,
                           ),
                           Padding(padding: EdgeInsets.only(top: 5)),
                           TextFormField(
                             keyboardType: TextInputType.number,
-                            decoration: kTextFieldDecoraction.copyWith(hintText: "Preço"),
+                            decoration: kTextFieldDecoraction.copyWith(
+                                hintText: "Preço"),
                             onSaved: (val) => precoValue = double.parse(val),
                           ),
                           Padding(padding: EdgeInsets.only(top: 5)),
                           TextFormField(
-                            decoration: kTextFieldDecoraction.copyWith(hintText: "URL da imagem"),
+                            decoration: kTextFieldDecoraction.copyWith(
+                                hintText: "URL da imagem"),
                             onSaved: (val) => img = val,
                           ),
                           Padding(padding: EdgeInsets.only(top: 5)),
                           TextFormField(
-                            decoration: kTextFieldDecoraction.copyWith(hintText: "Descrição"),
+                            decoration: kTextFieldDecoraction.copyWith(
+                                hintText: "Descrição"),
                             onSaved: (val) => descricao = val,
                           ),
                           Padding(padding: EdgeInsets.only(top: 20)),
@@ -92,11 +97,12 @@ class _AddPratoState extends State<AddPrato> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                              Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0)),
+                              Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 5, 0, 0)),
                               RaisedButton(
                                 color: Color(0xff38ad53),
                                 onPressed: () {
-                                    Navigator.pop(context);
+                                  Navigator.pop(context);
                                 },
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
@@ -147,6 +153,7 @@ class _AddPratoState extends State<AddPrato> {
     bool response = await control.savePrato(prato);
     if (response) {
       Restaurant res = await control.getRestByIdRest(prato.idRest);
+      Navigator.pop(context);
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => RestPage(res)));
     } else {
