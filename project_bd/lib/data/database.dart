@@ -42,7 +42,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE Restaurant(idRest INTEGER  PRIMARY KEY, name TEXT UNIQUE, password TEXT, numPedidos INTEGER, image VARCHAR, description VARCHAR, num TEXT, email TEXT UNIQUE, address TEXT, hora_abre SMALLDATETIME, hora_fecha SMALLDATETIME, entregaGratis INTEGER);");
     await db.execute(
-        "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, name TEXT, descricao TEXT,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
+        "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, active INTEGER DEFAULT 1, name TEXT, descricao TEXT,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
         'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
     await db.execute(
@@ -261,14 +261,38 @@ class DatabaseHelper {
 
   Future<void> updateEntrega(Restaurant res, int a) async {
     var dbClient = await db;
-    // Usei update pq já inicializo com 0 no cadastro
-    // entrega é inteiro 1 - gratis 2 - rapida  0 - não definida
     await dbClient.rawUpdate('''
       UPDATE Restaurant
       SET entregaGratis=?
       WHERE Restaurant.idRest=?
       ''', [a, res.id]);
     // res.setEntrega(a);
+  }
+
+  Future<void> changeNamePlate(int id, String name) async{
+    var dbClient = await db;
+    await dbClient.rawUpdate('''
+      UPDATE Prato
+      SET name='$name'
+      WHERE Prato.idPrato=$id
+      ''');
+  }
+
+  Future<void> changeDescPlate(int id, String desc) async{
+    var dbClient = await db;
+    await dbClient.rawUpdate('''
+      UPDATE Prato
+      SET descricao='$desc'
+      WHERE Prato.idPrato=$id
+      ''');
+  }
+  Future<void> changeImgPlate(int id, String img) async{
+    var dbClient = await db;
+    await dbClient.rawUpdate('''
+      UPDATE Prato
+      SET img='$img'
+      WHERE Prato.idPrato=$id
+      ''');
   }
 
   Future<Categories> saveCategoria(String name, String img) async {
@@ -555,7 +579,7 @@ class DatabaseHelper {
       FROM 
             Prato LEFT JOIN Preco ON Preco.idPrato = Prato.idPrato
       WHERE 
-            Prato.idRest=?
+            Prato.idRest=? AND Prato.active=1
       GROUP BY Prato.idPrato
             ''', [idRest]);
     try {
@@ -808,7 +832,6 @@ class DatabaseHelper {
     return pedidos;
   }
 
-//não esta completo
   Future<List<Prato>> getRelatorio3(int idRest) async {
     String date1 =
         DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 19);
@@ -938,6 +961,16 @@ class DatabaseHelper {
       ''');
     List<Restaurant> rests = transforming(test);
     return rests;
+  }
+
+  void deletePlate(int id)async{
+   var dbClient = await db;
+    dbClient.rawUpdate('''
+        UPDATE Prato
+        SET active=0
+        WHERE Prato.idPrato = $id
+        ''');
+
   }
 
   // ok - nao testada

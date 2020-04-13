@@ -7,7 +7,6 @@ import 'HomeRestPage.dart';
 import 'package:project_bd/Model/restaurant.dart';
 
 class RestPlate extends StatefulWidget {
-
   final Prato _prato;
   RestPlate(this._prato);
 
@@ -16,10 +15,12 @@ class RestPlate extends StatefulWidget {
 }
 
 class _RestPlateState extends State<RestPlate> {
-
   final Prato _prato;
   _RestPlateState(this._prato);
   double precoV;
+  String name;
+  String image;
+  String desc;
   final formKey = new GlobalKey<FormState>();
 
   @override
@@ -77,7 +78,7 @@ class _RestPlateState extends State<RestPlate> {
               padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
               margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.7,
+              height: MediaQuery.of(context).size.height * 0.9,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(20),
@@ -88,25 +89,41 @@ class _RestPlateState extends State<RestPlate> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    child: Image.network(
-                      '${this._prato.img}',
-                      fit: BoxFit.fill,
-                      height: MediaQuery.of(context).size.height * 0.35,
-                      width: MediaQuery.of(context).size.width,
+                  RawMaterialButton(
+                    onPressed: () {
+                      chageImage();
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: Image.network(
+                        '${this._prato.img}',
+                        fit: BoxFit.fill,
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        width: MediaQuery.of(context).size.width,
+                      ),
                     ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 40),
                   ),
-                  Text(
-                    '${this._prato.name}',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.grey.shade800,
-                      fontWeight: FontWeight.w500,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        '${this._prato.name}',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.grey.shade800,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      FlatButton(
+                        onPressed: () {
+                          chageName();
+                        },
+                        child: Icon(Icons.mode_edit),
+                      )
+                    ],
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
@@ -114,11 +131,22 @@ class _RestPlateState extends State<RestPlate> {
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
-                  Text('${this._prato.descricao}',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 15.0,
-                      )),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('${this._prato.descricao}',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15.0,
+                          )),
+                      FlatButton(
+                        onPressed: () {
+                          chageDesc();
+                        },
+                        child: Icon(Icons.mode_edit),
+                      )
+                    ],
+                  ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                   ),
@@ -130,7 +158,8 @@ class _RestPlateState extends State<RestPlate> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.15),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -152,6 +181,23 @@ class _RestPlateState extends State<RestPlate> {
                           });
                         },
                       ),
+                      RawMaterialButton(
+                        child: Text(
+                          'Deletar Prato',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        elevation: 6.0,
+                        constraints:
+                            BoxConstraints.tightFor(width: 130.0, height: 50.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        fillColor: Color(0xff38ad53),
+                        onPressed: () {
+                          setState(() {
+                            deletePlate();
+                          });
+                        },
+                      ),
                     ],
                   ),
                 ],
@@ -166,7 +212,9 @@ class _RestPlateState extends State<RestPlate> {
   void chagePrice(context) {
     showModalBottomSheet(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20)),
       ),
       context: context,
       builder: (context) => Container(
@@ -231,7 +279,248 @@ class _RestPlateState extends State<RestPlate> {
     );
   }
 
-  void _updatePrice() async{
+  void chageName() {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) => Container(
+        margin: EdgeInsets.only(left: 50.0, right: 50.0),
+        width: MediaQuery.of(context).size.width,
+        height: 180,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Form(
+              key: formKey,
+              child: TextFormField(
+                decoration:
+                    kTextFieldDecoraction.copyWith(hintText: "Novo nome"),
+                onSaved: (val) => name = val,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  color: Color(0xff38ad53),
+                  onPressed: () {
+                    setState(() {
+                      final form = formKey.currentState;
+                      if (form.validate()) {
+                        setState(() {
+                          form.save();
+                        });
+                      }
+                      try {
+                        Control control = Control();
+                        control.changePlateName(this._prato.idPrato, name);
+                        this._prato.setNome(name);
+                        Navigator.pop(context);
+                      } catch (err) {}
+                    });
+                  },
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                RaisedButton(
+                  color: Color(0xff38ad53),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void chageDesc() {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) => Container(
+        margin: EdgeInsets.only(left: 50.0, right: 50.0),
+        width: MediaQuery.of(context).size.width,
+        height: 180,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Form(
+              key: formKey,
+              child: TextFormField(
+                decoration:
+                    kTextFieldDecoraction.copyWith(hintText: "Nova descrição"),
+                onSaved: (val) => desc = val,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  color: Color(0xff38ad53),
+                  onPressed: () {
+                    setState(() {
+                      final form = formKey.currentState;
+                      if (form.validate()) {
+                        setState(() {
+                          form.save();
+                        });
+                      }
+                      try {
+                        Control control = Control();
+                        control.changePlateDescription(
+                            this._prato.idPrato, desc);
+                        this._prato.setDesc(desc);
+                        Navigator.pop(context);
+                      } catch (err) {}
+                    });
+                  },
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                RaisedButton(
+                  color: Color(0xff38ad53),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void chageImage() {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) => Container(
+        margin: EdgeInsets.only(left: 50.0, right: 50.0),
+        width: MediaQuery.of(context).size.width,
+        height: 180,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Form(
+              key: formKey,
+              child: TextFormField(
+                decoration:
+                    kTextFieldDecoraction.copyWith(hintText: "Nova imagem"),
+                onSaved: (val) => name = val,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RaisedButton(
+                  color: Color(0xff38ad53),
+                  onPressed: () {
+                    setState(() {
+                      final form = formKey.currentState;
+                      if (form.validate()) {
+                        setState(() {
+                          form.save();
+                        });
+                      }
+                      Control control = Control();
+                      try {
+                        control.changePlateImage(this._prato.idPrato, image);
+                        this._prato.setImg(image);
+                        Navigator.pop(context);
+                      } catch (err) {}
+                    });
+                  },
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                RaisedButton(
+                  color: Color(0xff38ad53),
+                  onPressed: () {
+                    setState(() {
+                      Navigator.pop(context);
+                    });
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void deletePlate() async {
+    Control control = Control();
+    await control.deletePlate(this._prato.idPrato);
+    Navigator.pop(context);
+  }
+
+  void _updatePrice() async {
     final form = formKey.currentState;
     if (form.validate()) {
       setState(() {
