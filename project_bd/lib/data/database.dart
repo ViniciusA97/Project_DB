@@ -44,7 +44,7 @@ class DatabaseHelper {
     await db.execute(
         "CREATE TABLE Prato(idPrato INTEGER  PRIMARY KEY, active INTEGER DEFAULT 1, name TEXT, descricao TEXT,img VARCHAR, idRest INT NOT NULL, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest));");
     await db.execute(
-        'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR, image VARCHAR)');
+        'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR UNIQUE, image VARCHAR)');
     await db.execute(
         'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria INTEGER, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
     await db.execute(
@@ -295,27 +295,31 @@ class DatabaseHelper {
       ''');
   }
 
-  Future<Categories> saveCategoria(String name, String img) async {
+  Future<void> saveCategoria(String name, String img, int id) async {
     var dbClient = await db;
-    dbClient.rawInsert(
+    try{
+     
+     await dbClient.rawInsert(
         'INSERT INTO Categoria(name, image) VALUES(?,?)', [name, img]);
-    dynamic resp = await dbClient.rawQuery(
-        'SELECT idCategoria,name,image FROM Categoria WHERE name =?', [name]);
-    return Categories.map(resp[0]);
+    dynamic t = await dbClient.rawQuery('''SELECT * FROM Categoria WHERE name='$name' '''); 
+    await dbClient.rawInsert(
+          'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
+          [id, t[0]['idCategoria']]);
+      
+    }catch(e){
+      print(e);
+    }
+
   }
 
   Future<void> saveRelacionCatRest(int idRest, int idCat) async {
     var dbClient = await db;
-    dynamic test = await dbClient.rawQuery(
-        'SELECT * FROM CategoriaRest WHERE idRest=$idRest AND idCategoria=$idCat');
-    try {
-      test[0]['idRest'];
-      return;
-    } catch (err) {
+    
+    
       await dbClient.rawInsert(
           'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
           [idRest, idCat]);
-    }
+    
   }
 
   Future<void> saveOpenTime(int idRest, DateTime time) async {
@@ -390,14 +394,15 @@ class DatabaseHelper {
     List<Map> resp = await dbClient.rawQuery('''
           SELECT 
                 CategoriaRest.idCategoria,
-                Categoria.name,
-                Categoria.image,
+                Categoria.name as nameCategoria,
+                Categoria.image as imageCategoria,
                 Categoria.idCategoria 
           FROM 
                 CategoriaRest INNER JOIN  Categoria ON Categoria.idCategoria = CategoriaRest.idCategoria 
           WHERE 
                 CategoriaRest.idRest=?''', [idRest]);
     List<Categories> cat = List<Categories>();
+    print(resp);
     for (var i in resp) {
       cat.add(Categories.map(i));
     }
