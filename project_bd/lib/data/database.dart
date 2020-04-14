@@ -28,12 +28,18 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
 
+  
   initDb() async {
     Directory documentDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentDirectory.path, "main.db");
-    var ourDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    var ourDb = await openDatabase(path, version: 1, onCreate: _onCreate,  onConfigure: _onConfigure);
     return ourDb;
   }
+
+  void _onConfigure(Database db)async {
+      await db.execute("PRAGMA foreign_keys = ON");
+  }
+
 
   // Create table
   void _onCreate(Database db, int version) async {
