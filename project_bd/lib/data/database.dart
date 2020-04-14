@@ -170,7 +170,7 @@ class DatabaseHelper {
                 (9.99, "2020-04-01 10:00:00", 34),
                 (8.99, "2020-04-01 10:00:00", 35),
                 (9.99, "2020-04-01 10:00:00", 36);
-
+                
     ''');
 
 
@@ -179,6 +179,7 @@ class DatabaseHelper {
 //insertion
   Future<bool> saveUser(User user) async {
     var dbClient = await db;
+    
     try {
       await dbClient.rawInsert(
           "INSERT INTO User (name, password, email, address, number) VALUES(?,?,?,?,?)",
@@ -212,6 +213,7 @@ class DatabaseHelper {
       return false;
     }
   }
+
 
   Future<bool> savePrato(Prato prato) async {
     var dbClient = await db;
