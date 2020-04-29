@@ -141,9 +141,6 @@ class _PlatePageState extends State<PlatePage> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-          ),
           Container(
             height: 10,
             width: MediaQuery.of(context).size.width,

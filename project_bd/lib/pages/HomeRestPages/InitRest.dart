@@ -687,7 +687,7 @@ class _InitRestState extends State<InitRest> {
     print(cat);
     DatabaseHelper db = DatabaseHelper.internal();
     try{
-      await db.saveRelacionCatRest(this._rest.id, cat.id);
+      await db.saveRelacionCatRest(this._rest.id, cat.id).catchError((onError){print(onError);});
       setState(() {
         if(this._categories==null || this._categories.isEmpty){
           this._categories = new List<Categories>();

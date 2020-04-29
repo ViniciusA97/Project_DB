@@ -52,7 +52,7 @@ class DatabaseHelper {
     await db.execute(
         'CREATE TABLE Categoria(idCategoria INTEGER PRIMARY KEY, name VARCHAR UNIQUE, image VARCHAR)');
     await db.execute(
-        'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria INTEGER, FOREIGN KEY(idRest) REFERENCES Categoria(idCategoria), FOREIGN KEY(idRest) REFERENCES Restaurant(idRest))');
+        'CREATE TABLE CategoriaRest(idRest INTEGER, idCategoria INTEGER, FOREIGN KEY(idRest) REFERENCES Restaurant(idRest), FOREIGN KEY(idCategoria) REFERENCES Categoria(idCategoria))');
     await db.execute(
         'CREATE TABLE Pedidos( idPedido INTEGER PRIMARY KEY, data DATATIME, precoTotal REAL, adress TEXT)');
     await db.execute(
@@ -80,7 +80,7 @@ class DatabaseHelper {
           
           ("Saladex","123","https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTk7X0Aulb0EqkDU0iFG2l8hwYufMEiULM7lTgXTKNijuWtekAW&usqp=CAU"," Restaunte especializado em Salada","99887766", "Rua da salada 67","saladex@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
           
-          ("Massa","123","https://abrilvejario.files.wordpress.com/2016/11/massa_ambiente_foto-tomas-rangel-2.jpeg?quality=70&strip=info&w=920", "Restaunte especializado em massas","99887766", "Rua da Massa 13","massa@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
+          ("Massa","123","https://ministeriodacomida.files.wordpress.com/2012/01/facebook1.jpg", "Restaunte especializado em massas","99887766", "Rua da Massa 13","massa@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",0),
           
           ("Pizzaria","123","https://img.stpu.com.br/?img=https://s3.amazonaws.com/pu-mgr/default/a0RG000000jZ3P9MAK/5a2fd72de4b0b6c56629e7ae.jpg&w=710&h=462", "Restaunte especializado em pizza","99887766", "Rua da pizza 233","pizzaria@gmail.com","2020-04-01 00:00:00.000","2020-04-01 19:00:00.000",1),
           
@@ -325,8 +325,7 @@ class DatabaseHelper {
     
     
       await dbClient.rawInsert(
-          'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES(?,?)',
-          [idRest, idCat]);
+          'INSERT INTO CategoriaRest(idRest, idCategoria) VALUES($idRest,$idCat)');
     
   }
 
